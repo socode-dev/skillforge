@@ -1,16 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  --radius-radius: var(--radius);
+  --breakpoint-small: 387px;
+  --breakpoint-md: 822px;
+  --breakpoint-tablet: 893px;
+
+  --shadow-subtle: 0 0 40px 20px rgba(48, 178, 151, 0.2);
+
+  --radius-radius: 0.625rem;
 
   /* Color theme */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
+  --color-soft-primary: var(--soft-primary);
+  --color-primary-dark: var(--primary-dark);
   --color-primary-foreground: var(--primary-foreground);
-  --color--secondary: var(--secondary);
+  --color-secondary: var(--secondary);
+  --color--secondary-dark: var(--secondary-dark);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-accent: var(--accent);
+  --color-accent-dark: var(--accent-dark);
   --color-accent-foreground: var(--accent-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
@@ -20,19 +30,45 @@
   --color-card-foreground: var(--card-foreground);
   --color-ring: var(--ring);
   --color-destructive: var(--destructive);
+  --color-destructive-dark: var(--destructive-dark);
   --color-destructive-foreground: var(--destructive-foreground);
+
+  /* Animation theme */
+  --animate-tilt: tilt 0.1s ease-in-out forwards;
+
+  @keyframes tilt {
+    100% {
+      transform: rotate(15deg);
+    }
+  }
+
+  --animate-spin-scale: spin-scale 5s linear infinite;
+
+  @keyframes spin-scale {
+    0% {
+      transform: rotate(0) scale(1);
+    }
+    50% {
+      transform: rotate(180deg) scale(0.85);
+    }
+    100% {
+      transform: rotate(360deg) scale(1);
+    }
+  }
 }
 
 :root {
-  --radius: 0.625rem;
-
   --background: rgb(250, 250, 250);
   --foreground: rgb(25, 25, 28);
   --primary: rgb(21, 120, 98);
+  --soft-primary: rgba(21, 120, 98, 0.1);
+  --primary-dark: rgb(17, 100, 81);
   --primary-foreground: rgb(255, 255, 255);
-  --secondary: rgb(229, 234, 239);
+  --secondary: rgb(166, 207, 199);
+  --secondary-dark: rgb(214, 219, 223);
   --secondary-foreground: rgb(31, 33, 36);
   --accent: rgb(0, 163, 153);
+  --accent-dark: rgb(1, 138, 129);
   --accent-foreground: rgb(255, 255, 255);
   --muted: rgb(240, 240, 242);
   --muted-foreground: rgb(100, 102, 106);
@@ -42,6 +78,7 @@
   --card-foreground: rgb(31, 33, 36);
   --ring: rgb(21, 120, 98);
   --destructive: rgb(220, 55, 55);
+  --destructive-dark: rgb(214, 38, 38);
   --destructive-foreground: rgb(255, 255, 255);
 }
 
@@ -49,10 +86,14 @@
   --background: rgb(16, 18, 19);
   --foreground: rgb(235, 235, 238);
   --primary: rgb(48, 178, 151);
+  --soft-primary: rgba(48, 178, 151, 0.1);
+  --primary-dark: rgb(45, 163, 140);
   --primary-foreground: rgb(255, 255, 255);
   --secondary: rgb(35, 39, 42);
+  --secondary-dark: rgb(14, 16, 17);
   --secondary-foreground: rgb(220, 220, 223);
   --accent: rgb(0, 185, 175);
+  --accent-dark: rgb(0, 165, 157);
   --accent-foreground: rgb(255, 255, 255);
   --muted: rgb(40, 43, 46);
   --muted-foreground: rgb(150, 153, 156);
@@ -62,5 +103,10 @@
   --card-foreground: rgb(235, 235, 238);
   --ring: rgb(48, 178, 151);
   --destructive: rgb(255, 95, 95);
+  --destructive-dark: rgb(252, 67, 67);
   --destructive-foreground: rgb(255, 255, 255);
+}
+
+html {
+  scroll-behavior: smooth;
 }
