@@ -1,11 +1,13 @@
 import logo from "../../../assets/skillforge-logo.webp";
 import { Menu, X } from "lucide-react";
 import Button from "../../ui/Button";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import useThemeStore from "../../../store/useThemeStore";
 
 const Header = () => {
+  const { theme, setTheme } = useThemeStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -21,12 +23,18 @@ const Header = () => {
     return () => window.removeEventListener<"resize">("resize", handleResize);
   }, [isMenuOpen]);
 
+  const handleMenuClose = () => setIsMenuOpen(false);
+
+  const handleThemeChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setTheme(e.target.value as "light" | "dark" | "system");
+  };
+
   return (
     <motion.header
       initial={{ y: -50 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="fixed z-50 w-full bg-transparent backdrop-blur-md"
+      className="fixed z-50 w-full bg-transparent backdrop-blur-2xl"
     >
       <div className="flex justify-between items-center py-4 px-6 md:px-12 lg:px-18 shadow">
         <button
@@ -59,6 +67,29 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center gap-5 max-md:hidden">
+          <select
+            name="theme"
+            value={theme}
+            onChange={handleThemeChange}
+            className="border-1 border-ring rounded-radius px-4 py-1 text-sm focus:border-ring cursor-pointer transition"
+          >
+            <option
+              value="light"
+              className="bg-muted cursor-pointer transition"
+            >
+              Light
+            </option>
+            <option value="dark" className="bg-muted cursor-pointer transition">
+              Dark
+            </option>
+            <option
+              value="system"
+              className="bg-muted cursor-pointer transition"
+            >
+              System
+            </option>
+          </select>
+
           <Button
             onClick={() => navigate("/login")}
             type="button"
@@ -90,7 +121,6 @@ const Header = () => {
         {isMenuOpen && (
           <motion.div
             role="button"
-            onClick={() => setIsMenuOpen(false)}
             initial={{ height: 0 }}
             animate={{ height: "fit-content" }}
             exit={{ height: 0 }}
@@ -99,18 +129,21 @@ const Header = () => {
           >
             <nav className="flex flex-col gap-8">
               <a
+                onClick={handleMenuClose}
                 href="#home"
                 className="w-fit hover:text-primary cursor-pointer transition"
               >
                 Home
               </a>
               <a
+                onClick={handleMenuClose}
                 href="#process"
                 className="w-fit hover:text-primary cursor-pointer transition"
               >
                 How It Works
               </a>
               <a
+                onClick={handleMenuClose}
                 href="#features"
                 className="w-fit hover:text-primary cursor-pointer transition"
               >
@@ -118,15 +151,54 @@ const Header = () => {
               </a>
             </nav>
 
+            <div className="w-full flex justify-between items-center">
+              <p>Theme</p>
+
+              <select
+                name="theme"
+                value={theme}
+                onChange={handleThemeChange}
+                className="border-2 border-border rounded-radius px-4 py-1 text-sm focus:border-ring active:border-border cursor-pointer transition"
+              >
+                <option
+                  onClick={handleMenuClose}
+                  value="light"
+                  className="bg-muted cursor-pointer transition"
+                >
+                  Light
+                </option>
+                <option
+                  onClick={handleMenuClose}
+                  value="dark"
+                  className="bg-muted cursor-pointer transition"
+                >
+                  Dark
+                </option>
+                <option
+                  onClick={handleMenuClose}
+                  value="system"
+                  className="bg-muted cursor-pointer transition"
+                >
+                  System
+                </option>
+              </select>
+            </div>
+
             <div className="flex flex-col gap-8 w-full">
               <button
-                onClick={() => navigate("/login")}
+                onClick={() => {
+                  navigate("/login");
+                  handleMenuClose();
+                }}
                 className="w-fit text-foreground hover:text-primary transition cursor-pointer self-start"
               >
                 Login
               </button>
               <Button
-                onClick={() => navigate("/signup")}
+                onClick={() => {
+                  navigate("/signup");
+                  handleMenuClose();
+                }}
                 type="button"
                 variant="primary"
               >

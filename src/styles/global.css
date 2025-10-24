@@ -3,7 +3,7 @@
 @theme {
   --breakpoint-small: 387px;
   --breakpoint-md: 822px;
-  --breakpoint-tablet: 893px;
+  --breakpoint-tablet: 973px;
 
   --shadow-subtle: 0 0 40px 20px rgba(48, 178, 151, 0.2);
 
@@ -32,6 +32,10 @@
   --color-destructive: var(--destructive);
   --color-destructive-dark: var(--destructive-dark);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-soft-pink: var(--soft-pink);
+  --color-soft-blue: var(--soft-blue);
+  --color-soft-green: var(--soft-green);
+  --color-soft-orange: var(--soft-orange);
 
   /* Animation theme */
   --animate-tilt: tilt 0.1s ease-in-out forwards;
@@ -80,6 +84,10 @@
   --destructive: rgb(220, 55, 55);
   --destructive-dark: rgb(214, 38, 38);
   --destructive-foreground: rgb(255, 255, 255);
+  --soft-pink: rgb(253, 242, 248);
+  --soft-blue: rgb(239, 246, 255);
+  --soft-green: rgb(240, 253, 244);
+  --soft-orange: rgb(255, 247, 237);
 }
 
 .dark {
@@ -105,8 +113,15 @@
   --destructive: rgb(255, 95, 95);
   --destructive-dark: rgb(252, 67, 67);
   --destructive-foreground: rgb(255, 255, 255);
+  --soft-pink: rgba(157, 23, 77, 0.1);
+  --soft-blue: rgba(30, 64, 175, 0.1);
+  --soft-green: rgba(22, 101, 52, 0.1);
+  --soft-orange: rgba(154, 52, 18, 0.1);
 }
 
-html {
+html,
+body {
   scroll-behavior: smooth;
+  transition: background-color 0.5s ease, color 0.5s ease;
+  color: var(--foreground);
 }

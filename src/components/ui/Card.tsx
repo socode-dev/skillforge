@@ -1,6 +1,12 @@
 import { motion } from "framer-motion";
-import type { CardProps } from "../../types/CardTypes";
 import clsx from "clsx";
+import type { MotionProps } from "framer-motion";
+import type { ReactNode } from "react";
+
+interface CardProps extends MotionProps {
+  children: ReactNode;
+  className?: string;
+}
 
 const Card = ({ children, className, ...props }: CardProps) => {
   return (

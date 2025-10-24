@@ -1,7 +1,7 @@
 import { ArrowRight, Sparkles } from "lucide-react";
 import Button from "../../../components/ui/Button";
 import teamCollaborationImage from "../../../assets/images/team-collaboration.webp";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
@@ -10,7 +10,7 @@ const Hero = () => {
   return (
     <section
       id="home"
-      className="flex flex-col md:flex-row justify-between items-center gap-10 pt-32 pb-15 px-6 md:px-12 lg:px-18 bg-gradient-to-r from-primary/10 to-primary/0"
+      className="flex flex-col md:flex-row justify-between items-center gap-10 pt-32 pb-15 px-6 md:px-12 lg:px-18 bg-gradient-to-r from-primary/10 via-primary/0 to-accent/10"
     >
       <div className="md:max-w-[500px] flex flex-col items-center text-center md:items-start md:text-left gap-6">
         <motion.div
@@ -75,7 +75,7 @@ const Hero = () => {
         />
 
         {/* Overlay */}
-        <div className="absolute z-10 inset-0 bg-gradient-to-r from-primary/30 via-accent/20 to-transparent"></div>
+        <div className="absolute z-10 inset-0 bg-gradient-to-r from-primary/20 via-accent/30 to-transparent"></div>
 
         <div className="absolute top-8/12 left-1/12 z-20 flex items-center gap-2 text-sm py-3 px-5 bg-muted rounded-radius">
           <div className="p-2 bg-gradient-to-br from-primary to-primary/50 text-primary-foreground rounded-radius">
