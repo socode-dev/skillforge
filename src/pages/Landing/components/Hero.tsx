@@ -2,19 +2,16 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import Button from "../../../components/ui/Button";
 import teamCollaborationImage from "../../../assets/images/team-collaboration.webp";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 
-const Hero = () => {
-  const navigate = useNavigate();
-
+const Hero = ({ handleSignupClick }: { handleSignupClick: () => void }) => {
   return (
     <section
       id="home"
-      className="flex flex-col md:flex-row justify-between items-center gap-10 pt-32 pb-15 px-6 md:px-12 lg:px-18 bg-gradient-to-r from-primary/10 via-primary/0 to-accent/10"
+      className="flex flex-col md:flex-row justify-between items-center gap-10 pt-32 pb-15 px-6 md:px-12 lg:px-18 bg-gradient-to-r from-primary/10 to-primary/0"
     >
       <div className="md:max-w-[500px] flex flex-col items-center text-center md:items-start md:text-left gap-6">
         <motion.div
-          initial={{ y: 1000, opacity: 0 }}
+          initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
           className="w-fit flex items-center gap-2 px-4 py-1 text-base text-primary bg-soft-primary rounded-full border-ring/20 border-1"
@@ -24,7 +21,7 @@ const Hero = () => {
         </motion.div>
 
         <motion.h2
-          initial={{ y: 1000, opacity: 0 }}
+          initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
           className="text-4xl md:text-5xl lg:text-6xl"
@@ -36,7 +33,7 @@ const Hero = () => {
         </motion.h2>
 
         <motion.p
-          initial={{ y: 1000, opacity: 0 }}
+          initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
           className="text-lg text-muted-foreground"
@@ -46,11 +43,11 @@ const Hero = () => {
         </motion.p>
 
         <Button
-          onClick={() => navigate("/signup")}
+          onClick={handleSignupClick}
           type="button"
           variant="primary"
           className="flex items-center gap-4 h-12 text-lg font-semibold shadow-primary shadow"
-          initial={{ y: 1000, opacity: 0, rotate: 360 }}
+          initial={{ y: 100, opacity: 0, rotate: 360 }}
           animate={{ y: 0, opacity: 1, rotate: 0 }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -65,7 +62,7 @@ const Hero = () => {
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.3, delay: 0.2, ease: "easeOut" }}
-        className="max-w-[500px] w-full min-w-[300px] max-h-[300px] relative rounded-2xl overflow-hidden shadow-subtle self-center"
+        className="max-w-[500px] w-full min-w-[300px] max-h-[300px] shadow-subtle relative rounded-2xl overflow-hidden self-center"
       >
         <img
           src={teamCollaborationImage}
@@ -75,7 +72,7 @@ const Hero = () => {
         />
 
         {/* Overlay */}
-        <div className="absolute z-10 inset-0 bg-gradient-to-r from-primary/20 via-accent/30 to-transparent"></div>
+        <div className="absolute z-10 inset-0 bg-gradient-to-r from-primary/10 via-accent/20 to-transparent"></div>
 
         <div className="absolute top-8/12 left-1/12 z-20 flex items-center gap-2 text-sm py-3 px-5 bg-muted rounded-radius">
           <div className="p-2 bg-gradient-to-br from-primary to-primary/50 text-primary-foreground rounded-radius">

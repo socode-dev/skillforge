@@ -1,13 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --breakpoint-small: 387px;
+  --breakpoint-small: 427px;
   --breakpoint-md: 822px;
   --breakpoint-tablet: 973px;
 
-  --shadow-subtle: 0 0 40px 20px rgba(48, 178, 151, 0.2);
-
   --radius-radius: 0.625rem;
+  --radius-radius-xl: 0.825rem;
+
+  --shadow-subtle: 0 0 20px 5px rgba(48, 178, 151, 0.2);
 
   /* Color theme */
   --color-background: var(--background);
@@ -36,6 +37,7 @@
   --color-soft-blue: var(--soft-blue);
   --color-soft-green: var(--soft-green);
   --color-soft-orange: var(--soft-orange);
+  --color-soft-destructive: var(--soft-destructive);
 
   /* Animation theme */
   --animate-tilt: tilt 0.1s ease-in-out forwards;
@@ -88,6 +90,7 @@
   --soft-blue: rgb(239, 246, 255);
   --soft-green: rgb(240, 253, 244);
   --soft-orange: rgb(255, 247, 237);
+  --soft-destructive: rgb(254, 242, 242);
 }
 
 .dark {
@@ -117,6 +120,7 @@
   --soft-blue: rgba(30, 64, 175, 0.1);
   --soft-green: rgba(22, 101, 52, 0.1);
   --soft-orange: rgba(154, 52, 18, 0.1);
+  --soft-destructive: rgba(69, 10, 10);
 }
 
 html,
@@ -124,4 +128,17 @@ body {
   scroll-behavior: smooth;
   transition: background-color 0.5s ease, color 0.5s ease;
   color: var(--foreground);
+}
+input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-soft-primary);
+  transition: all 0.2s ease;
+}
+.toast {
+  background-color: var(--card);
+  color: var(--card-foreground);
+  width: fit-content;
+  padding-inline: 1em;
+  padding-block: 0.6em;
+  box-shadow: 0 0 20px 5px rgba(48, 178, 151, 0.2);
 }

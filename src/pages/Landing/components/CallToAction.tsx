@@ -1,11 +1,12 @@
 import { ArrowRight, CircleCheck, Sparkles, Star, Zap } from "lucide-react";
 import Button from "../../../components/ui/Button";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 
-const CallToAction = () => {
-  const navigate = useNavigate();
-
+const CallToAction = ({
+  handleSignupClick,
+}: {
+  handleSignupClick: () => void;
+}) => {
   return (
     <motion.section
       initial={{ opacity: 0, y: 100 }}
@@ -45,7 +46,7 @@ const CallToAction = () => {
       </motion.p>
 
       <Button
-        onClick={() => navigate("/signup")}
+        onClick={handleSignupClick}
         initial={{ opacity: 0, y: 100, rotate: 360 }}
         whileInView={{ opacity: 1, y: 0, rotate: 0 }}
         whileHover={{ scale: 1.05 }}

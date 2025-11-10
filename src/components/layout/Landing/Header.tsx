@@ -3,13 +3,24 @@ import { Menu, X } from "lucide-react";
 import Button from "../../ui/Button";
 import { useEffect, useState, type ChangeEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useThemeStore from "../../../store/useThemeStore";
+import clsx from "clsx";
+import useMultiStepsStore from "../../../store/useMultiStepsStore";
 
 const Header = () => {
   const { theme, setTheme } = useThemeStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const { currentStep } = useMultiStepsStore();
+
+  const hideHeader =
+    pathname === "/login" ||
+    pathname === "/signup/step-1" ||
+    pathname === "/signup/step-2" ||
+    pathname === "/signup/step-3" ||
+    pathname === "/signup/step-4";
 
   useEffect(() => {
     const handleResize = (): void => {
@@ -31,10 +42,13 @@ const Header = () => {
 
   return (
     <motion.header
-      initial={{ y: -50 }}
+      initial={{ y: -20 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="fixed z-50 w-full bg-transparent backdrop-blur-2xl"
+      className={clsx(
+        "fixed z-50 w-full bg-transparent backdrop-blur-2xl",
+        hideHeader ? "hidden" : "block"
+      )}
     >
       <div className="flex justify-between items-center py-4 px-6 md:px-12 lg:px-18 shadow">
         <button
@@ -98,7 +112,7 @@ const Header = () => {
             Login
           </Button>
           <Button
-            onClick={() => navigate("/Signup")}
+            onClick={() => navigate(`/signup/step-${currentStep}`)}
             type="button"
             variant="primary"
           >
@@ -125,7 +139,7 @@ const Header = () => {
             animate={{ height: "fit-content" }}
             exit={{ height: 0 }}
             transition={{ duration: 0.1, ease: "easeInOut" }}
-            className="shadow-lg flex flex-col gap-8 w-full py-6 px-6 border-t-1 border-muted text-base"
+            className="shadow-lg flex flex-col gap-8 w-full py-6 px-6 border-t-1 border-muted text-base overflow-y-scroll"
           >
             <nav className="flex flex-col gap-8">
               <a
@@ -196,7 +210,7 @@ const Header = () => {
               </button>
               <Button
                 onClick={() => {
-                  navigate("/signup");
+                  navigate(`/signup/step-${currentStep}`);
                   handleMenuClose();
                 }}
                 type="button"

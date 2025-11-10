@@ -1,15 +1,31 @@
+import { useNavigate } from "react-router-dom";
 import { ScrollToTop } from "../../Layouts/ScrollToTop";
 import CallToAction from "./components/CallToAction";
 import Features from "./components/Features";
 import Hero from "./components/Hero";
 import Process from "./components/Process";
 import { motion } from "framer-motion";
+import useMultiStepsStore from "../../store/useMultiStepsStore";
 
 const LandingPage = () => {
+  const navigate = useNavigate();
+  const setCurrentStep = useMultiStepsStore((state) => state.setCurrentStep);
+
+  const handleSignupClick = (): void => {
+    setCurrentStep(1);
+    navigate("/signup/step-1");
+  };
+
   return (
-    <main className="flex flex-col">
+    <motion.main
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="flex flex-col"
+    >
       <ScrollToTop />
-      <Hero />
+      <Hero handleSignupClick={handleSignupClick} />
       <Process />
       <Features />
       <motion.div
@@ -29,8 +45,8 @@ const LandingPage = () => {
           Join thousands of learners and teachers
         </span>
       </motion.div>
-      <CallToAction />
-    </main>
+      <CallToAction handleSignupClick={handleSignupClick} />
+    </motion.main>
   );
 };
 
