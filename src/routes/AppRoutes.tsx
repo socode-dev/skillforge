@@ -4,6 +4,8 @@ import DashboardLayout from "../Layouts/DashboardLayout";
 import LandingPage from "../pages/Landing/LandingPage";
 import Login from "../pages/Auth/Login";
 import Signup from "../pages/Auth/Signup";
+import Dashboard from "../pages/Dashboard/Dashboard";
+import { ProtectedRoute } from "./ProtectedRoute";
 
 const AppRoutes = () => {
   return (
@@ -11,10 +13,19 @@ const AppRoutes = () => {
       <Route path="/" element={<LandingPageLayout />}>
         <Route index element={<LandingPage />} />
         <Route path="login" element={<Login />} />
-        <Route path="signup" element={<Signup />} />
+        <Route path="signup/:slug" element={<Signup />} />
       </Route>
 
-      <Route element={<DashboardLayout />}></Route>
+      <Route
+        path="/home"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<Dashboard />} />
+      </Route>
     </Routes>
   );
 };

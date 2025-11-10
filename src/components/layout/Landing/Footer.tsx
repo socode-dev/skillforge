@@ -1,9 +1,19 @@
 import logo from "../../../assets/skillforge-logo.webp";
 import { Mail, MapPin, Linkedin, Twitter } from "lucide-react";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
+import clsx from "clsx";
 
 const Footer = () => {
   const year = new Date().getFullYear();
+  const { pathname } = useLocation();
+
+  const hideFooter =
+    pathname === "/login" ||
+    pathname === "/signup/step-1" ||
+    pathname === "/signup/step-2" ||
+    pathname === "/signup/step-3" ||
+    pathname === "/signup/step-4";
 
   return (
     <motion.footer
@@ -11,7 +21,10 @@ const Footer = () => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       viewport={{ once: true }}
-      className="px-6 md:px-12 lg:px-18 bg-background"
+      className={clsx(
+        "px-6 md:px-12 lg:px-18 bg-background",
+        hideFooter ? "hidden" : "block"
+      )}
     >
       <div className="flex flex-col md:flex-row md:justify-between gap-10 py-15">
         <section className="flex flex-col">
