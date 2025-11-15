@@ -19,7 +19,7 @@ const Button = ({
     accent:
       "bg-accent text-accent-foreground hover:bg-accent-dark focus:bg-accent-dark",
     outline:
-      "bg-background text-foreground border-border border-1 hover:bg-accent hover:text-accent-foreground",
+      "bg-transparent border-border border-1 hover:text-primary hover:bg-accent",
     destructive:
       "bg-destructive text-destructive-foreground hover:bg-destructive-dark focus:bg-destructive-dark",
     ghost: "bg-transparent text-foreground",
