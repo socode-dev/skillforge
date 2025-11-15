@@ -2,6 +2,7 @@
 
 @theme {
   --breakpoint-small: 427px;
+  --breakpoint-sm: 568px;
   --breakpoint-md: 822px;
   --breakpoint-tablet: 973px;
 
@@ -141,4 +142,12 @@ input:focus {
   padding-inline: 1em;
   padding-block: 0.6em;
   box-shadow: 0 0 20px 5px rgba(48, 178, 151, 0.2);
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
