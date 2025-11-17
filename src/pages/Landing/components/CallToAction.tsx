@@ -55,9 +55,9 @@ const CallToAction = ({
         viewport={{ once: true, amount: 0.5 }}
         type="button"
         variant="secondary"
-        className="bg-white flex items-center gap-4 py-3 font-semibold text-xl transition"
+        className="bg-white flex items-center gap-4 py-3 transition"
       >
-        <span className="bg-clip-text text-transparent bg-gradient-to-r from-accent to-primary">
+        <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-accent to-primary">
           Get Started Now
         </span>{" "}
         <ArrowRight size={18} />

@@ -1,17 +1,17 @@
 import { Route, Routes } from "react-router-dom";
 import LandingPageLayout from "../Layouts/LandingPageLayout";
 import DashboardLayout from "../Layouts/DashboardLayout";
-import LandingPage from "../pages/Landing/LandingPage";
-import Login from "../pages/Auth/Login";
-import Signup from "../pages/Auth/Signup";
-import Dashboard from "../pages/Dashboard/Dashboard";
+import LandingPage from "../pages/landing/LandingPage";
+import Login from "../pages/auth/Login";
+import Signup from "../pages/auth/Signup";
+import Dashboard from "../pages/dashboard/Dashboard";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { SidebarProvider } from "../context/useSidebarContext";
-import Discover from "../pages/Dashboard/Discover";
-import SkillRequests from "../pages/Dashboard/SkillRequests";
-import Messages from "../pages/Dashboard/Messages";
-import Profile from "../pages/Dashboard/Profile";
-import Settings from "../pages/Dashboard/Settings";
+import Discover from "../pages/discover/Discover";
+import SkillRequests from "../pages/skillRequests/SkillRequests";
+import Messages from "../pages/messages/Messages";
+import Profile from "../pages/profile/Profile";
+import Settings from "../pages/settings/Settings";
 
 const AppRoutes = () => {
   return (
