@@ -31,7 +31,7 @@ interface StoreState {
   currentUser: null | CurrentUser;
   signupErr: string | null;
   loginErr: string | null;
-  isLoggingIn: boolean;
+  userLoggedIn: boolean;
   loading: boolean;
   setCurrentUser: (user: CurrentUser | null) => void;
   startAuthListener: (navigate: NavigateFunction) => void;
@@ -58,7 +58,7 @@ const useAuthStore = create<StoreState>()((set, get) => ({
   currentUser: null,
   signupErr: null,
   loginErr: null,
-  isLoggingIn: false,
+  userLoggedIn: false,
   loading: true,
 
   _authUnsubscribe: null,
@@ -71,7 +71,7 @@ const useAuthStore = create<StoreState>()((set, get) => ({
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
         // User is signed out
-        set({ currentUser: null, loading: false });
+        set({ currentUser: null, loading: false, userLoggedIn: false });
         return;
       }
 
@@ -79,7 +79,7 @@ const useAuthStore = create<StoreState>()((set, get) => ({
       const userDocSnap = await getDoc(docRef);
 
       if (!userDocSnap.exists()) {
-        set({ currentUser: null, loading: false });
+        set({ currentUser: null, loading: false, userLoggedIn: false });
         return;
       }
 
@@ -91,6 +91,7 @@ const useAuthStore = create<StoreState>()((set, get) => ({
       set({
         currentUser: userData,
         loading: false,
+        userLoggedIn: true,
       });
 
       if (userData.signupStepsCompleted < 4) {
@@ -118,7 +119,7 @@ const useAuthStore = create<StoreState>()((set, get) => ({
 
   onSignup: async (email, password, name, reset) => {
     const { nextPage } = useMultiStepsStore.getState();
-    set({ isLoggingIn: true });
+    set({ loading: true });
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -167,14 +168,14 @@ const useAuthStore = create<StoreState>()((set, get) => ({
         console.log(err);
       }
     } finally {
-      set({ isLoggingIn: false });
+      set({ loading: false });
       window.scrollTo(0, 0);
       reset();
     }
   },
 
   onLogin: async (email, password, reset, navigate) => {
-    set({ isLoggingIn: true });
+    set({ loading: true });
 
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -191,7 +192,12 @@ const useAuthStore = create<StoreState>()((set, get) => ({
       const userData = {
         ...(userDocSnap.data() as CurrentUser),
         uid: user.uid,
+        name: user.displayName as string,
+        email: user.email as string,
+        isEmailVerified: user.emailVerified,
       };
+
+      setDoc(doc(db, "users", user.uid), { ...userData });
 
       set({
         currentUser: userData,
@@ -214,7 +220,7 @@ const useAuthStore = create<StoreState>()((set, get) => ({
         setTimeout(() => set({ loginErr: null }), 5000);
       }
     } finally {
-      set({ isLoggingIn: false });
+      set({ loading: false });
       window.scrollTo(0, 0);
       reset();
     }

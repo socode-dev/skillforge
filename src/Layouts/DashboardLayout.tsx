@@ -4,12 +4,30 @@ import Sidebar from "../components/layout/Dashboard/Sidebar";
 import { useSidebarContext } from "../context/useSidebarContext";
 import { motion, AnimatePresence } from "framer-motion";
 import Footer from "../components/layout/Dashboard/Footer";
+import ShowEditModal from "../components/layout/Dashboard/ShowEditModal";
+import ShowDialog from "../components/layout/Dashboard/ShowDialog";
+import { Bounce, ToastContainer } from "react-toastify";
 
 const DashboardLayout = () => {
   const { isSidebarOpen, setIsSidebarOpen } = useSidebarContext();
 
   return (
     <div className="bg-background text-foreground flex w-full h-dvh relative">
+      {/* <Toaster /> */}
+      <ToastContainer
+        position="top-right"
+        newestOnTop={true}
+        pauseOnHover
+        transition={Bounce}
+        toastClassName={"toast"}
+      />
+
+      {/* Settings edit modal */}
+      <ShowEditModal />
+
+      {/* Dialog */}
+      <ShowDialog />
+
       {/* Desktop Sidebar */}
       <aside
         aria-label="desktop sidebar"
@@ -29,6 +47,7 @@ const DashboardLayout = () => {
           />
 
           <motion.aside
+            key={"mobile-sidebar"}
             onClick={() => setIsSidebarOpen(false)}
             aria-label="mobile sidebar"
             initial={{ opacity: 0, x: -50 }}

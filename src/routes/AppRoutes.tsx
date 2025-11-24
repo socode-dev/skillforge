@@ -12,11 +12,19 @@ import SkillRequests from "../pages/skillRequests/SkillRequests";
 import Messages from "../pages/messages/Messages";
 import Profile from "../pages/profile/Profile";
 import Settings from "../pages/settings/Settings";
+import PublicRoute from "./PublicRoute";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<LandingPageLayout />}>
+      <Route
+        path="/"
+        element={
+          <PublicRoute>
+            <LandingPageLayout />
+          </PublicRoute>
+        }
+      >
         <Route index element={<LandingPage />} />
         <Route path="login" element={<Login />} />
         <Route path="signup/:slug" element={<Signup />} />

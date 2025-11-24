@@ -19,7 +19,7 @@ export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
     return () => {
       lastProcessedStep.current = null;
     };
-  }, [currentUser, setCurrentStep]);
+  }, [currentUser]);
 
   if (loading) {
     return <p className="text-lg text-center mt-20">Loading...</p>;

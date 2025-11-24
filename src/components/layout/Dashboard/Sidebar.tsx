@@ -48,19 +48,29 @@ const Sidebar = () => {
         })}
       </nav>
 
-      <figure className="p-6 flex items-center gap-3 border-t-1 border-border">
-        <div className="w-fit h-fit p-3 bg-soft-primary text-primary rounded-full">
-          <User size={20} />
+      <figure className="w-full p-6 flex items-center gap-3 border-t-1 border-border">
+        <div className="w-12 h-10 p-0.5 bg-soft-primary text-primary rounded-full">
+          {currentUser && currentUser.avatar ? (
+            <img
+              src={currentUser.avatar}
+              alt="User avatar"
+              className="w-full h-full rounded-full object-fill"
+            />
+          ) : (
+            <User size={20} />
+          )}
         </div>
 
-        <figcaption className="space-y-1 text-foreground">
-          <span>{currentUser.name}</span>
+        <figcaption className="w-full text-foreground">
+          <span className="inline-block w-[90%] truncate text-base">
+            {currentUser.name}
+          </span>
 
           <button
             onClick={onSignout}
             className="flex items-center gap-2 text-destructive cursor-pointer"
           >
-            <LogOut size={15} />
+            <LogOut size={14} />
             <span className="text-sm font-medium">Log out</span>
           </button>
         </figcaption>

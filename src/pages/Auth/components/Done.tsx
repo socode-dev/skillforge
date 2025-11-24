@@ -79,18 +79,25 @@ const Done = () => {
 
         <div className="space-y-4">
           <h5 className="text-muted-foreground text-sm font-semibold">
-            Skills You Can Teach ({currentUser.skills.length})
+            Skills You Can Teach (
+            {
+              currentUser.skills.filter((skill) => skill && skill.trim() !== "")
+                .length
+            }
+            )
           </h5>
 
           <div className="flex flex-wrap gap-2">
-            {currentUser.skills.map((skill, i) => (
-              <span
-                key={skill + i}
-                className="py-1.5 px-4 bg-soft-primary text-primary text-sm font-semibold border-1 border-ring/20 rounded-radius"
-              >
-                {skill}
-              </span>
-            ))}
+            {currentUser.skills
+              .filter((skill) => skill && skill.trim() !== "")
+              .map((skill, i) => (
+                <span
+                  key={`${skill}-${i}`}
+                  className="py-1.5 px-4 bg-soft-primary text-primary text-sm font-semibold border-1 border-ring/20 rounded-radius"
+                >
+                  {skill}
+                </span>
+              ))}
           </div>
         </div>
       </div>

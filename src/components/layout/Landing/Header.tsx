@@ -7,9 +7,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useThemeStore from "../../../store/useThemeStore";
 import clsx from "clsx";
 import useMultiStepsStore from "../../../store/useMultiStepsStore";
+import ThemeSelect from "../../ui/ThemeSelect";
 
 const Header = () => {
-  const { theme, setTheme } = useThemeStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -35,10 +35,6 @@ const Header = () => {
   }, [isMenuOpen]);
 
   const handleMenuClose = () => setIsMenuOpen(false);
-
-  const handleThemeChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setTheme(e.target.value as "light" | "dark" | "system");
-  };
 
   return (
     <motion.header
@@ -81,28 +77,7 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center gap-5 max-md:hidden">
-          <select
-            name="theme"
-            value={theme}
-            onChange={handleThemeChange}
-            className="border-1 border-ring rounded-radius px-4 py-1 text-sm focus:border-ring cursor-pointer transition"
-          >
-            <option
-              value="light"
-              className="bg-muted cursor-pointer transition"
-            >
-              Light
-            </option>
-            <option value="dark" className="bg-muted cursor-pointer transition">
-              Dark
-            </option>
-            <option
-              value="system"
-              className="bg-muted cursor-pointer transition"
-            >
-              System
-            </option>
-          </select>
+          <ThemeSelect />
 
           <Button
             onClick={() => navigate("/login")}
@@ -168,34 +143,7 @@ const Header = () => {
             <div className="w-full flex justify-between items-center">
               <p>Theme</p>
 
-              <select
-                name="theme"
-                value={theme}
-                onChange={handleThemeChange}
-                className="border-2 border-border rounded-radius px-4 py-1 text-sm focus:border-ring active:border-border cursor-pointer transition"
-              >
-                <option
-                  onClick={handleMenuClose}
-                  value="light"
-                  className="bg-muted cursor-pointer transition"
-                >
-                  Light
-                </option>
-                <option
-                  onClick={handleMenuClose}
-                  value="dark"
-                  className="bg-muted cursor-pointer transition"
-                >
-                  Dark
-                </option>
-                <option
-                  onClick={handleMenuClose}
-                  value="system"
-                  className="bg-muted cursor-pointer transition"
-                >
-                  System
-                </option>
-              </select>
+              <ThemeSelect />
             </div>
 
             <div className="flex flex-col gap-8 w-full">
