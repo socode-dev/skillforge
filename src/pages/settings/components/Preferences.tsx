@@ -1,8 +1,11 @@
 import { Bell, ChevronDown, ChevronUp, Palette } from "lucide-react";
 import { useState } from "react";
 import clsx from "clsx";
+import ThemeSelect from "../../../components/ui/ThemeSelect";
+import useSettingsStore from "../../../store/useSettingsStore";
 
 const Preferences = () => {
+  const { isNotificationAllowed, setNotificationAllowed } = useSettingsStore();
   const [isPreferenceOpen, setIsPreferenceOpen] = useState<boolean>(false);
 
   return (
@@ -41,12 +44,7 @@ const Preferences = () => {
               <p className="text-muted-foreground text-xs">Switch theme</p>
             </div>
 
-            <button
-              type="button"
-              className="p-1 w-10 h-5 bg-primary rounded-full relative self-center"
-            >
-              <div className="absolute top-[50%] right-1 translate-y-[-50%] w-3.5 h-3.5 bg-background rounded-full" />
-            </button>
+            <ThemeSelect />
           </div>
         </div>
 
@@ -56,15 +54,24 @@ const Preferences = () => {
               <Bell size={20} className="text-primary" />
             </div>
             <div className="grow">
-              <h4 className="text-sm">Email Notifications</h4>
-              <p className="text-muted-foreground text-xs">Email updates</p>
+              <h4 className="text-sm">Push Notifications</h4>
+              <p className="text-muted-foreground text-xs">In-app updates</p>
             </div>
 
             <button
+              onClick={() => setNotificationAllowed(!isNotificationAllowed)}
               type="button"
-              className="p-1 w-10 h-5 bg-muted-foreground/50 rounded-full relative self-center"
+              className={clsx(
+                "p-1 w-10 h-5 rounded-full relative self-center transition duration-500 cursor-pointer",
+                isNotificationAllowed ? "bg-primary" : "bg-muted-foreground/50"
+              )}
             >
-              <div className="absolute top-[50%] left-1 translate-y-[-50%] w-3.5 h-3.5 bg-background rounded-full" />
+              <div
+                className={clsx(
+                  "absolute top-[50%] translate-y-[-50%] w-3.5 h-3.5 bg-background rounded-full transition duration-500",
+                  isNotificationAllowed ? "right-1" : "left-1"
+                )}
+              />
             </button>
           </div>
         </div>

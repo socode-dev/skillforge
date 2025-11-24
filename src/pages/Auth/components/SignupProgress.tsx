@@ -19,7 +19,7 @@ const SignupProgress = ({ currentStep, steps }: SignupProgressProps) => {
 
           return (
             <div
-              key={label}
+              key={label || `step-${index}`}
               className="relative flex flex-col items-center w-full z-0"
             >
               {/* Connecting line */}

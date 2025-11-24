@@ -10,7 +10,6 @@ import useAuthStore from "../../../store/useAuthStore";
 
 const Account = () => {
   const onSignup = useAuthStore((state) => state.onSignup);
-  const isLoggingIn = useAuthStore((state) => state.isLoggingIn);
   const [revealPassword, setRevealPassword] = useState({
     password: false,
     confirmPassword: false,
@@ -27,7 +26,7 @@ const Account = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
   } = form;
 
   const pascalCase = (str: string): string => {
@@ -185,11 +184,11 @@ const Account = () => {
         <Button
           onClick={onSubmit}
           type="button"
-          isDisabled={!isValid || isLoggingIn}
+          isDisabled={!isValid || isSubmitting}
           variant="primary"
-          className="py-3 w-full font-semibold disabled:opacity-20 disabled:cursor-not-allowed"
+          className="py-3 text-sm w-full font-semibold disabled:opacity-20 disabled:cursor-not-allowed"
         >
-          {isLoggingIn ? "Loading..." : "Next"}
+          {isSubmitting ? "Loading..." : "Next"}
         </Button>
       </div>
     </motion.div>

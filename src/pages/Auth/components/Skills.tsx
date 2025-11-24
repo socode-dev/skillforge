@@ -152,23 +152,25 @@ const Skills = () => {
       >
         {!!skills.length && (
           <div className="w-full flex flex-wrap gap-4">
-            {skills.map((skill) => (
-              <div
-                key={skill}
-                className="flex items-center gap-3 text-sm text-primary font-semibold p-2 bg-soft-primary border-1 border-ring/20 rounded-radius"
-              >
-                <span>{skill}</span>
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  transition={{ duration: 0.1, ease: "easeOut" }}
-                  onClick={() => deleteSkill(skill)}
-                  className="p-1 rounded-full bg-primary/20 hover:bg-primary/30 transition cursor-pointer"
+            {skills
+              .filter((skill) => skill && skill.trim() !== "")
+              .map((skill, index) => (
+                <div
+                  key={`${skill}-${index}`}
+                  className="flex items-center gap-3 text-sm text-primary font-semibold p-2 bg-soft-primary border-1 border-ring/20 rounded-radius"
                 >
-                  <X size={12} />
-                </motion.button>
-              </div>
-            ))}
+                  <span>{skill}</span>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{ duration: 0.1, ease: "easeOut" }}
+                    onClick={() => deleteSkill(skill)}
+                    className="p-1 rounded-full bg-primary/20 hover:bg-primary/30 transition cursor-pointer"
+                  >
+                    <X size={12} />
+                  </motion.button>
+                </div>
+              ))}
           </div>
         )}
 
@@ -192,7 +194,7 @@ const Skills = () => {
           variant="outline"
           type="button"
           onClick={previousPage}
-          className="py-3"
+          className="py-3 text-sm font-semibold"
         >
           Back
         </Button>
@@ -201,7 +203,7 @@ const Skills = () => {
           type="button"
           isDisabled={!skills.length || isSubmitting}
           onClick={onSubmit}
-          className="py-3 disabled:opacity-0 disabled:cursor-not-allowed"
+          className="py-3 text-sm font-semibold disabled:opacity-0 disabled:cursor-not-allowed"
         >
           {isSubmitting ? "Loading..." : "Next"}
         </Button>

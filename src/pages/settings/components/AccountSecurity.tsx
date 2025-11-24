@@ -11,9 +11,13 @@ import SettingsCard from "../../../components/ui/SettingsCard";
 import useAuthStore from "../../../store/useAuthStore";
 import { useState } from "react";
 import clsx from "clsx";
+import useSettingsStore from "../../../store/useSettingsStore";
 
 const AccountSecurity = () => {
   const { currentUser } = useAuthStore();
+  const setIsEditModalOpen = useSettingsStore(
+    (state) => state.setIsEditModalOpen
+  );
   const [isAccountSecurityOpen, setIsAccountSecurityOpen] =
     useState<boolean>(false);
 
@@ -50,7 +54,7 @@ const AccountSecurity = () => {
           heading="Name"
           subHeading="Your full name"
           value={currentUser.name}
-          handleEdit={() => console.log("Edit name")}
+          handleEdit={() => setIsEditModalOpen("name", true)}
           className="mb-4 border-b-1 border-border pb-4 rounded-b-radius"
         />
 
@@ -59,7 +63,7 @@ const AccountSecurity = () => {
           heading="Email Address"
           subHeading="Primary email"
           value={currentUser.email}
-          handleEdit={() => console.log("Edit email")}
+          handleEdit={() => setIsEditModalOpen("email", true)}
           className="mb-4 border-b-1 border-border pb-4 rounded-b-radius"
         />
 
@@ -68,7 +72,7 @@ const AccountSecurity = () => {
           heading="Password"
           subHeading="Change password"
           value={"••••••••"}
-          handleEdit={() => console.log("Change password")}
+          handleEdit={() => setIsEditModalOpen("password", true)}
           className="mb-4 border-b-1 border-border pb-4 rounded-b-radius"
         />
 
@@ -77,7 +81,7 @@ const AccountSecurity = () => {
           heading="Multi-Factor Authentication"
           subHeading="Extra security"
           value={"Disabled"}
-          handleEdit={() => console.log("Edit email")}
+          handleEdit={() => setIsEditModalOpen("multiFactor", true)}
           className="mb-6"
         />
       </div>

@@ -173,7 +173,7 @@ const Profile = () => {
           variant="outline"
           type="button"
           onClick={previousPage}
-          className="py-3"
+          className="py-3 text-sm font-semibold"
         >
           Back
         </Button>
@@ -182,7 +182,7 @@ const Profile = () => {
           type="button"
           isDisabled={isSubmitting}
           onClick={onSubmit}
-          className="py-3 disabled:opacity-20 disabled:cursor-not-allowed"
+          className="py-3 text-sm font-semibold disabled:opacity-20 disabled:cursor-not-allowed"
         >
           {isSubmitting ? "Loading..." : "Next"}
         </Button>

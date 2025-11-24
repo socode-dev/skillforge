@@ -1,8 +1,11 @@
 import { RefreshCcw, Trash2 } from "lucide-react";
 import Button from "../../../components/ui/Button";
 import { MdWarning } from "react-icons/md";
+import useSettingsStore from "../../../store/useSettingsStore";
 
 const DangerZone = () => {
+  const setIsDialogOpen = useSettingsStore((state) => state.setIsDialogOpen);
+
   return (
     <section className="bg-soft-destructive/10 text-card-foreground p-4 border-1 border-destructive/20 rounded-radius-xl mb-6">
       <div className="flex items-center gap-2 mb-4">
@@ -42,7 +45,7 @@ const DangerZone = () => {
         <Button
           type="button"
           variant="destructive"
-          onClick={() => console.log("Delete your account")}
+          onClick={() => setIsDialogOpen("deleteAccount", true)}
           className="flex items-center gap-3 text-sm font-semibold py-2"
         >
           <Trash2 size={15} />
