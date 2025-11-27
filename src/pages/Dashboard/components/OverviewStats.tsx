@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 const OverviewStats = () => {
   return (
-    <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {overviewStatsData.map((stats) => {
         return (
           <motion.div

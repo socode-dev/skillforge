@@ -21,7 +21,7 @@ const OngoingLearning = () => {
       </div>
 
       <div className="relative w-full overflow-x-auto overflow-y-hidden scrollbar-hide scroll-smooth">
-        <div className="flex gap-6 w-max snap-x snap-mandatory px-1">
+        <div className="flex gap-4 w-max snap-x snap-mandatory px-1">
           {ongoingLearningData.map((data) => {
             const ringStyle = {
               background: `conic-gradient(var(--color-primary) 0% ${data.progress}%, rgb(245, 245, 245) 100%)`,

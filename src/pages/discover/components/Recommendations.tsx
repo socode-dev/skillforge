@@ -1,0 +1,34 @@
+import { Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
+import SkillCard from "./SkillCard";
+import { skillData } from "../data/skillsData";
+
+const Recommendations = () => {
+  return (
+    <section className="mb-6">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="flex items-center gap-2 text-xl font-semibold">
+          <Sparkles size={20} className="text-primary" />
+          <span>Recommended for You</span>
+        </h3>
+
+        <Link
+          to={""}
+          className="text-sm font-semibold text-primary hover:text-primary-dark transition"
+        >
+          View all
+        </Link>
+      </div>
+
+      <div className="relative w-full overflow-x-auto overflow-y-hidden scrollbar-hide scroll-smooth">
+        <div className="flex gap-4 w-max max-w-full snap-x snap-mandatory">
+          {skillData.map((data) => (
+            <SkillCard key={data.id} data={data} size="min-w-80 h-auto" />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Recommendations;
