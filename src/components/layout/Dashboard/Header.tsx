@@ -10,7 +10,7 @@ const Header = () => {
   const { pathname } = useLocation();
 
   const dynamicDashboardName = (pathname: string) => {
-    if (pathname === "/home") return "Dashboard Overview";
+    if (pathname === "/home") return "Dashboard";
 
     const refinedName = pathname.replace("/home/", "").replace("-", " ");
 
@@ -30,7 +30,9 @@ const Header = () => {
         <Menu size={20} />
       </button>
 
-      <h1 className="text-base grow">{dynamicDashboardName(pathname)}</h1>
+      <h1 className="text-lg font-semibold grow">
+        {dynamicDashboardName(pathname)}
+      </h1>
 
       <button className="relative cursor-pointer">
         <Bell size={20} />

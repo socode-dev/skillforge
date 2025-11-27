@@ -15,7 +15,7 @@ const DiscoverRecommendation = () => {
       </h4>
 
       <div className="relative w-full max-sm:overflow-x-auto max-sm:overflow-y-hidden scrollbar-hide scroll-smooth">
-        <div className="max-sm:flex gap-6 w-max max-w-full max-sm:snap-x max-sm:snap-mandatory sm:grid sm:grid-cols-2 md:grid-cols-3">
+        <div className="max-sm:flex gap-4 w-max max-w-full max-sm:snap-x max-sm:snap-mandatory sm:grid sm:grid-cols-2 md:grid-cols-3">
           {recommendationsData.map((data) => (
             <motion.div
               whileHover={{
