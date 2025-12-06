@@ -5,7 +5,7 @@ export interface ButtonProps
   extends ComponentPropsWithoutRef<typeof motion.button> {
   children: ReactNode | string;
   type: "submit" | "reset" | "button";
-  onClick: () => void;
+  onClick?: () => void;
   variant:
     | "primary"
     | "secondary"

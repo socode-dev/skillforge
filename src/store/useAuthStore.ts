@@ -16,7 +16,13 @@ import type { AccountSchema } from "../schemas/accountSchema";
 import type { LoginSchema } from "../schemas/loginSchema";
 import type { NavigateFunction } from "react-router-dom";
 
-export type CurrentUser = {
+interface SkillType {
+  id: string;
+  skillName: string;
+  skillDesc: string;
+}
+
+export interface CurrentUser {
   uid: string;
   name: string;
   email: string;
@@ -24,8 +30,9 @@ export type CurrentUser = {
   signupStepsCompleted: number;
   avatar: string;
   bio?: string;
-  skills: string[];
-};
+  skills: SkillType[] | [];
+  role: string;
+}
 
 interface StoreState {
   currentUser: null | CurrentUser;
@@ -144,7 +151,8 @@ const useAuthStore = create<StoreState>()((set, get) => ({
           signupStepsCompleted: 1,
           avatar: "",
           bio: "",
-          skills: [""],
+          skills: [],
+          role: "",
         },
       });
 
@@ -156,6 +164,10 @@ const useAuthStore = create<StoreState>()((set, get) => ({
         isEmailVerified: user.emailVerified,
         signupStepsCompleted: 1,
         createdAt: new Date(),
+        avatar: "",
+        bio: "",
+        skills: [],
+        role: "",
       });
 
       nextPage();
