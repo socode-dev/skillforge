@@ -1,15 +1,14 @@
 import { z } from "zod";
 
+export const skillInputSchema = z.object({
+  skillName: z.string(),
+  skillDesc: z.string(),
+});
+
 export const skillSchema = z.object({
-  skills: z.array(
-    z.string().min(1, { message: "You must add at least one skill." })
-  ),
+  role: z.string(),
+  skills: z.array(skillInputSchema),
 });
 
 export type SkillSchema = z.infer<typeof skillSchema>;
-
-export const skillInputSchema = z.object({
-  skillInput: z.string().min(2, "Too short to be a skill").optional(),
-});
-
 export type SkillInputSchema = z.infer<typeof skillInputSchema>;

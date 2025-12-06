@@ -71,7 +71,13 @@ const Done = () => {
 
           <div>
             <h4 className="text-lg font-semibold">{currentUser.name}</h4>
-            <p className="text-muted-foreground text-sm">{currentUser.email}</p>
+            <p className="text-base text-muted-foreground">
+              {currentUser.role}
+            </p>
+            <hr className="text-border" />
+            <p className="text-muted-foreground text-sm mt-1">
+              {currentUser.email}
+            </p>
           </div>
         </div>
 
@@ -79,25 +85,18 @@ const Done = () => {
 
         <div className="space-y-4">
           <h5 className="text-muted-foreground text-sm font-semibold">
-            Skills You Can Teach (
-            {
-              currentUser.skills.filter((skill) => skill && skill.trim() !== "")
-                .length
-            }
-            )
+            Skills You Can Teach ({currentUser.skills.length})
           </h5>
 
           <div className="flex flex-wrap gap-2">
-            {currentUser.skills
-              .filter((skill) => skill && skill.trim() !== "")
-              .map((skill, i) => (
-                <span
-                  key={`${skill}-${i}`}
-                  className="py-1.5 px-4 bg-soft-primary text-primary text-sm font-semibold border-1 border-ring/20 rounded-radius"
-                >
-                  {skill}
-                </span>
-              ))}
+            {currentUser.skills.map((skill) => (
+              <span
+                key={skill.id}
+                className="py-1.5 px-4 bg-soft-primary text-primary text-sm font-semibold border-1 border-ring/20 rounded-radius"
+              >
+                {skill.skillName}
+              </span>
+            ))}
           </div>
         </div>
       </div>

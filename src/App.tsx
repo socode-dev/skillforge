@@ -4,6 +4,7 @@ import { AnimatePresence } from "framer-motion";
 import useThemeStore from "./store/useThemeStore";
 import { useEffect } from "react";
 import AppIntializer from "./routes/AppInitializer";
+import { SkillsProvider } from "./context/useSkillsContext";
 
 function App() {
   const initializeTheme = useThemeStore((state) => state.initializeTheme);
@@ -35,7 +36,9 @@ function App() {
     <BrowserRouter>
       <AppIntializer />
       <AnimatePresence mode="wait">
-        <AppRoutes />
+        <SkillsProvider>
+          <AppRoutes />
+        </SkillsProvider>
       </AnimatePresence>
     </BrowserRouter>
   );

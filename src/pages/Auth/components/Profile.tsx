@@ -184,7 +184,7 @@ const Profile = () => {
           onClick={onSubmit}
           className="py-3 text-sm font-semibold disabled:opacity-20 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? "Loading..." : "Next"}
+          {isSubmitting ? "Processing..." : "Next"}
         </Button>
       </div>
     </motion.div>

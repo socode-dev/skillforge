@@ -1,9 +1,7 @@
-import { ReceiptTurkishLiraIcon } from "lucide-react";
 import {
   createContext,
   useContext,
   useEffect,
-  useEffectEvent,
   useState,
   type Dispatch,
   type ReactNode,
