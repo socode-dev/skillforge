@@ -1,5 +1,7 @@
+import { v4 as uuidv4 } from "uuid";
+
 export interface ProfileDataType {
-  id: number;
+  id: string;
   name: string;
   job: string;
   skills: string[];
@@ -7,37 +9,37 @@ export interface ProfileDataType {
 
 export const profilesData: ProfileDataType[] = [
   {
-    id: 1,
+    id: uuidv4(),
     name: "Elena Martinez",
     job: "Full-Stack Developer & Mentor",
     skills: ["React", "Node.js", "TypeScript"],
   },
   {
-    id: 2,
+    id: uuidv4(),
     name: "David Chen",
     job: "UX Designer & Research",
     skills: ["Figma", "User Research", "Prototyping"],
   },
   {
-    id: 3,
+    id: uuidv4(),
     name: "Sarah Johnson",
     job: "Data Scientist",
     skills: ["Python", "Machine Learning", "SQL"],
   },
   {
-    id: 4,
+    id: uuidv4(),
     name: "Alex Rivera",
     job: "Product Manager",
     skills: ["Strategy", "Anaylytics", "Agile"],
   },
   {
-    id: 5,
+    id: uuidv4(),
     name: "Maya Patel",
     job: "Content Strategist",
     skills: ["SEO", "Copywriting", "Analytics"],
   },
   {
-    id: 6,
+    id: uuidv4(),
     name: "James Kim",
     job: "DevOps Engineer",
     skills: ["Docker", "Kubernetes", "AWS"],

@@ -7,6 +7,7 @@ import Footer from "../components/layout/Dashboard/Footer";
 import ShowEditModal from "../components/layout/Dashboard/ShowEditModal";
 import ShowDialog from "../components/layout/Dashboard/ShowDialog";
 import { Bounce, ToastContainer } from "react-toastify";
+import TabBar from "../components/layout/Dashboard/TabBar";
 
 const DashboardLayout = () => {
   const { isSidebarOpen, setIsSidebarOpen } = useSidebarContext();
@@ -31,7 +32,7 @@ const DashboardLayout = () => {
       {/* Desktop Sidebar */}
       <aside
         aria-label="desktop sidebar"
-        className="fixed w-1/6 h-full bg-background hidden border-r-1 border-border overflow-y-auto lg:flex flex-col"
+        className="fixed w-1/6 h-full bg-background hidden border-r-1 border-border overflow-y-auto scrollbar-hide lg:flex flex-col"
       >
         <Sidebar />
       </aside>
@@ -54,19 +55,20 @@ const DashboardLayout = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="fixed h-full z-30 bg-background border-r-1 border-border w-68 overflow-y-auto flex flex-col"
+            className="fixed h-full z-30 bg-background border-r-1 border-border w-68 overflow-y-auto scrollbar-hide flex flex-col"
           >
             <Sidebar />
           </motion.aside>
         </AnimatePresence>
       )}
 
-      <div className=" w-full h-dvh lg:w-5/6 lg:left-1/6 absolute flex flex-col overflow-y-auto">
+      <div className=" w-full h-dvh lg:w-5/6 lg:left-1/6 absolute flex flex-col overflow-y-auto scrollbar-hide">
         <Header />
-        <div className="grow pt-25 px-6 md:px-8 lg:px-10 bg-background text-foreground">
+        <div className="grow pt-25 px-6 md:px-8 lg:px-10 max-md:mb-15 bg-background text-foreground">
           <Outlet />
         </div>
         <Footer />
+        <TabBar />
       </div>
     </div>
   );

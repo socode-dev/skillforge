@@ -1,5 +1,7 @@
+import { v4 as uuidv4 } from "uuid";
+
 export interface OverviewStatsType {
-  id: number;
+  id: string;
   emoji: string;
   count: number;
   label: string;
@@ -7,25 +9,25 @@ export interface OverviewStatsType {
 
 export const overviewStatsData: OverviewStatsType[] = [
   {
-    id: 1,
+    id: uuidv4(),
     emoji: "📘",
     count: 5,
     label: "Active Skills Learning",
   },
   {
-    id: 2,
+    id: uuidv4(),
     emoji: "🎓",
     count: 3,
     label: "Active Skills Teaching",
   },
   {
-    id: 3,
+    id: uuidv4(),
     emoji: "⏱️",
     count: 12,
     label: "Pending Skills Requests",
   },
   {
-    id: 4,
+    id: uuidv4(),
     emoji: "✅",
     count: 28,
     label: "Completed Skills",

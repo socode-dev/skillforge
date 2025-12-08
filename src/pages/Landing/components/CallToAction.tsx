@@ -19,7 +19,7 @@ const CallToAction = ({
         initial={{ opacity: 0, scale: 0.5 }}
         whileInView={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        viewport={{ once: true, amount: 0.5 }}
+        viewport={{ once: true, amount: 0.3 }}
         className="w-fit p-6 rounded-full bg-accent/50 backdrop-blur-md border border-accent/50 text-white animate-spin-scale mb-6"
       >
         <Sparkles size={30} />
@@ -28,7 +28,7 @@ const CallToAction = ({
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        viewport={{ once: true, amount: 0.5 }}
+        viewport={{ once: true, amount: 0.3 }}
         className="text-3xl md:text-3xl text-white text-center mb-6"
       >
         Ready to Unlock Your Potential?
@@ -38,7 +38,7 @@ const CallToAction = ({
         initial={{ opacity: 0, y: -100 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        viewport={{ once: true, amount: 0.5 }}
+        viewport={{ once: true, amount: 0.3 }}
         className="text-lg text-center text-white mb-8"
       >
         Join SkillForge today and start exchanging skills with a vibrant
@@ -47,12 +47,12 @@ const CallToAction = ({
 
       <Button
         onClick={handleSignupClick}
-        initial={{ opacity: 0, y: 100, rotate: 360 }}
-        whileInView={{ opacity: 1, y: 0, rotate: 0 }}
+        initial={{ opacity: 0, y: 100 }}
+        whileInView={{ opacity: 1, y: 0 }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        viewport={{ once: true, amount: 0.5 }}
+        viewport={{ once: true, amount: 0.3 }}
         type="button"
         variant="secondary"
         className="bg-white flex items-center gap-4 py-3 transition"
@@ -67,7 +67,7 @@ const CallToAction = ({
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        viewport={{ once: true, amount: 0.5 }}
+        viewport={{ once: true, amount: 0.3 }}
         className="flex flex-wrap items-center gap-6 text-white mt-8"
       >
         <div className="flex items-center gap-2 text-sm">

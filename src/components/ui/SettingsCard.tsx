@@ -38,8 +38,8 @@ const SettingsCard = ({
       <Button
         onClick={handleEdit}
         type="button"
-        variant="primary"
-        className="flex items-center gap-2 w-fit h-fit py-2 text-sm self-center"
+        variant="outline"
+        className="flex items-center gap-2 w-fit h-fit py-2 text-sm text-primary self-center"
       >
         <span>Edit</span>
         <ChevronRight size={18} />

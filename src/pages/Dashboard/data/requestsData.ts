@@ -1,5 +1,7 @@
+import { v4 as uuidv4 } from "uuid";
+
 interface RequestDataType {
-  id: number;
+  id: string;
   name: string;
   skill: string;
   time: string;
@@ -8,14 +10,14 @@ interface RequestDataType {
 
 export const outgoingRequestData: RequestDataType[] = [
   {
-    id: 1,
+    id: uuidv4(),
     name: "David Wilson",
     skill: "Machine Learning",
     time: "3h ago",
     isActive: false,
   },
   {
-    id: 2,
+    id: uuidv4(),
     name: "Olivia Martinez",
     skill: "SEO Optimization",
     time: "1d ago",
@@ -25,14 +27,14 @@ export const outgoingRequestData: RequestDataType[] = [
 
 export const incomingRequestData: RequestDataType[] = [
   {
-    id: 1,
+    id: uuidv4(),
     name: "Emma johnson",
     skill: "React Performance",
     time: "4h ago",
     isActive: true,
   },
   {
-    id: 2,
+    id: uuidv4(),
     name: "Michael Brown",
     skill: "Figma Prototyping",
     time: "2h ago",

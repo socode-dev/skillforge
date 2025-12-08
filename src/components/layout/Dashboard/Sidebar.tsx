@@ -49,7 +49,12 @@ const Sidebar = () => {
       </nav>
 
       <figure className="w-full p-6 flex items-center gap-3 border-t-1 border-border">
-        <div className="w-12 h-10 p-0.5 bg-soft-primary text-primary rounded-full">
+        <div
+          className={clsx(
+            "w-12 h-10 p-0.5 bg-soft-primary text-primary rounded-full",
+            !currentUser.avatar && "flex items-center justify-center"
+          )}
+        >
           {currentUser && currentUser.avatar ? (
             <img
               src={currentUser.avatar}

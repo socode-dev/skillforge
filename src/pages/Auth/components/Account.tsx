@@ -78,7 +78,7 @@ const Account = () => {
               name={"fullName"}
               type={"text"}
               placeholder={"John Doe"}
-              className="px-12 py-3"
+              className="w-full px-12 py-3"
             />
             <User
               size={20}
@@ -101,7 +101,7 @@ const Account = () => {
               name={"email"}
               type={"email"}
               placeholder={"you@example.com"}
-              className="px-12 py-3"
+              className="w-full px-12 py-3"
             />
             <Mail
               size={20}
@@ -123,7 +123,7 @@ const Account = () => {
               name={"password"}
               type={revealPassword.password ? "text" : "password"}
               placeholder="•••••••••"
-              className="px-12 py-3"
+              className="w-full px-12 py-3"
             />
             <Lock
               size={20}
@@ -156,7 +156,7 @@ const Account = () => {
               name={"confirmPassword"}
               type={revealPassword.confirmPassword ? "text" : "password"}
               placeholder="•••••••••"
-              className="px-12 py-3"
+              className="w-full px-12 py-3"
             />
             <Lock
               size={20}

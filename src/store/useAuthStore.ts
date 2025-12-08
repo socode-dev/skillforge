@@ -20,6 +20,7 @@ interface SkillType {
   id: string;
   skillName: string;
   skillDesc: string;
+  skillLearners: number;
 }
 
 export interface CurrentUser {

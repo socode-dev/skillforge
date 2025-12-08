@@ -23,6 +23,7 @@ const Skills = () => {
   const {
     skillsRegister: register,
     skillsHandleSubmit: handleSubmit,
+    skillsReset,
     skillsFormState,
   } = useSkillsContext();
   const { errors, isSubmitting, isValid } = skillsFormState;
@@ -49,6 +50,7 @@ const Skills = () => {
     });
 
     nextPage();
+    skillsReset();
   });
 
   // Function to delete skill

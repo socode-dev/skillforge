@@ -1,5 +1,7 @@
+import { v4 as uuidv4 } from "uuid";
+
 interface RecommendationsDataType {
-  id: number;
+  id: string;
   category: string;
   skill: string;
   desc: string;
@@ -9,7 +11,7 @@ interface RecommendationsDataType {
 
 export const recommendationsData: RecommendationsDataType[] = [
   {
-    id: 1,
+    id: uuidv4(),
     category: "Development",
     skill: "TypeScript Mastery",
     desc: "Learn advanced TypeScript techniques and types system patterns.",
@@ -17,7 +19,7 @@ export const recommendationsData: RecommendationsDataType[] = [
     categoryBackground: "bg-blue-500/10",
   },
   {
-    id: 2,
+    id: uuidv4(),
     category: "Marketing",
     skill: "Brand Strategy Workshop",
     desc: "Discover how to build a compelling brand identity and strategy that works.",
@@ -25,7 +27,7 @@ export const recommendationsData: RecommendationsDataType[] = [
     categoryBackground: "bg-pink-600/10",
   },
   {
-    id: 3,
+    id: uuidv4(),
     category: "Design",
     skill: "3D Modeling Fundamentals",
     desc: "Get started with 3D modeling using Blender and create stunning visual modeling.",
@@ -33,7 +35,7 @@ export const recommendationsData: RecommendationsDataType[] = [
     categoryBackground: "bg-purple-600/10",
   },
   {
-    id: 4,
+    id: uuidv4(),
     category: "Communication",
     skill: "Public Speaking Mastery",
     desc: "Overcome stage fright and deliver impactfull presentations.",
@@ -41,7 +43,7 @@ export const recommendationsData: RecommendationsDataType[] = [
     categoryBackground: "bg-orange-600/10",
   },
   {
-    id: 5,
+    id: uuidv4(),
     category: "Data Science",
     skill: "Data Visualization",
     desc: "Transform complex data into clear, actionable insight using modern data.",
@@ -49,7 +51,7 @@ export const recommendationsData: RecommendationsDataType[] = [
     categoryBackground: "bg-green-600/10",
   },
   {
-    id: 6,
+    id: uuidv4(),
     category: "Writing",
     skill: "Creative Writing",
     desc: "Develop your storytelling skills and learn to craft compeling narratives.",
