@@ -13,7 +13,7 @@ const Process = () => {
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        viewport={{ once: true, amount: 0.5 }}
+        viewport={{ once: true, amount: 0.3 }}
         className="flex flex-col items-center"
       >
         <div className="w-fit bg-soft-primary border-ring/20 border-1 py-1 px-4 rounded-full mb-4">
@@ -48,7 +48,7 @@ const Process = () => {
               initial={{ opacity: 0, y: 100 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              viewport={{ once: true, amount: 0.5 }}
+              viewport={{ once: true, amount: 0.3 }}
             >
               <div
                 className={clsx(

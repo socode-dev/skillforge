@@ -3,7 +3,7 @@ import type { UseFormRegister } from "react-hook-form";
 
 export type RegisterType = UseFormRegister<{
   searchValue?: string;
-  filterValue?: "all" | "skills" | "people" | "projects";
+  filterValue?: "all" | "skills" | "people";
 }>;
 
 type FilterProps = {

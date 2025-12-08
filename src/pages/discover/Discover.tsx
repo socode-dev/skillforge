@@ -15,7 +15,9 @@ const Discover = () => {
     filterValue: "all",
   });
 
-  const { register } = form;
+  const { register, watch } = form;
+
+  const filterValue = watch("filterValue");
 
   return (
     <motion.main
@@ -37,11 +39,16 @@ const Discover = () => {
 
       <Filter register={register} />
 
-      <Recommendations />
+      {(filterValue == "all" || filterValue === "skills") && (
+        <>
+          <Recommendations />
+          <PopularSkills />
+        </>
+      )}
 
-      <PopularSkills />
-
-      <FeaturedMembers />
+      {(filterValue === "all" || filterValue === "people") && (
+        <FeaturedMembers />
+      )}
     </motion.main>
   );
 };

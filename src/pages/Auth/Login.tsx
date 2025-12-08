@@ -12,7 +12,7 @@ import useAuthStore from "../../store/useAuthStore";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { onLogin, loginErr, isLoggingIn, onSignout } = useAuthStore();
+  const { onLogin, loginErr } = useAuthStore();
   const [revealPassword, setRevealPassword] = useState(false);
 
   const RevealIcon: LucideIcon = revealPassword ? EyeOff : Eye;
@@ -107,7 +107,7 @@ const Login = () => {
           </fieldset>
 
           <fieldset className="flex justify-between items-center text-sm">
-            <div className="flex items-center gap-2">
+            <div className="w-fit flex items-center gap-2">
               <Input
                 label="Remeber Me"
                 name="remember-me"
@@ -129,13 +129,13 @@ const Login = () => {
             onClick={onSubmit}
             type="submit"
             variant="primary"
-            isDisabled={!isValid || isLoggingIn}
+            isDisabled={!isValid}
             className="w-full py-3 text-sm font-semibold disabled:opacity-20 disabled:cursor-not-allowed"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             transition={{ duration: 0.1, ease: "easeOut" }}
           >
-            {isLoggingIn ? "Loading..." : "Login"}
+            Login
           </Button>
         </form>
 
@@ -146,7 +146,7 @@ const Login = () => {
         </div>
 
         <Button
-          onClick={onSignout}
+          onClick={() => console.log("Signup with google")}
           type="button"
           variant="outline"
           className="flex justify-center items-center gap-4 w-full py-3"

@@ -46,7 +46,7 @@ const Header = () => {
         hideHeader ? "hidden" : "block"
       )}
     >
-      <div className="flex justify-between items-center py-4 px-6 md:px-12 lg:px-18 shadow">
+      <div className="flex justify-between items-center py-4 px-6 md:px-12 lg:px-18">
         <button
           onClick={() => navigate("/")}
           className="flex items-center gap-2 cursor-pointer"

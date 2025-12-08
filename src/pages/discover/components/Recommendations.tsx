@@ -1,9 +1,15 @@
 import { Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import SkillCard from "./SkillCard";
-import { skillData } from "../data/skillsData";
+import useUsersStore from "../../../store/useUsersStore";
+import { shuffleArray } from "../../../utils/shuffleArray";
 
 const Recommendations = () => {
+  const { skills } = useUsersStore();
+  const shuffledSkills = shuffleArray(skills);
+
+  const slicedSkills = shuffledSkills.slice(0, 6);
+
   return (
     <section className="mb-6">
       <div className="flex justify-between items-center mb-4">
@@ -22,8 +28,12 @@ const Recommendations = () => {
 
       <div className="relative w-full overflow-x-auto overflow-y-hidden scrollbar-hide scroll-smooth">
         <div className="flex gap-4 w-max max-w-full snap-x snap-mandatory">
-          {skillData.map((data) => (
-            <SkillCard key={data.id} data={data} size="min-w-80 h-auto" />
+          {slicedSkills.map((skill) => (
+            <SkillCard
+              key={skill.skillId}
+              data={skill}
+              size="min-w-80 h-auto"
+            />
           ))}
         </div>
       </div>

@@ -60,14 +60,14 @@ const Profile = () => {
 
     updateDoc(docRef, {
       ...userDocSnap.data(),
-      avatar: data.avatar,
+      avatar: data.avatar ?? "",
       bio: data.bio ?? "",
       signupStepsCompleted: 3,
     });
 
     setCurrentUser({
       ...currentUser,
-      avatar: data.avatar,
+      avatar: data.avatar ?? "",
       bio: data.bio ?? "",
     });
 
@@ -160,11 +160,6 @@ const Profile = () => {
           >
             {bio?.length}/500
           </p>
-          {errors.bio && (
-            <p className="text-destructive text-xs mt-1">
-              {errors.bio.message}
-            </p>
-          )}
         </fieldset>
       </div>
 

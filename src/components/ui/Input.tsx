@@ -49,7 +49,7 @@ const Input = ({
         id={name}
         placeholder={placeholder}
         className={clsx(
-          "rounded-radius bg-input text-foreground text-sm border-1 border-border outline-none focus:border-2 focus:border-primary/80 focus:shadow shadow-soft-primary transition",
+          "rounded-radius-xl bg-input text-foreground text-sm border-1 border-border outline-none focus:border-2 focus:border-primary/80 focus:shadow shadow-soft-primary transition",
           className
         )}
       />

@@ -1,8 +1,8 @@
 import { MessageCircle, UserPlus } from "lucide-react";
 import Button from "../../../components/ui/Button";
-import type { ProfileDataType } from "../data/profilesData";
 import clsx from "clsx";
 import { motion } from "framer-motion";
+import type { UsersFeedDataType } from "../../../lib/buildDiscoverFeeds";
 
 const getInitial = (value: string) => {
   if (!value) return "";
@@ -16,10 +16,10 @@ const getInitial = (value: string) => {
 };
 
 const MemberCard = ({
-  data,
+  user,
   index,
 }: {
-  data: ProfileDataType;
+  user: UsersFeedDataType;
   index: number;
 }) => {
   return (
@@ -33,24 +33,32 @@ const MemberCard = ({
     >
       <div className="flex gap-4">
         <div className="w-14 h-14 flex justify-center items-center bg-soft-primary text-primary rounded-full">
-          <p>{getInitial(data.name)}</p>
+          {user.avatar ? (
+            <img
+              src={user.avatar}
+              alt={`${user.name} avatar`}
+              className="w-full h-full rounded-full"
+            />
+          ) : (
+            <p>{getInitial(user.name)}</p>
+          )}
         </div>
 
         <div>
           <h4 className={clsx(index % 2 && "text-lg font-semibold")}>
-            {data.name}
+            {user.name}
           </h4>
-          <p className="text-sm text-muted-foreground mt-1">{data.job}</p>
+          <p className="text-sm text-muted-foreground mt-1">{user.role}</p>
         </div>
       </div>
 
       <div className="flex gap-2 mt-4">
-        {data.skills.map((skill, i) => (
+        {user.skills.map((skill) => (
           <p
-            key={`skill-${i}-${skill.length}`}
+            key={skill.id}
             className="py-1 px-4 bg-muted text-muted-foreground text-xs rounded-full"
           >
-            {skill}
+            {skill.skillName}
           </p>
         ))}
       </div>
@@ -58,7 +66,7 @@ const MemberCard = ({
       <div className="w-full flex gap-4 mt-4">
         <Button
           type="button"
-          onClick={() => console.log(`Connect with ${data.name}`)}
+          onClick={() => console.log(`Connect with ${user.name}`)}
           variant="primary"
           className="grow flex justify-center items-center gap-2 text-sm font-semibold"
         >
@@ -67,7 +75,7 @@ const MemberCard = ({
         </Button>
 
         <Button
-          onClick={() => console.log(`Message ${data.name}`)}
+          onClick={() => console.log(`Message ${user.name}`)}
           type="button"
           variant="outline"
         >

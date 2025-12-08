@@ -47,8 +47,8 @@ const Hero = ({ handleSignupClick }: { handleSignupClick: () => void }) => {
           type="button"
           variant="primary"
           className="flex items-center gap-4 h-12 text-lg font-semibold shadow-primary shadow"
-          initial={{ y: 100, opacity: 0, rotate: 360 }}
-          animate={{ y: 0, opacity: 1, rotate: 0 }}
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           transition={{ duration: 0.3, ease: "easeOut" }}

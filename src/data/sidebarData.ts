@@ -6,40 +6,41 @@ import {
   Settings,
   User,
 } from "lucide-react";
+import { v4 as uuidv4 } from "uuid";
 
 export const sidebarData = [
   {
-    id: 1,
+    id: uuidv4(),
     icon: Home,
     label: "Dashboard",
     link: "/home",
   },
   {
-    id: 2,
+    id: uuidv4(),
     icon: Search,
     label: "Discover",
     link: "/home/discover",
   },
   {
-    id: 3,
+    id: uuidv4(),
     icon: ArrowLeftRight,
     label: "Skill Requests",
     link: "/home/skill-requests",
   },
   {
-    id: 4,
+    id: uuidv4(),
     icon: MessageSquare,
     label: "Messages",
     link: "/home/messages",
   },
   {
-    id: 5,
+    id: uuidv4(),
     icon: User,
     label: "Profile",
     link: "/home/profile",
   },
   {
-    id: 6,
+    id: uuidv4(),
     icon: Settings,
     label: "Settings",
     link: "/home/settings",

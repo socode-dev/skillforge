@@ -1,4 +1,4 @@
-import { CheckCircle2, Sparkles } from "lucide-react";
+import { CheckCircle2, Sparkles, User } from "lucide-react";
 import Button from "../../../components/ui/Button";
 import { motion } from "framer-motion";
 import useMultiStepsStore from "../../../store/useMultiStepsStore";
@@ -7,9 +7,11 @@ import useAuthStore from "../../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../lib/firebase";
+import clsx from "clsx";
 
 const Done = () => {
   const navigate = useNavigate();
+  const setCurrentStep = useMultiStepsStore((state) => state.setCurrentStep);
   const currentUser = useAuthStore((state) => state.currentUser);
   const setCurrentUser = useAuthStore((state) => state.setCurrentUser);
   const previousPage = useMultiStepsStore((state) => state.previousPage);
@@ -28,6 +30,7 @@ const Done = () => {
       setCurrentUser({ ...currentUser, signupStepsCompleted: 4 });
 
       navigate("/home", { replace: true });
+      setCurrentStep(1);
     } catch (err) {
       console.error("Error:", err);
     }
@@ -60,20 +63,28 @@ const Done = () => {
         </div>
 
         <div className=" w-full flex gap-4">
-          <div className="w-20 aspect-square p-1 border-1 border-border rounded-full">
-            <img
-              src={currentUser.avatar}
-              alt="My Profile Picture"
-              className="w-full h-full rounded-full"
-              loading="lazy"
-            />
+          <div
+            className={clsx(
+              "w-20 aspect-square p-1 border-1 border-border rounded-full",
+              !currentUser.avatar &&
+                "flex justify-center items-center bg-soft-primary text-primary"
+            )}
+          >
+            {currentUser.avatar ? (
+              <img
+                src={currentUser.avatar}
+                alt="My Profile Picture"
+                className="w-full h-full rounded-full"
+                loading="lazy"
+              />
+            ) : (
+              <User size={35} />
+            )}
           </div>
 
           <div>
             <h4 className="text-lg font-semibold">{currentUser.name}</h4>
-            <p className="text-base text-muted-foreground">
-              {currentUser.role}
-            </p>
+            <p className="text-sm text-muted-foreground">{currentUser.role}</p>
             <hr className="text-border" />
             <p className="text-muted-foreground text-sm mt-1">
               {currentUser.email}
