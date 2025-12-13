@@ -1,22 +1,26 @@
 import clsx from "clsx";
-import { Eye, Users } from "lucide-react";
+import { Send, Users } from "lucide-react";
 import Button from "../../../components/ui/Button";
 import { motion } from "framer-motion";
 import type { SkillsFeedDataType } from "../../../lib/buildDiscoverFeeds";
+import useRequestsStore, {
+  type SkillRequests,
+} from "../../../store/useRequestsStore";
+import useAuthStore from "../../../store/useAuthStore";
 
 const colors: string[] = [
-  "bg-red-500/10  text-red-500",
-  "bg-blue-500/10 text-blue-500",
-  "bg-yellow-500/10 text-yellow-500",
-  "bg-purple-500/10 text-purple-500",
-  "bg-pink-500/10 0 text-pink-500",
-  "bg-indigo-500/10 text-indigo-500",
-  "bg-amber-500/10 text-amber-500",
-  "bg-gray-500/10 text-gray-500",
-  "bg-violet-500/10 text-violet-500",
-  "bg-rose-500/10 text-rose-500",
-  "bg-emerald-500/10 text-emerald-500",
-  "bg-orange-500/10 text-orange-500",
+  "bg-red-500/10  text-red-500 shadow-red-500/10",
+  "bg-blue-500/10 text-blue-500 shadow-blue-500/10",
+  "bg-yellow-500/10 text-yellow-500 shadow-yellow-500/10",
+  "bg-purple-500/10 text-purple-500 shadow-purple-500/10",
+  "bg-pink-500/10 text-pink-500 shadow-pink-500/10",
+  "bg-indigo-500/10 text-indigo-500 shadow-indigo-500/10",
+  "bg-amber-500/10 text-amber-500 shadow-amber-500/10",
+  "bg-gray-500/10 text-gray-500 shadow-gray-500/10",
+  "bg-violet-500/10 text-violet-500 shadow-violet-500/10",
+  "bg-rose-500/10 text-rose-500 shadow-rose-500/10",
+  "bg-emerald-500/10 text-emerald-500 shadow-emerald-500/10",
+  "bg-orange-500/10 text-orange-500 shadow-orange-500/10",
 ];
 
 const generateInitialIcon = (name: string) => {
@@ -28,7 +32,7 @@ const generateInitialIcon = (name: string) => {
   return (
     <div
       className={clsx(
-        "w-12 h-12 flex items-center justify-center rounded-radius text-xl font-semibold",
+        "w-12 h-12 flex items-center justify-center rounded-radius text-xl font-semibold shadow-lg",
         randomColor
       )}
     >
@@ -46,6 +50,27 @@ const SkillCard = ({
   className?: string;
   size?: string;
 }) => {
+  const { currentUser } = useAuthStore();
+  const { handleSendSkillRequest, skillRequests } = useRequestsStore();
+
+  if (!currentUser) return;
+
+  const requestData: SkillRequests = {
+    receiverID: data.ownerID,
+    requesterID: currentUser?.uid,
+    skillID: data.skillID,
+    skillName: data.skillName,
+    requesterRole: data.role,
+    requesterName: data.name,
+    requesterAvatar: data.avatar,
+    status: "pending",
+    type: "outgoing",
+  };
+
+  const isSkillRequested = skillRequests.find(
+    (skill) => skill.skillID === data.skillID
+  );
+
   return (
     <motion.div
       whileHover={{
@@ -74,11 +99,15 @@ const SkillCard = ({
         <Button
           type="button"
           variant="primary"
-          onClick={() => console.log("View skill details")}
-          className="flex items-center gap-2 text-sm font-semibold"
+          onClick={() => handleSendSkillRequest(requestData)}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ duration: 0.1, ease: "easeOut" }}
+          isDisabled={!!isSkillRequested}
+          className="flex items-center py-2 gap-2 text-sm font-semibold"
         >
-          <Eye size={18} />
-          <span>View</span>
+          <Send size={18} />
+          <span>{isSkillRequested ? "Requested" : "Request"}</span>
         </Button>
       </div>
     </motion.div>

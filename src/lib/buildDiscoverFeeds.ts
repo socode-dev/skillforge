@@ -19,7 +19,8 @@ export interface FetchedUserDataType {
 }
 
 export interface SkillsFeedDataType {
-  skillId: string;
+  ownerID: string;
+  skillID: string;
   name: string;
   role: string;
   avatar: string;
@@ -58,10 +59,11 @@ export const buildDiscoverFeeds = (users: FetchedUserDataType[]) => {
     }
 
     user.skills.forEach((skill: SkillsDataType) => {
-      const skillExist = skillsFeed.find((data) => data.skillId === skill.id);
+      const skillExist = skillsFeed.find((data) => data.skillID === skill.id);
       if (!skillExist) {
         skillsFeed.push({
-          skillId: skill.id,
+          ownerID: user.id,
+          skillID: skill.id,
           name: user.name,
           role: user.role,
           avatar: user.avatar,

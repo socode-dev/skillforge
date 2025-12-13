@@ -31,7 +31,7 @@ const Button = ({
       type={type}
       onClick={onClick}
       className={clsx(
-        "px-5 py-1.5 rounded-radius cursor-pointer disabled:cursor-not-allowed disabled:opacity-30 transition",
+        "px-5 py-1.5 rounded-radius cursor-pointer disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition",
         variants[variant],
         className
       )}

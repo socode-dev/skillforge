@@ -3,6 +3,15 @@ import Button from "../../../components/ui/Button";
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import type { UsersFeedDataType } from "../../../lib/buildDiscoverFeeds";
+import useRequestsStore, {
+  type InvitationData,
+} from "../../../store/useRequestsStore";
+import useAuthStore from "../../../store/useAuthStore";
+
+interface MemberCardProps {
+  user: UsersFeedDataType;
+  index: number;
+}
 
 const getInitial = (value: string) => {
   if (!value) return "";
@@ -15,13 +24,26 @@ const getInitial = (value: string) => {
   return firstLetterCap.join("");
 };
 
-const MemberCard = ({
-  user,
-  index,
-}: {
-  user: UsersFeedDataType;
-  index: number;
-}) => {
+const MemberCard = ({ user, index }: MemberCardProps) => {
+  const { currentUser } = useAuthStore();
+  const { handleSendInvitation, invitations } = useRequestsStore();
+
+  const isInvitationSent = invitations.find(
+    (invite) => invite.receiverID === user.id
+  );
+
+  if (!currentUser) return;
+
+  const invitationData: InvitationData = {
+    receiverID: user.id,
+    requesterID: currentUser.uid,
+    requesterName: user.name,
+    requesterRole: user.role,
+    requesterAvatar: user.avatar,
+    status: "pending",
+    type: "outgoing",
+  };
+
   return (
     <motion.div
       whileHover={{
@@ -66,12 +88,19 @@ const MemberCard = ({
       <div className="w-full flex gap-4 mt-4">
         <Button
           type="button"
-          onClick={() => console.log(`Connect with ${user.name}`)}
+          onClick={() => handleSendInvitation(invitationData)}
+          isDisabled={!!isInvitationSent}
           variant="primary"
           className="grow flex justify-center items-center gap-2 text-sm font-semibold"
         >
-          <UserPlus size={15} />
-          <span>Connect</span>
+          {isInvitationSent ? (
+            "Pending"
+          ) : (
+            <>
+              <UserPlus size={15} />
+              <span>Connect</span>
+            </>
+          )}
         </Button>
 
         <Button

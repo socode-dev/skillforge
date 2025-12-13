@@ -10,7 +10,7 @@ const PopularSkills = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {skills.map((skill) => (
-          <SkillCard key={skill.skillId} data={skill} size="w-full h-auto" />
+          <SkillCard key={skill.skillID} data={skill} size="w-full h-auto" />
         ))}
       </div>
     </section>
