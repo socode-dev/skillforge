@@ -3,10 +3,11 @@ import { Link } from "react-router-dom";
 import SkillCard from "./SkillCard";
 import useUsersStore from "../../../store/useUsersStore";
 import { shuffleArray } from "../../../utils/shuffleArray";
+import type { SkillsFeedDataType } from "../../../lib/buildDiscoverFeeds";
 
 const Recommendations = () => {
   const { skills } = useUsersStore();
-  const shuffledSkills = shuffleArray(skills);
+  const shuffledSkills = shuffleArray(skills) as SkillsFeedDataType[];
 
   const slicedSkills = shuffledSkills.slice(0, 6);
 
@@ -30,7 +31,7 @@ const Recommendations = () => {
         <div className="flex gap-4 w-max max-w-full snap-x snap-mandatory">
           {slicedSkills.map((skill) => (
             <SkillCard
-              key={skill.skillId}
+              key={skill.skillID}
               data={skill}
               size="min-w-80 h-auto"
             />
