@@ -22,7 +22,7 @@ const Discover = () => {
   return (
     <motion.main
       initial={{ opacity: 0, y: 50, x: 50 }}
-      animate={{ opacity: 1, y: 1, x: 1 }}
+      animate={{ opacity: 1, y: 0, x: 0 }}
       exit={{ opacity: 0, x: -50, y: 50 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
       className="w-full pb-10"

@@ -29,19 +29,20 @@ const MemberCard = ({ user, index }: MemberCardProps) => {
   const { handleSendInvitation, invitations } = useRequestsStore();
 
   const isInvitationSent = invitations.find(
-    (invite) => invite.receiverID === user.id
+    (invite) => invite.incomingUserID === user.id
   );
 
   if (!currentUser) return;
 
   const invitationData: InvitationData = {
-    receiverID: user.id,
-    requesterID: currentUser.uid,
-    requesterName: user.name,
-    requesterRole: user.role,
-    requesterAvatar: user.avatar,
+    incomingUserID: user.id,
+    outgoingUserID: currentUser.uid,
+    incomingUserName: user.name,
+    incomingUserRole: user.role,
+    incomingUserAvatar: user.avatar,
     status: "pending",
     type: "outgoing",
+    time: Date.now(),
   };
 
   return (
