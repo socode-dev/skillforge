@@ -52,12 +52,12 @@ const Sidebar = () => {
         <div
           className={clsx(
             "w-12 h-10 p-0.5 bg-soft-primary text-primary rounded-full",
-            !currentUser.avatar && "flex items-center justify-center"
+            !currentUser?.profile?.avatar && "flex items-center justify-center"
           )}
         >
-          {currentUser && currentUser.avatar ? (
+          {currentUser && currentUser?.profile?.avatar ? (
             <img
-              src={currentUser.avatar}
+              src={currentUser?.profile?.avatar}
               alt="User avatar"
               className="w-full h-full rounded-full object-fill"
             />
@@ -68,7 +68,7 @@ const Sidebar = () => {
 
         <figcaption className="w-full text-foreground">
           <span className="inline-block w-[90%] truncate text-base">
-            {currentUser.name}
+            {currentUser?.profile?.name}
           </span>
 
           <button

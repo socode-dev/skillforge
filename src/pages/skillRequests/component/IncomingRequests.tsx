@@ -1,26 +1,47 @@
 import { motion } from "framer-motion";
 import useRequestsStore from "@/store/useRequestsStore";
 import RequestCard from "@/pages/skillRequests/component/RequestCard";
+import useAuthStore from "@/store/useAuthStore";
 
 const IncomingRequests = () => {
+  const { currentUser } = useAuthStore();
   const { skillRequests } = useRequestsStore();
 
-  const incomingRequests = skillRequests.filter(
-    (request) => request.type === "incoming" && request.status === "pending"
+  const filteredRequests = skillRequests.filter(
+    (req) =>
+      req.owner.userId === currentUser?.profile.userId &&
+      req.requester.userId !== currentUser.profile.userId &&
+      req.status === "PENDING"
   );
 
-  const requests = incomingRequests.map((request) => ({
-    docID: request.docID,
-    skillID: request.skillID,
-    skillName: request.skillName,
-    userID: request.outgoingUserID,
-    userName: request.outgoingUserName,
-    userRole: request.outgoingUserRole,
-    userAvatar: request.outgoingUserAvatar,
-    type: request.type,
-    status: request.status,
-    time: request.time,
-  }));
+  const requests = filteredRequests.map((req) => {
+    const {
+      skillId,
+      skillName,
+      skillDesc,
+      owner: { userId: ownerUserId },
+      requester: { userId: requesterUserId, name, role, avatar },
+      requestId,
+      status,
+      createdAt,
+      updatedAt,
+    } = req;
+
+    return {
+      requestId,
+      skillId,
+      skillName,
+      skillDesc,
+      status,
+      createdAt,
+      updatedAt,
+      ownerUserId,
+      requesterUserId,
+      name,
+      role,
+      avatar,
+    };
+  });
 
   if (!requests.length) {
     return (
@@ -42,7 +63,7 @@ const IncomingRequests = () => {
       className="grid grid-cols-1 md:grid-cols-2 gap-6"
     >
       {requests.map((request) => (
-        <RequestCard key={request.docID} request={request} />
+        <RequestCard key={request.requestId} request={request} />
       ))}
     </motion.section>
   );

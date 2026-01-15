@@ -12,11 +12,7 @@ import {
 import { deleteDoc, doc, getDoc, setDoc } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
 import { toast } from "react-toastify";
-import type {
-  FieldErrors,
-  UseFormReset,
-  UseFormSetError,
-} from "react-hook-form";
+import type { UseFormReset, UseFormSetError } from "react-hook-form";
 
 interface IsModalOpen {
   name: boolean;

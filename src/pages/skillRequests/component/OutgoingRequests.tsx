@@ -1,29 +1,49 @@
 import { useNavigate } from "react-router-dom";
-import Button from "../../../components/ui/Button";
-import useRequestsStore from "../../../store/useRequestsStore";
-import RequestCard from "./RequestCard";
+import Button from "@/components/ui/Button";
+import useRequestsStore from "@/store/useRequestsStore";
+import RequestCard from "@/pages/skillRequests/component/RequestCard";
 import { motion } from "framer-motion";
+import useAuthStore from "@/store/useAuthStore";
 
 const OutgoingRequests = () => {
   const navigate = useNavigate();
+  const { currentUser } = useAuthStore();
   const { skillRequests } = useRequestsStore();
 
-  const outgoingRequests = skillRequests.filter(
-    (request) => request.type === "outgoing"
+  const filteredRequests = skillRequests.filter(
+    (req) =>
+      req.requester.userId === currentUser?.profile.userId &&
+      req.owner.userId !== currentUser.profile.userId
   );
 
-  const requests = outgoingRequests.map((request) => ({
-    docID: request.docID,
-    skillID: request.skillID,
-    skillName: request.skillName,
-    userID: request.incomingUserID,
-    userName: request.incomingUserName,
-    userRole: request.incomingUserRole,
-    userAvatar: request.incomingUserAvatar,
-    type: request.type,
-    status: request.status,
-    time: request.time,
-  }));
+  const requests = filteredRequests.map((req) => {
+    const {
+      skillId,
+      skillName,
+      skillDesc,
+      owner: { userId: ownerUserId, name, role, avatar },
+      requester: { userId: requesterUserId },
+      requestId,
+      status,
+      createdAt,
+      updatedAt,
+    } = req;
+
+    return {
+      requestId,
+      skillId,
+      skillName,
+      skillDesc,
+      status,
+      createdAt,
+      updatedAt,
+      ownerUserId,
+      requesterUserId,
+      name,
+      role,
+      avatar,
+    };
+  });
 
   if (!requests.length) {
     return (
@@ -54,7 +74,7 @@ const OutgoingRequests = () => {
       className="grid grid-cols-1 md:grid-cols-2 gap-6"
     >
       {requests.map((request) => (
-        <RequestCard key={request.docID} request={request} />
+        <RequestCard key={request.requestId} request={request} />
       ))}
     </motion.section>
   );

@@ -1,33 +1,43 @@
 import { db } from "./firebase";
-import { collection, doc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import { auth } from "./firebase";
+import type { SkillDataType } from "@/store/useUsersAndSkillsStore";
+import useUsersAndSkillsStore from "@/store/useUsersAndSkillsStore";
+import useRequestsStore, { type SkillRequest } from "@/store/useRequestsStore";
 
-export const firestoreCollectionListener = <T>(
-  uid: string,
-  subCollection: string,
-  setter: (value: T[]) => void
-) => {
-  if (!uid || !subCollection) {
-    console.warn(
-      "firestoreCollectionListener: uid or subCollection is undefined"
-    );
-    return () => {};
-  }
+// export const firestoreSubCollectionListener = <T>(
+//   uid: string,
+//   subCollection: string,
+//   setter: (value: T[]) => void
+// ) => {
+//   if (!uid || !subCollection) {
+//     console.warn(
+//       "firestoreCollectionListener: uid or subCollection is undefined"
+//     );
+//     return () => {};
+//   }
 
-  const subCollectionRef = collection(db, "users", uid, subCollection);
+//   const subCollectionRef = collection(db, "users", uid, subCollection);
 
-  const unsubscribe = onSnapshot(subCollectionRef, (snapshot) => {
-    const data = snapshot.docs.map((doc) => ({ ...doc.data() }));
+//   const unsubscribe = onSnapshot(subCollectionRef, (snapshot) => {
+//     const data = snapshot.docs.map((doc) => ({ ...doc.data() }));
 
-    if (!!data.length) {
-      setter(data as T[]);
-    } else {
-      setter([] as T[]);
-    }
-  });
+//     if (!!data.length) {
+//       setter(data as T[]);
+//     } else {
+//       setter([] as T[]);
+//     }
+//   });
 
-  return unsubscribe;
-};
+//   return unsubscribe;
+// };
 
 export const firestoreDocListener = <T>(
   uid: string,
@@ -40,26 +50,27 @@ export const firestoreDocListener = <T>(
 
   const userRef = doc(db, "users", uid);
 
-  const unsubscribe = onSnapshot(userRef, (docSnapshot) => {
-    if (!docSnapshot.exists()) {
+  const unsubscribe = onSnapshot(userRef, (snapshot) => {
+    if (!snapshot.exists()) {
       console.warn(
         `firestoreDocListener: Document at users/${uid} does not exist`
       );
       return;
     }
 
-    const data = docSnapshot.data();
+    const data = snapshot.data();
 
-    setter({ ...data, uid: docSnapshot.id } as T);
+    setter({ ...data, uid: snapshot.id } as T);
   });
 
   return unsubscribe;
 };
 
-export const firestoreUsersCollectionListener = <T>(
-  currentUserId: string | null | undefined,
-  setter: (users: T[]) => void
+export const skillsCollectionListener = (
+  currentUserId: string | null | undefined
 ) => {
+  const { setSkills } = useUsersAndSkillsStore.getState();
+
   if (!currentUserId) {
     console.warn(
       "firestoreUsersCollectionListener: currentUserId is undefined"
@@ -67,19 +78,62 @@ export const firestoreUsersCollectionListener = <T>(
     return () => {};
   }
 
-  const usersCollectionRef = collection(db, "users");
+  const collectionRef = collection(db, "skills");
 
-  const unsubscribe = onSnapshot(usersCollectionRef, (snapshot) => {
-    const allUsers = snapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
+  const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+    if (snapshot.empty) {
+      console.warn(`firestoreListener: Document at skills/ does not exist`);
+      return;
+    }
+
+    const allSkills = snapshot.docs.map((doc) => ({
+      ...(doc.data() as SkillDataType),
     }));
 
-    const otherUsers = allUsers.filter(
-      (user) => user.id !== currentUserId && user.id !== auth.currentUser?.uid
+    const otherSkills = allSkills.filter(
+      (skill) =>
+        skill.ownerId !== currentUserId &&
+        skill.ownerId !== auth.currentUser?.uid
     );
 
-    setter(otherUsers as T[]);
+    setSkills(otherSkills);
+  });
+
+  return unsubscribe;
+};
+
+export const skillRequestListener = (currentUserId: string) => {
+  const { setSkillRequests } = useRequestsStore.getState();
+
+  if (!currentUserId) {
+    console.warn(
+      "firestoreUsersCollectionListener: currentUserId is undefined"
+    );
+    return () => {};
+  }
+
+  const collectionRef = collection(db, "skillRequests");
+
+  const q = query(
+    collectionRef,
+    where("participants", "array-contains", currentUserId),
+    orderBy("updatedAt", "desc")
+  );
+
+  const unsubscribe = onSnapshot(q, (snapshot) => {
+    if (snapshot.empty) {
+      console.warn(
+        `firestoreListener: Document at skillRequests/ does not exist`
+      );
+      return;
+    }
+
+    const skillRequests = snapshot.docs.map((request) => {
+      const { participants, ...rest } = request.data();
+
+      return { ...rest } as SkillRequest;
+    });
+    setSkillRequests(skillRequests);
   });
 
   return unsubscribe;

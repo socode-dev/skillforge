@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import useAuthStore from "./useAuthStore";
+import useAuthStore, { type SkillType } from "./useAuthStore";
 import { v4 as uuidv4 } from "uuid";
 import type { UseFormGetValues, UseFormSetValue } from "react-hook-form";
 import type { SkillSchema } from "../schemas/skillSchema";
@@ -32,7 +32,18 @@ const useMultiStepsStore = create<StoreState>()((set) => ({
   },
 
   previousPage: () => {
+    const { currentUser, setCurrentUser } = useAuthStore.getState();
     set((state) => ({ currentStep: state.currentStep - 1 }));
+
+    if (currentUser) {
+      setCurrentUser({
+        ...currentUser,
+        profile: {
+          ...currentUser.profile,
+          signupStepsCompleted: currentUser.profile.signupStepsCompleted - 1,
+        },
+      });
+    }
   },
 
   handleAddSkill: async (
@@ -42,26 +53,33 @@ const useMultiStepsStore = create<StoreState>()((set) => ({
     getSkillsValues
   ) => {
     const { currentUser, setCurrentUser } = useAuthStore.getState();
-    let updatedSkills;
+    let updatedSkills: SkillType[];
 
     if (!currentUser) return;
-
-    console.log(currentUser);
 
     const currentSkills = currentUser.skills;
 
     if (!!currentSkills.length) {
       updatedSkills = [
         ...currentSkills,
-        { id: uuidv4(), skillName, skillDesc, skillLearners: 0 },
+        { id: uuidv4(), skillName, skillDesc, learnersCount: 0 },
       ];
     } else {
       updatedSkills = [
-        { id: uuidv4(), skillName, skillDesc, skillLearners: 0 },
+        { id: uuidv4(), skillName, skillDesc, learnersCount: 0 },
       ];
     }
 
-    const updatedCurrentUser = { ...currentUser, skills: updatedSkills };
+    const skillsReview = updatedSkills.map((skill) => ({
+      id: skill.id,
+      skillName: skill.skillName,
+      skillDesc: skill.skillDesc,
+    }));
+
+    const updatedCurrentUser = {
+      profile: { ...currentUser.profile, skillsReview },
+      skills: updatedSkills,
+    };
 
     setCurrentUser(updatedCurrentUser);
 

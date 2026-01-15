@@ -1,16 +1,15 @@
 import { Briefcase, Plus, Sparkles, X } from "lucide-react";
-import Heading from "./Heading";
-import Button from "../../../components/ui/Button";
+import Heading from "@/pages/auth/components/Heading";
+import Button from "@/components/ui/Button";
 import clsx from "clsx";
 import { motion } from "framer-motion";
-import useMultiStepsStore from "../../../store/useMultiStepsStore";
-import { ScrollToTop } from "../../../Layouts/ScrollToTop";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../../../lib/firebase";
-import useAuthStore from "../../../store/useAuthStore";
-import { toast } from "react-toastify";
-import { useSkillsContext } from "../../../context/useSkillsContext";
-import Input from "../../../components/ui/Input";
+import useMultiStepsStore from "@/store/useMultiStepsStore";
+import { ScrollToTop } from "@/Layouts/ScrollToTop";
+import useAuthStore from "@/store/useAuthStore";
+import { useSkillsContext } from "@/context/useSkillsContext";
+import Input from "@/components/ui/Input";
+import { doc, increment, updateDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 const Skills = () => {
   const nextPage = useMultiStepsStore((state) => state.nextPage);
@@ -23,7 +22,6 @@ const Skills = () => {
   const {
     skillsRegister: register,
     skillsHandleSubmit: handleSubmit,
-    skillsReset,
     skillsFormState,
   } = useSkillsContext();
   const { errors, isSubmitting, isValid } = skillsFormState;
@@ -33,35 +31,39 @@ const Skills = () => {
   const skills = currentUser.skills;
 
   const onSubmit = handleSubmit(async (data) => {
-    if (!currentUser) return;
-    if (!skills.length) {
-      toast.error("Please add at least 1 skill you can teach");
-      return;
-    }
-    const docRef = doc(db, "users", currentUser.uid);
-    const userDocSnap = await getDoc(docRef);
-    if (!userDocSnap.exists()) return;
+    nextPage();
 
-    updateDoc(docRef, {
-      ...userDocSnap.data(),
-      skills: currentUser.skills,
-      signupStepsCompleted: 2,
+    await updateDoc(doc(db, "users", currentUser.profile.userId), {
       role: data.role,
+      skillsReview: currentUser.profile.skillsReview,
+      signupStepsCompleted: increment(1),
     });
 
-    nextPage();
-    skillsReset();
+    setCurrentUser({
+      ...currentUser,
+      profile: {
+        ...currentUser.profile,
+        role: data.role,
+        signupStepsCompleted: currentUser.profile.signupStepsCompleted + 1,
+      },
+    });
+    // skillsReset();
   });
 
   // Function to delete skill
-  const deleteSkill = (id: string) => {
-    if (!id) return;
+  const deleteSkill = (name: string) => {
+    if (!name) return;
 
     const skills = currentUser.skills;
 
-    const filteredSkills = skills.filter((skill) => skill.id !== id);
+    if (!skills) return;
 
-    setCurrentUser({ ...currentUser, skills: filteredSkills });
+    const filteredSkills = skills.filter((skill) => skill.skillName !== name);
+
+    setCurrentUser({
+      profile: { ...currentUser.profile, skillsReview: filteredSkills },
+      skills: filteredSkills,
+    });
   };
 
   return (
@@ -121,17 +123,17 @@ const Skills = () => {
       >
         {!!skills.length && (
           <div className="w-full flex flex-wrap gap-4">
-            {skills.map((skill) => (
+            {skills.map(({ skillName, skillDesc }, i) => (
               <div
-                key={skill.id}
+                key={`skill-${i}-${skillName}-${skillDesc}`}
                 className="flex items-center gap-3 text-sm text-primary font-semibold p-2 bg-soft-primary border-1 border-ring/20 rounded-radius"
               >
-                <span>{skill.skillName}</span>
+                <span>{skillName}</span>
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   transition={{ duration: 0.1, ease: "easeOut" }}
-                  onClick={() => deleteSkill(skill.id)}
+                  onClick={() => deleteSkill(skillName)}
                   className="p-1 rounded-full bg-primary/20 hover:bg-primary/30 transition cursor-pointer"
                 >
                   <X size={12} />

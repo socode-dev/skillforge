@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -7,42 +8,52 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../lib/firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import useMultiStepsStore from "./useMultiStepsStore";
 import { getAuthErrorMessage } from "../lib/authErrors";
 import { FirebaseError } from "firebase/app";
 import type { UseFormReset } from "react-hook-form";
 import type { AccountSchema } from "../schemas/accountSchema";
 import type { LoginSchema } from "../schemas/loginSchema";
-import type { NavigateFunction } from "react-router-dom";
+import { type NavigateFunction } from "react-router-dom";
+import { functions } from "../lib/firebase";
+import { httpsCallable } from "firebase/functions";
 
-interface SkillType {
-  id: string;
+export interface SkillType {
+  id?: string;
   skillName: string;
   skillDesc: string;
-  skillLearners: number;
+  learnersCount?: number;
 }
 
 export interface CurrentUser {
-  uid: string;
-  name: string;
-  email: string;
-  isEmailVerified: boolean;
-  signupStepsCompleted: number;
-  avatar: string;
-  bio?: string;
+  profile: {
+    userId: string;
+    avatar?: string;
+    name: string;
+    email: string;
+    bio?: string;
+    role: string;
+    signupStepsCompleted: number;
+    ratingAvg?: number;
+    ratingCount?: number;
+    coinBalance?: number;
+    skillsReview: Omit<SkillType, "learnersCount">[] | [];
+  };
   skills: SkillType[] | [];
-  role: string;
 }
 
 interface StoreState {
   currentUser: null | CurrentUser;
+  loading: boolean;
+  authResolved: boolean;
+  _authUnsubscribe: (() => void) | null;
+
   signupErr: string | null;
   loginErr: string | null;
-  userLoggedIn: boolean;
-  loading: boolean;
+
   setCurrentUser: (user: CurrentUser | null) => void;
-  startAuthListener: (navigate: NavigateFunction) => void;
+  startAuthListener: () => void;
   stopAuthListener: () => void;
   onSignup: (
     email: string,
@@ -57,193 +68,196 @@ interface StoreState {
     navigate: NavigateFunction
   ) => Promise<void>;
   onSignout: () => void;
-  _authUnsubscribe: null | (() => void);
 }
 
-// const navigate = useNavigate();
+const createInitialUserDoc = httpsCallable(functions, "createInitialUserDoc");
 
-const useAuthStore = create<StoreState>()((set, get) => ({
-  currentUser: null,
-  signupErr: null,
-  loginErr: null,
-  userLoggedIn: false,
-  loading: true,
+const useAuthStore = create<StoreState>()(
+  persist(
+    (set, get) => ({
+      currentUser: null,
+      signupErr: null,
+      loginErr: null,
+      loading: true,
+      _authUnsubscribe: null,
+      authResolved: false,
 
-  _authUnsubscribe: null,
+      setCurrentUser: (user: CurrentUser | null) => set({ currentUser: user }),
 
-  setCurrentUser: (user: CurrentUser | null) => set({ currentUser: user }),
+      startAuthListener: () => {
+        if (get()._authUnsubscribe) return;
 
-  startAuthListener: (navigate) => {
-    if (get()._authUnsubscribe) return;
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+          set({ loading: true });
 
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        // User is signed out
-        set({ currentUser: null, loading: false, userLoggedIn: false });
-        return;
-      }
+          if (!user) {
+            set({ loading: false, authResolved: true });
+            return;
+          }
 
-      const docRef = doc(db, "users", user.uid);
-      const userDocSnap = await getDoc(docRef);
+          const userRef = doc(db, "users", user.uid);
+          const userDocSnap = await getDoc(userRef);
 
-      if (!userDocSnap.exists()) {
-        set({ currentUser: null, loading: false, userLoggedIn: false });
-        return;
-      }
+          if (!userDocSnap.exists()) {
+            set({ loading: false, authResolved: true });
+            return;
+          }
 
-      const userData = {
-        ...(userDocSnap.data() as CurrentUser),
-        uid: user.uid,
-      };
+          const skillsSnap = await getDocs(
+            collection(db, "users", user.uid, "skills")
+          );
 
-      set({
-        currentUser: userData,
-        loading: false,
-        userLoggedIn: true,
-      });
+          const profile = userDocSnap.data() as CurrentUser["profile"];
+          const skills = skillsSnap.docs.map((doc) => ({
+            ...doc.data(),
+          })) as CurrentUser["skills"];
 
-      if (userData.signupStepsCompleted < 4) {
-        const { currentStep, setCurrentStep } = useMultiStepsStore.getState();
-        setCurrentStep(userData.signupStepsCompleted + 1);
+          const userData = {
+            profile,
+            skills,
+          };
 
-        navigate(`/signup/step-${currentStep}`, {
-          replace: true,
+          set({
+            currentUser: userData,
+            loading: false,
+            authResolved: true,
+          });
+
+          const step = userData.profile.signupStepsCompleted + 1;
+
+          useMultiStepsStore.getState().setCurrentStep(step);
         });
-      } else {
-        navigate("/home", { replace: true });
-      }
-    });
 
-    set({ _authUnsubscribe: unsubscribe });
-  },
+        set({ _authUnsubscribe: unsubscribe });
+      },
 
-  stopAuthListener: () => {
-    const unsubscribe = get()._authUnsubscribe;
-    if (unsubscribe) {
-      unsubscribe();
-      set({ _authUnsubscribe: null });
+      stopAuthListener: () => {
+        const unsubscribe = get()._authUnsubscribe;
+        if (unsubscribe) {
+          unsubscribe();
+          set({ _authUnsubscribe: null });
+        }
+      },
+
+      onSignup: async (email, password, name, reset) => {
+        const { nextPage } = useMultiStepsStore.getState();
+        set({ loading: true });
+        try {
+          const { user } = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+
+          updateProfile(user, {
+            displayName: name,
+          });
+
+          const userData = {
+            profile: {
+              userId: user.uid,
+              name,
+              email,
+              signupStepsCompleted: 1,
+              avatar: "",
+              bio: "",
+              role: "",
+              skillsReview: [],
+            },
+            skills: [],
+          };
+
+          set({
+            currentUser: userData,
+          });
+
+          await createInitialUserDoc(userData["profile"]);
+
+          nextPage();
+        } catch (err) {
+          if (err instanceof FirebaseError) {
+            set({ signupErr: getAuthErrorMessage(err) });
+
+            setTimeout(() => set({ signupErr: null }), 5000);
+          }
+        } finally {
+          set({ loading: false });
+          window.scrollTo(0, 0);
+          reset();
+        }
+      },
+
+      onLogin: async (email, password, reset, navigate) => {
+        set({ loading: true, authResolved: false });
+
+        try {
+          const { user } = await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+
+          // Fetch user document from Firestore to check signup progress
+          const userRef = doc(db, "users", user.uid);
+          const userDocSnap = await getDoc(userRef);
+
+          if (!userDocSnap.exists()) {
+            set({ loading: false, authResolved: true });
+            return;
+          }
+
+          const skillsSnap = await getDocs(
+            collection(db, "users", user.uid, "skills")
+          );
+
+          const profile = userDocSnap.data() as CurrentUser["profile"];
+          const skills = skillsSnap.docs.map((doc) => ({
+            ...doc.data(),
+          })) as CurrentUser["skills"];
+
+          const userData = {
+            profile,
+            skills,
+          };
+
+          set({
+            currentUser: userData,
+            loading: false,
+            authResolved: true,
+          });
+
+          const step = userData.profile.signupStepsCompleted + 1;
+          useMultiStepsStore.getState().setCurrentStep(step);
+
+          if (userData.profile.signupStepsCompleted < 4) {
+            navigate(`/signup/step-${step}`, { replace: true });
+          } else {
+            navigate("/home", { replace: true });
+          }
+        } catch (err) {
+          if (err instanceof FirebaseError) {
+            set({ loginErr: getAuthErrorMessage(err) });
+
+            setTimeout(() => set({ loginErr: null }), 5000);
+          }
+          set({ loading: false, authResolved: true });
+        } finally {
+          window.scrollTo(0, 0);
+          reset();
+        }
+      },
+
+      onSignout: () => {
+        signOut(auth);
+
+        set({ currentUser: null });
+      },
+    }),
+    {
+      name: "current-user-storage",
+      partialize: (state) => ({ currentUser: state.currentUser }),
     }
-  },
-
-  onSignup: async (email, password, name, reset) => {
-    const { nextPage } = useMultiStepsStore.getState();
-    set({ loading: true });
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-      const user = userCredential.user;
-
-      if (!user) return;
-
-      updateProfile(user, {
-        displayName: name,
-      });
-
-      set({
-        currentUser: {
-          uid: user.uid,
-          name,
-          email,
-          isEmailVerified: user.emailVerified as boolean,
-          signupStepsCompleted: 1,
-          avatar: "",
-          bio: "",
-          skills: [],
-          role: "",
-        },
-      });
-
-      const docRef = doc(db, "users", user.uid);
-
-      setDoc(docRef, {
-        email,
-        name: name,
-        isEmailVerified: user.emailVerified,
-        signupStepsCompleted: 1,
-        createdAt: new Date(),
-        avatar: "",
-        bio: "",
-        skills: [],
-        role: "",
-      });
-
-      nextPage();
-    } catch (err) {
-      if (err instanceof FirebaseError) {
-        set({ signupErr: getAuthErrorMessage(err) });
-
-        setTimeout(() => set({ signupErr: null }), 5000);
-      } else {
-        console.log(err);
-      }
-    } finally {
-      set({ loading: false });
-      window.scrollTo(0, 0);
-      reset();
-    }
-  },
-
-  onLogin: async (email, password, reset, navigate) => {
-    set({ loading: true });
-
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-
-      const docRef = doc(db, "users", user.uid);
-      const userDocSnap = await getDoc(docRef);
-      if (!userDocSnap.exists()) return;
-
-      const userData = {
-        ...(userDocSnap.data() as CurrentUser),
-        uid: user.uid,
-        name: user.displayName as string,
-        email: user.email as string,
-        isEmailVerified: user.emailVerified,
-      };
-
-      setDoc(doc(db, "users", user.uid), { ...userData });
-
-      set({
-        currentUser: userData,
-      });
-
-      if (userData.signupStepsCompleted < 4) {
-        const { currentStep, setCurrentStep } = useMultiStepsStore.getState();
-        setCurrentStep(userData.signupStepsCompleted + 1);
-
-        navigate(`/signup/step-${currentStep}`, {
-          replace: true,
-        });
-      } else {
-        navigate("/home", { replace: true });
-      }
-    } catch (err) {
-      if (err instanceof FirebaseError) {
-        set({ loginErr: getAuthErrorMessage(err) });
-
-        setTimeout(() => set({ loginErr: null }), 5000);
-      }
-    } finally {
-      set({ loading: false });
-      window.scrollTo(0, 0);
-      reset();
-    }
-  },
-
-  onSignout: () => {
-    signOut(auth);
-
-    set({ currentUser: null });
-  },
-}));
+  )
+);
 
 export default useAuthStore;

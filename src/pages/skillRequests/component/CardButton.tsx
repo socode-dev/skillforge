@@ -1,26 +1,14 @@
-import Button from "../../../components/ui/Button";
-import useRequestsStore, {
-  type SkillRequests,
-} from "../../../store/useRequestsStore";
+import type { SkillRequest } from "@/store/useRequestsStore";
+import Button from "@/components/ui/Button";
+import useRequestsStore from "@/store/useRequestsStore";
 
-interface CardButtonProps
-  extends Pick<SkillRequests, "status" | "type" | "skillName"> {
-  skillID: string;
-  incomingUserID: string;
+interface CardButtonProps extends Pick<SkillRequest, "status" | "requestId"> {
+  type: "incoming" | "outgoing";
 }
 
-const CardButton = ({
-  status,
-  type,
-  skillID,
-  skillName,
-  incomingUserID,
-}: CardButtonProps) => {
-  const {
-    handleCancelRequest,
-    handleDeclineRequest,
-    handleAcceptSkillRequest,
-  } = useRequestsStore();
+const CardButton = ({ status, type, requestId }: CardButtonProps) => {
+  const { onCancelRequest, onDeclineRequest, onAcceptRequest, loading } =
+    useRequestsStore();
 
   if (type === "incoming") {
     return (
@@ -29,9 +17,7 @@ const CardButton = ({
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           transition={{ duration: 0.1, ease: "easeOut" }}
-          onClick={() =>
-            handleAcceptSkillRequest(skillID, skillName, incomingUserID)
-          }
+          onClick={() => onAcceptRequest(requestId)}
           type="button"
           variant="primary"
           className="text-sm sm:text-base"
@@ -39,31 +25,31 @@ const CardButton = ({
           Accept
         </Button>
         <Button
-          onClick={() => handleDeclineRequest(skillID, incomingUserID)}
+          onClick={() => onDeclineRequest(requestId)}
           type="button"
           variant="outline"
           className="text-sm sm:text-base text-muted-foreground"
         >
-          Decline
+          {loading.isDeclining[requestId] ? "Declining..." : "Decline"}
         </Button>
       </div>
     );
-  } else if (type === "outgoing" && status === "pending") {
+  } else if (type === "outgoing" && status === "PENDING") {
     return (
       <Button
         type="button"
-        onClick={() => handleCancelRequest(skillID, incomingUserID)}
+        onClick={() => onCancelRequest(requestId)}
         variant="outline"
         className="w-full text-sm sm:text-base"
       >
-        Cancel Request
+        {loading.isCancelling[requestId] ? "Cancelling..." : "Cancel Request"}
       </Button>
     );
-  } else if (type === "outgoing" && status === "accepted") {
+  } else if (type === "outgoing" && status === "ACCEPTED") {
     return (
       <Button
         type="button"
-        onClick={() => console.log("Message", incomingUserID)}
+        onClick={() => console.log("Message")}
         variant="outline"
         className="w-full"
       >

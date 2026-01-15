@@ -12,9 +12,9 @@ import {
 import clsx from "clsx";
 import { useState, type ChangeEvent } from "react";
 import { uploadToCloudinary } from "../../../utils/uploadToCloudinary";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../../../lib/firebase";
 import useAuthStore from "../../../store/useAuthStore";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 const Profile = () => {
   const [uploading, setUploading] = useState<boolean>(false);
@@ -54,21 +54,20 @@ const Profile = () => {
   const onSubmit = handleSubmit(async (data) => {
     if (!currentUser) return;
 
-    const docRef = doc(db, "users", currentUser.uid);
-    const userDocSnap = await getDoc(docRef);
-    if (!userDocSnap.exists()) return;
+    setCurrentUser({
+      ...currentUser,
+      profile: {
+        ...currentUser.profile,
+        avatar: data.avatar ?? "",
+        bio: data.bio ?? "",
+        signupStepsCompleted: currentUser.profile.signupStepsCompleted + 1,
+      },
+    });
 
-    updateDoc(docRef, {
-      ...userDocSnap.data(),
+    updateDoc(doc(db, "users", currentUser.profile.userId), {
       avatar: data.avatar ?? "",
       bio: data.bio ?? "",
       signupStepsCompleted: 3,
-    });
-
-    setCurrentUser({
-      ...currentUser,
-      avatar: data.avatar ?? "",
-      bio: data.bio ?? "",
     });
 
     nextPage();

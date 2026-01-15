@@ -2,14 +2,14 @@ import { MessageCircle, UserPlus } from "lucide-react";
 import Button from "../../../components/ui/Button";
 import clsx from "clsx";
 import { motion } from "framer-motion";
-import type { UsersFeedDataType } from "../../../lib/buildDiscoverFeeds";
 import useRequestsStore, {
   type InvitationData,
 } from "../../../store/useRequestsStore";
 import useAuthStore from "../../../store/useAuthStore";
+import type { UserDataType } from "@/store/useUsersAndSkillsStore";
 
 interface MemberCardProps {
-  user: UsersFeedDataType;
+  user: UserDataType;
   index: number;
 }
 
@@ -26,24 +26,24 @@ const getInitial = (value: string) => {
 
 const MemberCard = ({ user, index }: MemberCardProps) => {
   const { currentUser } = useAuthStore();
-  const { handleSendInvitation, invitations } = useRequestsStore();
+  // const { invitations } = useRequestsStore();
 
-  const isInvitationSent = invitations.find(
-    (invite) => invite.incomingUserID === user.id
-  );
+  // const isInvitationSent = invitations.find(
+  //   (invite) => invite.incomingUserID === user.id
+  // );
 
   if (!currentUser) return;
 
-  const invitationData: InvitationData = {
-    incomingUserID: user.id,
-    outgoingUserID: currentUser.uid,
-    incomingUserName: user.name,
-    incomingUserRole: user.role,
-    incomingUserAvatar: user.avatar,
-    status: "pending",
-    type: "outgoing",
-    time: Date.now(),
-  };
+  // const invitationData: InvitationData = {
+  //   incomingUserID: user.id,
+  //   outgoingUserID: currentUser.uid,
+  //   incomingUserName: user.name,
+  //   incomingUserRole: user.role,
+  //   incomingUserAvatar: user.avatar,
+  //   status: "pending",
+  //   type: "outgoing",
+  //   time: Date.now(),
+  // };
 
   return (
     <motion.div
@@ -76,9 +76,9 @@ const MemberCard = ({ user, index }: MemberCardProps) => {
       </div>
 
       <div className="flex gap-2 mt-4">
-        {user.skills.map((skill) => (
+        {user.skillsReview.map((skill) => (
           <p
-            key={skill.id}
+            key={skill.skillId}
             className="py-1 px-4 bg-muted text-muted-foreground text-xs rounded-full"
           >
             {skill.skillName}
@@ -89,19 +89,19 @@ const MemberCard = ({ user, index }: MemberCardProps) => {
       <div className="w-full flex gap-4 mt-4">
         <Button
           type="button"
-          onClick={() => handleSendInvitation(invitationData)}
-          isDisabled={!!isInvitationSent}
+          // onClick={() => handleSendInvitation(invitationData)}
+          // isDisabled={!!isInvitationSent}
           variant="primary"
           className="grow flex justify-center items-center gap-2 text-sm font-semibold"
         >
-          {isInvitationSent ? (
-            "Pending"
-          ) : (
-            <>
-              <UserPlus size={15} />
-              <span>Connect</span>
-            </>
-          )}
+          {/* {isInvitationSent ? ( */}
+          {/* "Pending" */}
+          {/* ) : ( */}
+          <>
+            <UserPlus size={15} />
+            <span>Connect</span>
+          </>
+          {/* )} */}
         </Button>
 
         <Button

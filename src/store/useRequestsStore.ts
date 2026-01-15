@@ -1,257 +1,249 @@
+import { functions } from "@/lib/firebase";
+import type { Timestamp } from "firebase/firestore";
+import { httpsCallable } from "firebase/functions";
 import {
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  updateDoc,
-} from "firebase/firestore";
+  CheckCircle2,
+  Clock,
+  Hourglass,
+  RotateCcw,
+  Send,
+  type LucideIcon,
+} from "lucide-react";
+import { toast } from "react-toastify";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { auth, db } from "@/lib/firebase";
-import { toast } from "react-toastify";
-import { cancelSkillRequest } from "@/functions/cancelSkillRequest";
-import { declineSkillRequest } from "@/functions/declineSkillRequest";
-import { acceptSkillRequest } from "@/functions/acceptSkillRequest";
-import type { CurrentUser } from "@/store/useAuthStore";
-import { v4 as uuidV4 } from "uuid";
 
-export interface SkillRequests {
-  docID: string;
-  skillID: string;
+export type RequestStatus =
+  | "PENDING"
+  | "ACCEPTED"
+  | "DECLINED"
+  | "COMPLETED"
+  | "CANCELLED";
+type SkillRequestButtonText =
+  | "Request"
+  | "Requested"
+  | "Request Again"
+  | "In Progress"
+  | "Completed";
+
+export interface SkillRequest {
+  requestId: string;
+
+  skillId: string;
   skillName: string;
-  incomingUserID: string;
-  incomingUserName: string;
-  incomingUserAvatar: string;
-  incomingUserRole: string;
-  outgoingUserID: string;
-  outgoingUserRole: string;
-  outgoingUserName: string;
-  outgoingUserAvatar: string;
-  status: "pending" | "accepted" | "declined" | "completed";
-  type: "outgoing" | "incoming";
-  time: number;
+  skillDesc: string;
+
+  owner: {
+    userId: string;
+    name: string;
+    role: string;
+    avatar?: string;
+  };
+
+  requester: {
+    userId: string;
+    name: string;
+    role: string;
+    avatar?: string;
+  };
+
+  status: RequestStatus;
+
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+
+  acceptedAt?: Timestamp;
+  declinedAt?: Timestamp;
+  completedAt?: Timestamp;
+
+  chatId?: string;
 }
 
-export type InvitationData = Omit<
-  SkillRequests,
-  | "skillID"
-  | "skillName"
-  | "outgoingUserName"
-  | "outgoingUserRole"
-  | "outgoingUserAvatar"
-  | "docID"
+interface LoadingState {
+  isRequesting: Record<string, boolean>;
+  isAccepting: Record<string, boolean>;
+  isCancelling: Record<string, boolean>;
+  isDeclining: Record<string, boolean>;
+}
+
+type RequestDataType = Pick<
+  SkillRequest,
+  "skillId" | "skillName" | "skillDesc" | "owner" | "requester"
 >;
 
 export interface RequestsStoreState {
-  skillRequests: SkillRequests[] | [];
-  setSkillRequests: (requests: SkillRequests[] | []) => void;
-  invitations: InvitationData[] | [];
-  handleSendSkillRequest: (skillData: SkillRequests) => Promise<void>;
-  handleSendInvitation: (userData: InvitationData) => Promise<void>;
-  handleAcceptSkillRequest: (
-    skillID: string,
-    skillName: string,
-    requesterUserID: string
-  ) => Promise<void>;
-  handleCancelRequest: (skillID: string, ownerUserID: string) => Promise<void>;
-  handleDeclineRequest: (
-    skillID: string,
-    requesterUserID: string
-  ) => Promise<void>;
+  skillRequests: SkillRequest[] | [];
+  // invitations: InvitationData[] | [];
+  loading: LoadingState;
+
+  setSkillRequests: (requests: SkillRequest[] | []) => void;
+  setLoading: (
+    loadingType: keyof LoadingState,
+    value: boolean,
+    requestId?: string
+  ) => void;
+  getSkillRequestButtonChildren: (status?: RequestStatus) => {
+    text: SkillRequestButtonText;
+    icon: LucideIcon;
+  };
+  onSendRequest: (requestData: RequestDataType) => Promise<void>;
+  onAcceptRequest: (requestId: string) => Promise<void>;
+  onCancelRequest: (requestId: string) => Promise<void>;
+  onDeclineRequest: (requestId: string) => Promise<void>;
 }
+
+const sendRequest = httpsCallable(functions, "sendSkillRequest");
+const acceptRequest = httpsCallable(functions, "acceptSkillRequest");
+const cancelRequest = httpsCallable(functions, "cancelSkillRequest");
+const declineRequest = httpsCallable(functions, "declineSkillRequest");
 
 const useRequestsStore = create<RequestsStoreState>()(
   persist(
     (set, get) => ({
       skillRequests: [],
       invitations: [],
+      loading: {
+        isRequesting: {},
+        isAccepting: {},
+        isCancelling: {},
+        isDeclining: {},
+      },
 
       setSkillRequests: (requests) => set({ skillRequests: requests }),
 
-      handleSendSkillRequest: async (skillData: SkillRequests) => {
-        const modifiedSkillData = {
-          ...skillData,
-          skillID: uuidV4(),
-        };
+      setLoading: (type, value, id) => {
+        set((state) => {
+          if (!id) return state;
 
-        const incomingDocRef = collection(
-          db,
-          "users",
-          modifiedSkillData.incomingUserID,
-          "skillRequests"
-        );
+          return {
+            loading: {
+              ...state.loading,
+              [type]: {
+                ...state.loading[type],
+                [id]: value,
+              },
+            },
+          };
+        });
+      },
 
-        const outgoingDocRef = collection(
-          db,
-          "users",
-          modifiedSkillData.outgoingUserID,
-          "skillRequests"
-        );
+      onSendRequest: async (requestData) => {
+        const { setLoading } = get();
 
-        const incomingSkillData: SkillRequests = {
-          ...modifiedSkillData,
-          type: "incoming",
-        };
-        const outgoingSkillData: SkillRequests = {
-          ...modifiedSkillData,
-          type: "outgoing",
-        };
+        if (!requestData) {
+          toast.error("Error. Please try again");
+          return;
+        }
+
+        setLoading("isRequesting", true, requestData.skillId);
+
         try {
-          set({
-            skillRequests: [...get().skillRequests, outgoingSkillData],
-          });
+          await sendRequest(requestData);
+          toast.success("Request Sent");
+        } catch (err) {
+          console.error(err);
+        } finally {
+          setLoading("isRequesting", false, requestData.skillId);
+        }
+      },
 
-          await addDoc(incomingDocRef, incomingSkillData);
-          await addDoc(outgoingDocRef, outgoingSkillData);
+      onAcceptRequest: async (requestId) => {
+        const { setLoading } = get();
 
-          const getIncomingDocs = await getDocs(incomingDocRef);
-          const getoutgoingDocs = await getDocs(outgoingDocRef);
+        if (!requestId) {
+          toast.error("Request Id not found");
+          return;
+        }
 
-          getIncomingDocs.docs.map((docSnapshot) => {
-            const updatedSkillDoc = {
-              ...docSnapshot.data(),
-              docID: docSnapshot.id,
-            };
+        setLoading("isAccepting", true, requestId);
 
-            updateDoc(
-              doc(
-                db,
-                "users",
-                skillData.incomingUserID,
-                "skillRequests",
-                docSnapshot.id
-              ),
-              updatedSkillDoc
-            );
-
-            return updatedSkillDoc as SkillRequests;
-          });
-
-          const updatedOutgoingDocs = getoutgoingDocs.docs.map(
-            (docSnapshot) => {
-              const updatedSkillDoc = {
-                ...docSnapshot.data(),
-                docID: docSnapshot.id,
-              };
-
-              updateDoc(
-                doc(
-                  db,
-                  "users",
-                  skillData.outgoingUserID,
-                  "skillRequests",
-                  docSnapshot.id
-                ),
-                updatedSkillDoc
-              );
-
-              return updatedSkillDoc as SkillRequests;
-            }
-          );
-
-          set({ skillRequests: updatedOutgoingDocs });
-
-          toast.success("Skill request sent.");
+        try {
+          await acceptRequest({ requestId });
+          toast.success("Request Accepted");
         } catch (err) {
           console.error("Error:", err);
-          toast.error("Something went wrong. Please try again");
+        } finally {
+          setLoading("isAccepting", false, requestId);
         }
       },
 
-      handleSendInvitation: async (userData) => {
-        const incomingDocRef = collection(
-          db,
-          "users",
-          userData.incomingUserID,
-          "invitation"
-        );
-        const outgoingDocRef = collection(
-          db,
-          "users",
-          userData.outgoingUserID,
-          "invitation"
-        );
+      onCancelRequest: async (requestId) => {
+        const { setLoading } = get();
 
-        const incomingInviteData: InvitationData = {
-          ...userData,
-          type: "incoming",
-        };
-        const outgoingInviteData: InvitationData = {
-          ...userData,
-          type: "outgoing",
-        };
+        if (!requestId) {
+          toast.error("Request Id not found");
+          return;
+        }
+
+        setLoading("isCancelling", true, requestId);
 
         try {
-          set({
-            invitations: [...get().invitations, outgoingInviteData],
-          });
-          await addDoc(incomingDocRef, incomingInviteData);
-          await addDoc(outgoingDocRef, outgoingInviteData);
-
-          toast.success("Invitation sent");
+          await cancelRequest({ requestId });
+          toast.success("Request Cancelled");
         } catch (err) {
-          console.log("Error:", err);
+          console.error("Error:", err);
+        } finally {
+          setLoading("isCancelling", false, requestId);
         }
       },
 
-      handleAcceptSkillRequest: async (skillID, skillName, requesterUserID) => {
-        const currentUser = auth.currentUser;
+      onDeclineRequest: async (requestId) => {
+        const { setLoading } = get();
 
-        if (!currentUser) return;
+        if (!requestId) {
+          toast.error("Request Id not found");
+          return;
+        }
 
-        await acceptSkillRequest({
-          skillID,
-          skillOwnerUserID: currentUser.uid,
-          requesterUserID,
-          set: set,
-        });
+        setLoading("isDeclining", true, requestId);
 
-        const skillOwnerDocRef = doc(db, "users", currentUser.uid);
-        const skillOwnerDoc = await getDoc(skillOwnerDocRef);
-
-        // Add 1 to the number of skill learners
-        if (skillOwnerDoc.exists()) {
-          const data = skillOwnerDoc.data() as CurrentUser;
-
-          const updatedUserDoc = {
-            ...data,
-            skills: data.skills.map((skill) => ({
-              ...skill,
-              skillLearners:
-                skill.skillName == skillName
-                  ? skill.skillLearners + 1
-                  : skill.skillLearners,
-            })),
-          };
-          await updateDoc(skillOwnerDocRef, updatedUserDoc);
+        try {
+          await declineRequest({ requestId });
+          toast.success("Request Declined");
+        } catch (err) {
+          console.error("Error:", err);
+        } finally {
+          setLoading("isDeclining", false, requestId);
         }
       },
 
-      handleCancelRequest: async (skillID, ownerUserID) => {
-        const currentUser = auth.currentUser;
+      getSkillRequestButtonChildren: (status) => {
+        let text: SkillRequestButtonText;
+        let icon: LucideIcon;
 
-        if (!currentUser) return;
+        if (!status) {
+          text = "Request";
+          icon = Send;
 
-        await cancelSkillRequest({
-          skillID,
-          skillOwnerID: ownerUserID,
-          requesterUserID: currentUser.uid,
-          set: set,
-        });
-      },
+          return { text, icon };
+        }
 
-      handleDeclineRequest: async (skillID, requesterUserID) => {
-        const currentUser = auth.currentUser;
-
-        if (!currentUser) return;
-
-        await declineSkillRequest({
-          skillID,
-          skillOwnerUserID: currentUser.uid,
-          requesterUserID,
-          set: set,
-        });
+        switch (status) {
+          case "PENDING":
+            text = "Requested";
+            icon = Clock;
+            return { text, icon };
+          case "ACCEPTED":
+            text = "In Progress";
+            icon = Hourglass;
+            return { text, icon };
+          case "COMPLETED":
+            text = "Completed";
+            icon = CheckCircle2;
+            return { text, icon };
+          case "DECLINED":
+            text = "Request Again";
+            icon = RotateCcw;
+            return { text, icon };
+          case "CANCELLED":
+            text = "Request Again";
+            icon = RotateCcw;
+            return { text, icon };
+          default:
+            text = "Request";
+            icon = Send;
+            return { text, icon };
+        }
       },
     }),
     {
