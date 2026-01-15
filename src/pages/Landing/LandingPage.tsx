@@ -9,12 +9,9 @@ import useMultiStepsStore from "../../store/useMultiStepsStore";
 
 const LandingPage = () => {
   const navigate = useNavigate();
-  const setCurrentStep = useMultiStepsStore((state) => state.setCurrentStep);
+  const { currentStep } = useMultiStepsStore();
 
-  const handleSignupClick = (): void => {
-    setCurrentStep(1);
-    navigate("/signup/step-1");
-  };
+  const handleSignupClick = () => navigate(`/signup/step-${currentStep}`);
 
   return (
     <motion.main

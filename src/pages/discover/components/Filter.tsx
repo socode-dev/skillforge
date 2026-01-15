@@ -23,7 +23,7 @@ const Filter = ({ register }: FilterProps) => {
         />
         <label
           htmlFor="all"
-          className="flex gap-2 items-center text-muted-foreground border-1 border-border px-4 py-2.5 rounded-radius-xl peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:border-primary cursor-pointer transition"
+          className="flex gap-2 items-center text-muted-foreground border-1 border-border px-4 py-2 rounded-radius-xl peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:border-primary cursor-pointer transition"
         >
           <Sparkles size={15} />
           <span className="text-sm font-medium">All</span>
@@ -40,7 +40,7 @@ const Filter = ({ register }: FilterProps) => {
         />
         <label
           htmlFor="skills"
-          className="flex gap-2 items-center text-muted-foreground border-1 border-border px-4 py-2.5 rounded-radius-xl peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:border-primary cursor-pointer transition"
+          className="flex gap-2 items-center text-muted-foreground border-1 border-border px-4 py-2 rounded-radius-xl peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:border-primary cursor-pointer transition"
         >
           <Code2 size={15} />
           <span className="text-sm font-medium">Skills</span>
@@ -57,7 +57,7 @@ const Filter = ({ register }: FilterProps) => {
         />
         <label
           htmlFor="people"
-          className="flex gap-2 items-center text-muted-foreground border-1 border-border px-4 py-2.5 rounded-radius-xl peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:border-primary cursor-pointer transition"
+          className="flex gap-2 items-center text-muted-foreground border-1 border-border px-4 py-2 rounded-radius-xl peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:border-primary cursor-pointer transition"
         >
           <Users size={15} />
           <span className="text-sm font-medium">People</span>

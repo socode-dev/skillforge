@@ -1,4 +1,4 @@
-import useUsersStore from "../../../store/useUsersStore";
+import useUsersStore from "../../../store/useUsersAndSkillsStore";
 import SkillCard from "./SkillCard";
 
 const PopularSkills = () => {
@@ -10,7 +10,7 @@ const PopularSkills = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {skills.map((skill) => (
-          <SkillCard key={skill.skillID} data={skill} size="w-full h-auto" />
+          <SkillCard key={skill.skillId} skill={skill} size="w-full h-auto" />
         ))}
       </div>
     </section>

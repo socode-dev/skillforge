@@ -1,4 +1,4 @@
-import useUsersStore from "../../../store/useUsersStore";
+import useUsersStore from "../../../store/useUsersAndSkillsStore";
 import MemberCard from "./MemberCard";
 
 const FeaturedMembers = () => {
@@ -10,7 +10,7 @@ const FeaturedMembers = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 tablet:grid-cols-3 gap-4">
         {users.map((user, i) => (
-          <MemberCard key={user.id} user={user} index={i} />
+          <MemberCard key={user.userId} user={user} index={i} />
         ))}
       </div>
     </section>

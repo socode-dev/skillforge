@@ -1,5 +1,5 @@
 import SignupProgress from "./components/SignupProgress";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import AuthHeader from "./components/AuthHeader";
 import { motion } from "framer-motion";
 import Skills from "./components/Skills";
@@ -11,6 +11,7 @@ import type { JSX } from "react";
 import { AnimatePresence } from "framer-motion";
 import useAuthStore from "../../store/useAuthStore";
 import { ScrollToTop } from "../../Layouts/ScrollToTop";
+import { useEffect } from "react";
 
 interface StepsState {
   [index: number]: JSX.Element;
@@ -19,7 +20,20 @@ interface StepsState {
 const Signup = () => {
   const signupErr = useAuthStore((state) => state.signupErr);
   const currentStep = useMultiStepsStore((state) => state.currentStep);
+  const navigate = useNavigate();
+  const { slug } = useParams<{ slug: string }>();
   const steps = ["Account", "Skills", "Profile", "Done"];
+
+  // Reactively update URL when currentStep changes
+  useEffect(() => {
+    const expectedPath = `/signup/step-${currentStep}`;
+    const currentPath = `/signup/${slug}`;
+
+    // Only update URL if it doesn't match the current step
+    if (currentPath !== expectedPath) {
+      navigate(expectedPath, { replace: true });
+    }
+  }, [currentStep, navigate, slug]);
 
   const stepsComponents: StepsState = {
     0: <Account />,

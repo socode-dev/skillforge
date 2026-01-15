@@ -42,9 +42,9 @@ const Header = () => {
       </button>
 
       <button className="bg-primary w-10 h-10 flex justify-center items-center p-0.5 text-primary-foreground hover:bg-primary-dark rounded-full transition cursor-pointer">
-        {currentUser && currentUser.avatar ? (
+        {currentUser && currentUser?.profile?.avatar ? (
           <img
-            src={currentUser.avatar}
+            src={currentUser?.profile?.avatar}
             alt="User avatar"
             className="w-full h-full rounded-full object-fill"
           />

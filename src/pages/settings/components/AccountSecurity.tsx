@@ -23,6 +23,8 @@ const AccountSecurity = () => {
 
   if (!currentUser) return;
 
+  const { profile } = currentUser;
+
   return (
     <section className="w-full bg-card text-card-foreground px-4 border-1 border-border rounded-radius-xl mb-6">
       <button
@@ -53,7 +55,7 @@ const AccountSecurity = () => {
           icon={User}
           heading="Name"
           subHeading="Your full name"
-          value={currentUser.name}
+          value={profile.name}
           handleEdit={() => setIsEditModalOpen("name", true)}
           className="mb-4 border-b-1 border-border pb-4 rounded-b-radius"
         />
@@ -62,7 +64,7 @@ const AccountSecurity = () => {
           icon={Mail}
           heading="Email Address"
           subHeading="Primary email"
-          value={currentUser.email}
+          value={profile.email}
           handleEdit={() => setIsEditModalOpen("email", true)}
           className="mb-4 border-b-1 border-border pb-4 rounded-b-radius"
         />

@@ -1,27 +1,24 @@
-import { useEffect, useEffectEvent } from "react";
-import useAuthStore from "../store/useAuthStore";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import useAuthStore from "@/store/useAuthStore";
+import useUsersStore from "@/store/useUsersAndSkillsStore";
+// import useRequestsStore from "@/store/useRequestsStore";
 import {
-  buildDiscoverFeeds,
-  type FetchedUserDataType,
-} from "../lib/buildDiscoverFeeds";
-import useUsersStore from "../store/useUsersStore";
-import {
-  firestoreCollectionListener,
-  firestoreDocListener,
-  firestoreUsersCollectionListener,
-} from "../lib/firestoreListener";
-import useRequestsStore from "../store/useRequestsStore";
+  // firestoreCollectionListener,
+  // firestoreDocListener,
+  // firestoreUsersCollectionListener,
+  skillsCollectionListener,
+  skillRequestListener,
+} from "@/lib/firestoreListener";
+import { fetchSkills, fetchUsers } from "@/lib/fetchDiscoverData";
 
 const AppIntializer = () => {
-  const navigate = useNavigate();
   const { startAuthListener, stopAuthListener, currentUser, setCurrentUser } =
     useAuthStore();
   const { setUsers, setSkills } = useUsersStore();
-  const { setSkillRequests } = useRequestsStore();
+  // const { setSkillRequests } = useRequestsStore();
 
   useEffect(() => {
-    startAuthListener(navigate);
+    startAuthListener();
 
     if (!currentUser) return;
 
@@ -30,49 +27,54 @@ const AppIntializer = () => {
     };
   }, []);
 
-  const handleUsersUpdate = useEffectEvent(
-    (otherUsers: FetchedUserDataType[]) => {
-      const { usersFeed, skillsFeed } = buildDiscoverFeeds(
-        otherUsers as FetchedUserDataType[]
-      );
+  useEffect(() => {
+    if (!currentUser) return;
 
-      setUsers(usersFeed);
-      setSkills(skillsFeed);
-    }
-  );
+    const fetch = async () => {
+      const skills = await fetchSkills(currentUser.profile.userId);
+      const users = await fetchUsers(currentUser.profile.userId);
+
+      if (!users) return null;
+
+      // setSkills(skills);
+      setUsers(users);
+    };
+
+    const timeout = setTimeout(async () => {
+      try {
+        await fetch();
+      } catch (err) {
+        console.error(err);
+      }
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, [currentUser?.profile?.userId]);
 
   useEffect(() => {
-    if (!currentUser?.uid) return;
+    if (!currentUser) return;
 
-    const unsubscribeUsersListener = firestoreUsersCollectionListener(
-      currentUser.uid,
-      handleUsersUpdate
+    const unsubscribeSkillsListener = skillsCollectionListener(
+      currentUser.profile.userId
     );
 
     return () => {
-      unsubscribeUsersListener();
+      unsubscribeSkillsListener();
+      // unsubscribeSkillRequestListener();
     };
-  }, [currentUser?.uid]);
+  }, [currentUser?.profile?.userId]);
 
   useEffect(() => {
-    if (!currentUser?.uid) return;
+    if (!currentUser) return;
 
-    const unsubscribeSkillRequestListener = firestoreCollectionListener(
-      currentUser.uid,
-      "skillRequests",
-      setSkillRequests
-    );
-
-    const unsubscribeUserDocListener = firestoreDocListener(
-      currentUser.uid,
-      setCurrentUser
+    const unsubscribeSkillRequestListener = skillRequestListener(
+      currentUser.profile.userId
     );
 
     return () => {
       unsubscribeSkillRequestListener();
-      unsubscribeUserDocListener();
     };
-  }, [currentUser?.uid, setSkillRequests, setCurrentUser]);
+  }, [currentUser?.profile?.userId]);
 
   return null;
 };
