@@ -1,6 +1,6 @@
 import { ArrowRight, Sparkles } from "lucide-react";
-import { recommendationsData } from "../data/recommendationsData";
-import Button from "../../../components/ui/Button";
+import { recommendationsData } from "@/pages/dashboard/data/recommendationsData";
+import Button from "@/components/ui/Button";
 import clsx from "clsx";
 import { motion } from "framer-motion";
 

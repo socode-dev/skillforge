@@ -50,20 +50,8 @@ const Sidebar = () => {
 
       <figure className="w-full p-6 flex items-center gap-3 border-t-1 border-border">
         <div
-          className={clsx(
-            "w-12 h-10 p-0.5 bg-soft-primary text-primary rounded-full",
-            !currentUser?.profile?.avatar && "flex items-center justify-center"
-          )}
-        >
-          {currentUser && currentUser?.profile?.avatar ? (
-            <img
-              src={currentUser?.profile?.avatar}
-              alt="User avatar"
-              className="w-full h-full rounded-full object-fill"
-            />
-          ) : (
+          className="min-w-10 h-10 p-0.5 bg-soft-primary text-primary rounded-full flex items-center justify-center" >
             <User size={20} />
-          )}
         </div>
 
         <figcaption className="w-full text-foreground">

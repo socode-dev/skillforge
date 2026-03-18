@@ -1,13 +1,13 @@
 import { Outlet } from "react-router-dom";
-import Header from "../components/layout/Dashboard/Header";
-import Sidebar from "../components/layout/Dashboard/Sidebar";
-import { useSidebarContext } from "../context/useSidebarContext";
+import Header from "@/components/layout/Dashboard/Header";
+import Sidebar from "@/components/layout/Dashboard/Sidebar";
+import { useSidebarContext } from "@/context/useSidebarContext";
 import { motion, AnimatePresence } from "framer-motion";
-import Footer from "../components/layout/Dashboard/Footer";
-import ShowEditModal from "../components/layout/Dashboard/ShowEditModal";
-import ShowDialog from "../components/layout/Dashboard/ShowDialog";
+import Footer from "@/components/layout/Dashboard/Footer";
+import ShowEditModal from "@/components/layout/Dashboard/ShowEditModal";
+import ShowDialog from "@/components/layout/Dashboard/ShowDialog";
 import { Bounce, ToastContainer } from "react-toastify";
-import TabBar from "../components/layout/Dashboard/TabBar";
+import TabBar from "@/components/layout/Dashboard/TabBar";
 
 const DashboardLayout = () => {
   const { isSidebarOpen, setIsSidebarOpen } = useSidebarContext();
@@ -64,7 +64,7 @@ const DashboardLayout = () => {
 
       <div className=" w-full h-dvh lg:w-5/6 lg:left-1/6 absolute flex flex-col overflow-y-auto scrollbar-hide">
         <Header />
-        <div className="grow pt-25 px-6 md:px-8 lg:px-10 max-md:mb-15 bg-background text-foreground">
+        <div className="grow pt-25 max-md:mb-15 bg-background text-foreground">
           <Outlet />
         </div>
         <Footer />

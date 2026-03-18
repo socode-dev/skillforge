@@ -19,7 +19,7 @@ export type RequestStatus =
   | "DECLINED"
   | "COMPLETED"
   | "CANCELLED";
-type SkillRequestButtonText =
+type RequestButtonText =
   | "Request"
   | "Requested"
   | "Request Again"
@@ -28,7 +28,6 @@ type SkillRequestButtonText =
 
 export interface SkillRequest {
   requestId: string;
-
   skillId: string;
   skillName: string;
   skillDesc: string;
@@ -83,11 +82,11 @@ export interface RequestsStoreState {
     requestId?: string
   ) => void;
   getSkillRequestButtonChildren: (status?: RequestStatus) => {
-    text: SkillRequestButtonText;
+    text: RequestButtonText;
     icon: LucideIcon;
   };
   onSendRequest: (requestData: RequestDataType) => Promise<void>;
-  onAcceptRequest: (requestId: string) => Promise<void>;
+  onAcceptRequest: (requestData: {requestId: string, ownerUserId: string; requesterUserId: string; skillId: string; skillName: string;}) => Promise<void>;
   onCancelRequest: (requestId: string) => Promise<void>;
   onDeclineRequest: (requestId: string) => Promise<void>;
 }
@@ -147,18 +146,20 @@ const useRequestsStore = create<RequestsStoreState>()(
         }
       },
 
-      onAcceptRequest: async (requestId) => {
+      onAcceptRequest: async (requestData) => {
         const { setLoading } = get();
 
-        if (!requestId) {
-          toast.error("Request Id not found");
+        if (!Object.keys(requestData).length) {
+          toast.error("Request data not found");
           return;
         }
+
+        const {requestId} = requestData;
 
         setLoading("isAccepting", true, requestId);
 
         try {
-          await acceptRequest({ requestId });
+          await acceptRequest(requestData);
           toast.success("Request Accepted");
         } catch (err) {
           console.error("Error:", err);
@@ -208,7 +209,7 @@ const useRequestsStore = create<RequestsStoreState>()(
       },
 
       getSkillRequestButtonChildren: (status) => {
-        let text: SkillRequestButtonText;
+        let text: RequestButtonText;
         let icon: LucideIcon;
 
         if (!status) {

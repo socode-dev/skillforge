@@ -1,6 +1,6 @@
 import { ArrowRight, Sparkles } from "lucide-react";
-import Button from "../../../components/ui/Button";
-import teamCollaborationImage from "../../../assets/images/team-collaboration.webp";
+import Button from "@/components/ui/Button";
+import teamCollaborationImage from "@/assets/images/team-collaboration.webp";
 import { motion } from "framer-motion";
 
 const Hero = ({ handleSignupClick }: { handleSignupClick: () => void }) => {

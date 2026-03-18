@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
-import SearchBar from "./components/SearchBar";
-import Filter from "./components/Filter";
-import { searchAndFilterSchema } from "../../schemas/searchAndFilterSchema";
-import { useAuthForm } from "../../hooks/useAuthForm";
-import Recommendations from "./components/Recommendations";
-import PopularSkills from "./components/PopularSkills";
-import FeaturedMembers from "./components/FeaturedMembers";
-import { ScrollToTop } from "../../Layouts/ScrollToTop";
+import SearchBar from "@/pages/discover/components/SearchBar";
+import Filter from "@/pages/discover/components/Filter";
+import { searchAndFilterSchema } from "@/schemas/searchAndFilterSchema";
+import { useAuthForm } from "@/hooks/useAuthForm";
+import Recommendations from "@/pages/discover/components/Recommendations";
+import PopularSkills from "@/pages/discover/components/PopularSkills";
+import FeaturedMembers from "@/pages/discover/components/FeaturedMembers";
+import { ScrollToTop } from "@/Layouts/ScrollToTop";
 
 const Discover = () => {
   const { discoverSearchShcema } = searchAndFilterSchema;
@@ -18,6 +18,7 @@ const Discover = () => {
   const { register, watch } = form;
 
   const filterValue = watch("filterValue");
+  const searchValue = watch("searchValue")!;
 
   return (
     <motion.main
@@ -25,7 +26,7 @@ const Discover = () => {
       animate={{ opacity: 1, y: 0, x: 0 }}
       exit={{ opacity: 0, x: -50, y: 50 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="w-full pb-10"
+      className="w-full pb-10 px-6 md:px-8 lg:px-10"
     >
       <ScrollToTop />
       <section className="w-full mb-8">
@@ -41,8 +42,8 @@ const Discover = () => {
 
       {(filterValue == "all" || filterValue === "skills") && (
         <>
-          <Recommendations />
-          <PopularSkills />
+          <Recommendations searchValue={searchValue}/>
+          <PopularSkills searchValue={searchValue}/>
         </>
       )}
 

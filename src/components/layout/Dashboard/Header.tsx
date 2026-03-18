@@ -2,6 +2,7 @@ import { Bell, Menu, User } from "lucide-react";
 import { useSidebarContext } from "../../../context/useSidebarContext";
 import { useLocation } from "react-router-dom";
 import useAuthStore from "../../../store/useAuthStore";
+import clsx from "clsx";
 
 const Header = () => {
   const { currentUser } = useAuthStore();
@@ -21,7 +22,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-10 bg-background lg:left-1/6 py-4 px-6 md:px-8 flex items-center gap-8 border-b-1 border-border">
+    <header className={clsx("fixed top-0 left-0 right-0 z-10 bg-background lg:left-1/6 py-4 px-6 md:px-8 flex items-center gap-8 border-b-1 border-border", pathname.includes("thread") && "hidden")}>
       <button
         onClick={() => setIsSidebarOpen((prev) => !prev)}
         aria-label="hamburger"
@@ -41,12 +42,12 @@ const Header = () => {
         )}
       </button>
 
-      <button className="bg-primary w-10 h-10 flex justify-center items-center p-0.5 text-primary-foreground hover:bg-primary-dark rounded-full transition cursor-pointer">
+      <button className="bg-primary w-10 h-10 flex justify-center items-center text-primary-foreground hover:bg-primary-dark rounded-full transition cursor-pointer">
         {currentUser && currentUser?.profile?.avatar ? (
           <img
             src={currentUser?.profile?.avatar}
             alt="User avatar"
-            className="w-full h-full rounded-full object-fill"
+            className="w-[95%] h-[95%] rounded-full object-fill"
           />
         ) : (
           <User size={20} />
