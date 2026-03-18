@@ -1,32 +1,26 @@
 import { Sparkles } from "lucide-react";
-import { Link } from "react-router-dom";
-import SkillCard from "./SkillCard";
+import SkillCard from "@/pages/discover/components/SkillCard";
 import useUsersStore, {
   type SkillDataType,
-} from "../../../store/useUsersAndSkillsStore";
-import { shuffleArray } from "../../../utils/shuffleArray";
+} from "@/store/useUsersAndSkillsStore";
+import { shuffleArray } from "@/utils/shuffleArray";
 
-const Recommendations = () => {
+const Recommendations = ({searchValue}: {searchValue: string}) => {
   const { skills } = useUsersStore();
   const shuffledSkills = shuffleArray(skills) as SkillDataType[];
 
-  const slicedSkills = shuffledSkills.slice(0, 6);
+  const slicedSkills = shuffledSkills.slice(0, 6).filter(skill => skill.skillName.toLowerCase().includes(searchValue.toLowerCase()) || skill.skillDesc.toLowerCase().includes(searchValue.toLowerCase()));
+
+  if(!slicedSkills.length) return null;
 
   return (
     <section className="mb-6">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="flex items-center gap-2 text-xl font-semibold">
+      <h3 className="flex items-center gap-2 text-xl font-semibold mb-4">
           <Sparkles size={20} className="text-primary" />
           <span>Recommended for You</span>
-        </h3>
+      </h3>
 
-        <Link
-          to={""}
-          className="text-sm font-semibold text-primary hover:text-primary-dark transition"
-        >
-          View all
-        </Link>
-      </div>
+      
 
       <div className="relative w-full overflow-x-auto overflow-y-hidden scrollbar-hide scroll-smooth">
         <div className="flex gap-4 w-max max-w-full snap-x snap-mandatory">

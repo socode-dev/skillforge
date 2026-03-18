@@ -1,5 +1,5 @@
-import useUsersStore from "../../../store/useUsersAndSkillsStore";
-import MemberCard from "./MemberCard";
+import useUsersStore from "@/store/useUsersAndSkillsStore";
+import MemberCard from "@/pages/discover/components/MemberCard";
 
 const FeaturedMembers = () => {
   const { users } = useUsersStore();

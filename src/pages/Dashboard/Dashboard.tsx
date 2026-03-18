@@ -1,10 +1,10 @@
-import { ScrollToTop } from "../../Layouts/ScrollToTop";
-import DiscoverRecommendation from "./components/DiscoverRecommendations";
-import Hero from "./components/Hero";
-import MessagesOverview from "./components/MessagesOverview";
-import OngoingLearning from "./components/OngoingLearning";
-import OverviewStats from "./components/OverviewStats";
-import RequestsOverview from "./components/RequestsOverview";
+import { ScrollToTop } from "@/Layouts/ScrollToTop";
+import DiscoverRecommendation from "@/pages/dashboard/components/DiscoverRecommendations";
+import Hero from "@/pages/dashboard/components/Hero";
+import MessagesOverview from "@/pages/dashboard/components/MessagesOverview";
+import OngoingLearning from "@/pages/dashboard/components/OngoingLearning";
+import OverviewStats from "@/pages/dashboard/components/OverviewStats";
+import RequestsOverview from "@/pages/dashboard/components/RequestsOverview";
 import { motion } from "framer-motion";
 
 const Dashboard = () => {
@@ -14,7 +14,7 @@ const Dashboard = () => {
       animate={{ opacity: 1, y: 1, x: 1 }}
       exit={{ opacity: 0, x: -50, y: 50 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="space-y-10 w-full pb-10"
+      className="space-y-10 w-full pb-10 px-6 md:px-8 lg:px-10"
     >
       <ScrollToTop />
       <Hero />

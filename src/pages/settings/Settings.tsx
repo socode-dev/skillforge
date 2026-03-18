@@ -1,6 +1,6 @@
-import AccountSecurity from "./components/AccountSecurity";
-import DangerZone from "./components/DangerZone";
-import Preferences from "./components/Preferences";
+import AccountSecurity from "@/pages/settings/components/AccountSecurity";
+import DangerZone from "@/pages/settings/components/DangerZone";
+import Preferences from "@/pages/settings/components/Preferences";
 import { motion } from "framer-motion";
 
 const Settings = () => {
@@ -10,7 +10,7 @@ const Settings = () => {
       animate={{ opacity: 1, y: 1, x: 1 }}
       exit={{ opacity: 0, x: -50, y: 50 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="w-full bg-background text-foreground pb-6 sm:px-8 md:px-10 tablet:px-12"
+      className="w-full bg-background text-foreground pb-6 px-6 md:px-8 lg:px-10"
     >
       <section className="w-full mb-8">
         <h2 className="text-2xl font-semibold mb-1">Settings</h2>

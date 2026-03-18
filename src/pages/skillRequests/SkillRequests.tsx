@@ -10,7 +10,7 @@ const SkillRequests = () => {
   );
 
   return (
-    <main className="mb-8 flex flex-col gap-15">
+    <main className="mb-8 flex flex-col gap-15 px-6 md:px-8 lg:px-10">
       <RequestNavBar
         requestType={requestType}
         setRequestType={setRequestType}

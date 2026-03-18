@@ -95,6 +95,7 @@ const useAuthStore = create<StoreState>()(
             return;
           }
 
+
           const userRef = doc(db, "users", user.uid);
           const userDocSnap = await getDoc(userRef);
 

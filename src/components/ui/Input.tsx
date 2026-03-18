@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import type { RefAttributes } from "react";
+import type { InputHTMLAttributes, RefAttributes } from "react";
 
 interface InputProps extends RefAttributes<HTMLInputElement> {
   label?: string;
@@ -14,6 +14,7 @@ interface InputProps extends RefAttributes<HTMLInputElement> {
     | "date"
     | "image"
     | "file"
+    | "search"
     | "range";
   placeholder?: string;
   className?: string;
@@ -28,7 +29,7 @@ const Input = ({
   className,
   labelClassName,
   ...props
-}: InputProps) => {
+}: InputProps & InputHTMLAttributes<HTMLInputElement>) => {
   return (
     <>
       {label && (
@@ -49,7 +50,7 @@ const Input = ({
         id={name}
         placeholder={placeholder}
         className={clsx(
-          "rounded-radius-xl bg-input text-foreground text-sm border-1 border-border outline-none focus:border-2 focus:border-primary/80 focus:shadow shadow-soft-primary transition",
+          "rounded-radius-xl bg-input text-foreground text-base border-1 border-border outline-none focus:border-2 focus:border-primary/80 focus:shadow shadow-soft-primary transition",
           className
         )}
       />

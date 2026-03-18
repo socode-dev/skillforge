@@ -9,5 +9,6 @@ export { sendSkillRequest } from "@functions/skillRequest/send";
 export { cancelSkillRequest } from "@functions/skillRequest/cancel";
 export { declineSkillRequest } from "@functions/skillRequest/decline";
 export { acceptSkillRequest } from "@functions/skillRequest/accept";
+export {sendMessage} from "@functions/chat/sendMessage";
 
 export const db = getFirestore();

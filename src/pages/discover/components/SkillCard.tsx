@@ -5,11 +5,8 @@ import useRequestsStore from "@/store/useRequestsStore";
 import useAuthStore from "@/store/useAuthStore";
 import { colors } from "@/data/colors";
 import type { SkillDataType } from "@/store/useUsersAndSkillsStore";
-import { httpsCallable } from "firebase/functions";
-import { functions } from "@/lib/firebase";
-import { useState } from "react";
-import { Users } from "lucide-react";
 import useUsersAndSkillsStore from "@/store/useUsersAndSkillsStore";
+import { Users } from "lucide-react";
 
 interface SkillCardProps {
   skill: SkillDataType;

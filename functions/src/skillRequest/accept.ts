@@ -1,78 +1,120 @@
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { db } from "@functions/index";
-import { v4 as uuidv4 } from "uuid";
 import { FieldValue } from "firebase-admin/firestore";
+import { getChatId } from "@functions/utils/chat";
+import {AcceptPayload} from "@functions/types/skillRequest/AcceptPayload";
+import { generateChatSlug } from "@functions/utils/generateChatSlug";
+import { v4 as uuidv4 } from "uuid";
 
-export const acceptSkillRequest = onCall<{ requestId: string }>(
+export const acceptSkillRequest = onCall<AcceptPayload>(
   async ({ auth, data }) => {
     if (!auth) {
       throw new HttpsError("unauthenticated", "Login required");
     }
 
     const { uid } = auth;
-    const { requestId } = data;
+    const { requestId, ownerUserId, requesterUserId, skillId, skillName } = data;
 
-    if (!requestId) {
-      throw new HttpsError("invalid-argument", "Request id not found");
+    if (!requestId || !ownerUserId || !requesterUserId) {
+      throw new HttpsError("invalid-argument", "Request data not found");
     }
 
-    const requestRef = db.collection("skillRequests").doc(requestId);
+    const ownerDocSnap = await db.collection("users").doc(ownerUserId).get();
+    const requesterDocSnap = await db.collection("users").doc(requesterUserId).get();
 
-    return await db.runTransaction(async (tx) => {
-      const snap = await tx.get(requestRef);
+    if(!ownerDocSnap.exists && !requesterDocSnap.exists) {
+      throw new HttpsError("not-found", "Users document does not exist")
+    }
+    
+    const ownerData = ownerDocSnap.data();
+    const requesterData = requesterDocSnap.data();
+    
+    
+    if (ownerData?.userId !== uid) {
+      throw new HttpsError(
+        "permission-denied",
+        "only owner can accept request"
+      );
+    }
+    
+    const chatId = getChatId(ownerData?.userId, requesterData?.userId);
+    const chatSlug = generateChatSlug();
+    
+    const chatRef = db.collection("chats").doc(chatId);
+    const chatSnap = await chatRef.get();
+    
+    const batch = db.batch();
 
-      if (!snap.exists) {
-        throw new HttpsError("not-found", "Skill request not found");
-      }
-
-      const request = snap.data();
-
-      // Authorization
-      if (request?.owner.userId !== uid) {
-        throw new HttpsError(
-          "permission-denied",
-          "only owner can accept request"
-        );
-      }
-
-      // State validation
-      if (request.status !== "PENDING") {
-        throw new HttpsError(
-          "failed-precondition",
-          "Request is no longer pending"
-        );
-      }
-
-      // Prevent duplicate chat creation
-      if (request.chatId) {
-        return { chatId: request.chatId };
-      }
-
-      const chatId = uuidv4();
-      const chatRef = db.collection("chats").doc(chatId);
-
-      tx.set(chatRef, {
+    if(!chatSnap.exists) {
+      const chatDoc = {
         chatId,
-        participant: [request.owner.userId, request.requester.userId],
-        participantMap: {
-          [request.owner.userId]: true,
-          [request.requester.userId]: true,
+        slug: chatSlug,
+        participants: [ownerData?.userId, requesterData?.userId],
+        participantDetails: {
+          [ownerData?.userId]: {
+            userId: ownerData?.userId,
+            name: ownerData?.name,
+            role: ownerData?.role,
+            avatar: ownerData?.avatar
+          },
+          [requesterData?.userId]: {
+            name: requesterData?.name,
+            role: requesterData?.role,
+            avatar: requesterData?.avatar
+          }
         },
-        skillId: request.skillId,
-        requestId,
-        createdAt: FieldValue.serverTimestamp(),
-        lastMessageAt: null,
-      });
 
-      // Update request status
-      tx.update(requestRef, {
-        status: "ACCEPTED",
-        chatId,
+        lastMessage: null,
         updatedAt: FieldValue.serverTimestamp(),
-        acceptedAt: FieldValue.serverTimestamp(),
-      });
+        createdAt: FieldValue.serverTimestamp(),
+      }
+      
+      // Create chat
+      batch.set(chatRef, chatDoc);
+    }
+    
+        const messageRef = chatRef.collection("messages").doc();
+    
+        const systemMessage = {
+          messageId: messageRef.id,
+          clientId: uuidv4(),
+          chatId,
+          text: `"${skillName}" request has been accepted`,
+          type: "SYSTEM",
+          status: "SENT",
+          createdAt: FieldValue.serverTimestamp()
+        }
+    
+    // Create system message
+    batch.set(messageRef, systemMessage);
 
-      return { chatId };
+    // Update chat last message
+    batch.update(chatRef, {
+      lastMessage: {
+        messageId: systemMessage.messageId,
+        type: "SYSTEM",
+        text: systemMessage.text,
+        createdAt: FieldValue.serverTimestamp()
+      },
+      updatedAt: FieldValue.serverTimestamp()
     });
+    
+    const requestRef = db.collection("skillRequests").doc(requestId)
+
+    const skillRequestUpdate =  {
+      status: "ACCEPTED",
+      updatedAt: FieldValue.serverTimestamp(),
+      acceptedAt: FieldValue.serverTimestamp(),
+      chatId
+    }
+
+    // Update skill request status and chat id
+    batch.update(requestRef, skillRequestUpdate)
+
+    const skillDocRef = db.collection("skills").doc(skillId);
+    // Increase skill leaners count
+    batch.update(skillDocRef, {learnersCount: FieldValue.increment(1) });
+
+    await batch.commit();
   }
 );

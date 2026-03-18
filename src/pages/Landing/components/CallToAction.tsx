@@ -1,5 +1,5 @@
 import { ArrowRight, CircleCheck, Sparkles, Star, Zap } from "lucide-react";
-import Button from "../../../components/ui/Button";
+import Button from "@/components/ui/Button";
 import { motion } from "framer-motion";
 
 const CallToAction = ({

@@ -1,11 +1,8 @@
 import { MessageCircle, UserPlus } from "lucide-react";
-import Button from "../../../components/ui/Button";
+import Button from "@/components/ui/Button";
 import clsx from "clsx";
 import { motion } from "framer-motion";
-import useRequestsStore, {
-  type InvitationData,
-} from "../../../store/useRequestsStore";
-import useAuthStore from "../../../store/useAuthStore";
+import useAuthStore from "@/store/useAuthStore";
 import type { UserDataType } from "@/store/useUsersAndSkillsStore";
 
 interface MemberCardProps {
@@ -26,24 +23,8 @@ const getInitial = (value: string) => {
 
 const MemberCard = ({ user, index }: MemberCardProps) => {
   const { currentUser } = useAuthStore();
-  // const { invitations } = useRequestsStore();
-
-  // const isInvitationSent = invitations.find(
-  //   (invite) => invite.incomingUserID === user.id
-  // );
 
   if (!currentUser) return;
-
-  // const invitationData: InvitationData = {
-  //   incomingUserID: user.id,
-  //   outgoingUserID: currentUser.uid,
-  //   incomingUserName: user.name,
-  //   incomingUserRole: user.role,
-  //   incomingUserAvatar: user.avatar,
-  //   status: "pending",
-  //   type: "outgoing",
-  //   time: Date.now(),
-  // };
 
   return (
     <motion.div

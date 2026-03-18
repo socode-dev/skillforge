@@ -1,12 +1,20 @@
 import type { SkillRequest } from "@/store/useRequestsStore";
 import Button from "@/components/ui/Button";
 import useRequestsStore from "@/store/useRequestsStore";
+import { useNavigate } from "react-router-dom";
 
 interface CardButtonProps extends Pick<SkillRequest, "status" | "requestId"> {
+  acceptRequestData: {
+    ownerUserId: string;
+    requesterUserId: string;
+    skillId: string;
+    skillName: string;
+  }
   type: "incoming" | "outgoing";
 }
 
-const CardButton = ({ status, type, requestId }: CardButtonProps) => {
+const CardButton = ({ status, type, requestId, acceptRequestData }: CardButtonProps) => {
+  const navigate = useNavigate();
   const { onCancelRequest, onDeclineRequest, onAcceptRequest, loading } =
     useRequestsStore();
 
@@ -17,12 +25,12 @@ const CardButton = ({ status, type, requestId }: CardButtonProps) => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           transition={{ duration: 0.1, ease: "easeOut" }}
-          onClick={() => onAcceptRequest(requestId)}
+          onClick={() => onAcceptRequest({requestId, ...acceptRequestData})}
           type="button"
           variant="primary"
           className="text-sm sm:text-base"
         >
-          Accept
+          {loading.isAccepting[requestId] ? "Accepting..." : "Accept"}
         </Button>
         <Button
           onClick={() => onDeclineRequest(requestId)}
@@ -49,7 +57,7 @@ const CardButton = ({ status, type, requestId }: CardButtonProps) => {
     return (
       <Button
         type="button"
-        onClick={() => console.log("Message")}
+        onClick={() => navigate("/home/Messages")}
         variant="outline"
         className="w-full"
       >

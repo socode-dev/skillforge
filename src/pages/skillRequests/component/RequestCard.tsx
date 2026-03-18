@@ -10,7 +10,7 @@ import {
 import { colors } from "@/data/colors";
 import clsx from "clsx";
 import CardButton from "@/pages/skillRequests/component/CardButton";
-import { formatTimeDistance } from "@/utils/formatTimeDistance";
+import { formatTime } from "@/utils/formatTime";
 import useAuthStore from "@/store/useAuthStore";
 import type { RequestStatus } from "@/store/useRequestsStore";
 import type { Timestamp } from "firebase/firestore";
@@ -64,6 +64,15 @@ const RequestCard = ({ request }: { request: RequestType }) => {
     statusContent[request.status as keyof typeof statusContent].icon;
 
   const randomColor: string = colors[Math.floor(Math.random() * colors.length)];
+
+  const acceptRequestData = {
+    ownerUserId: request.ownerUserId,
+    requesterUserId: request.requesterUserId,
+    skillId: request.skillId,
+    skillName: request.skillName
+  }
+  
+  
   return (
     <figure className="w-full py-5 px-3 bg-card text-card-foreground border-l-4 border-primary rounded-radius-xl flex gap-4 shadow relative overflow-hidden">
       <div className="absolute -right-20 top-12 bg-accent/5 w-30 h-30 rounded-full" />
@@ -122,13 +131,14 @@ const RequestCard = ({ request }: { request: RequestType }) => {
 
         <time className="flex items-center gap-1.5 text-xs text-muted-foreground my-4">
           <Clock size={14} />{" "}
-          <span>{formatTimeDistance(request.updatedAt)}</span>
+          <span>{formatTime(request.updatedAt)}</span>
         </time>
 
         <CardButton
           status={request.status}
           type={requestType}
           requestId={request.requestId}
+          acceptRequestData={acceptRequestData}
         />
       </figcaption>
     </figure>

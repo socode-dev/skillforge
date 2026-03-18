@@ -1,18 +1,20 @@
 import { Route, Routes } from "react-router-dom";
-import LandingPageLayout from "../Layouts/LandingPageLayout";
-import DashboardLayout from "../Layouts/DashboardLayout";
-import LandingPage from "../pages/landing/LandingPage";
-import Login from "../pages/auth/Login";
-import Signup from "../pages/auth/Signup";
-import Dashboard from "../pages/dashboard/Dashboard";
-import { ProtectedRoute } from "./ProtectedRoute";
-import { SidebarProvider } from "../context/useSidebarContext";
-import Discover from "../pages/discover/Discover";
-import SkillRequests from "../pages/skillRequests/SkillRequests";
-import Messages from "../pages/messages/Messages";
-import Profile from "../pages/profile/Profile";
-import Settings from "../pages/settings/Settings";
-import PublicRoute from "./PublicRoute";
+import LandingPageLayout from "@/Layouts/LandingPageLayout";
+import DashboardLayout from "@/Layouts/DashboardLayout";
+import LandingPage from "@/pages/landing/LandingPage";
+import Login from "@/pages/auth/Login";
+import Signup from "@/pages/auth/Signup";
+import Dashboard from "@/pages/dashboard/Dashboard";
+import { ProtectedRoute } from "@/routes/ProtectedRoute";
+import { SidebarProvider } from "@/context/useSidebarContext";
+import Discover from "@/pages/discover/Discover";
+import SkillRequests from "@/pages/skillRequests/SkillRequests";
+import ChatList from "@/pages/messages/ChatList";
+import ChatThread from "@/pages/messages/ChatThread";
+import Profile from "@/pages/profile/Profile";
+import Settings from "@/pages/settings/Settings";
+import PublicRoute from "@/routes/PublicRoute";
+import { ChatProvider } from "@/context/useChatContext";
 
 const AppRoutes = () => {
   return (
@@ -43,7 +45,8 @@ const AppRoutes = () => {
         <Route index element={<Dashboard />} />
         <Route path="discover" element={<Discover />} />
         <Route path="skill-requests" element={<SkillRequests />} />
-        <Route path="messages" element={<Messages />} />
+        <Route path="messages" element={<ChatProvider><ChatList></ChatList></ChatProvider>} />
+        <Route path="messages/thread/:slug" element={<ChatProvider><ChatThread /></ChatProvider>} />
         <Route path="profile" element={<Profile />} />
         <Route path="settings" element={<Settings />} />
       </Route>
