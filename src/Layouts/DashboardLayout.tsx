@@ -8,6 +8,7 @@ import ShowEditModal from "@/components/layout/Dashboard/ShowEditModal";
 import ShowDialog from "@/components/layout/Dashboard/ShowDialog";
 import { Bounce, ToastContainer } from "react-toastify";
 import TabBar from "@/components/layout/Dashboard/TabBar";
+import EditProfile from "@/components/dialogs/EditProfile";
 
 const DashboardLayout = () => {
   const { isSidebarOpen, setIsSidebarOpen } = useSidebarContext();
@@ -28,6 +29,8 @@ const DashboardLayout = () => {
 
       {/* Dialog */}
       <ShowDialog />
+
+      <EditProfile />
 
       {/* Desktop Sidebar */}
       <aside

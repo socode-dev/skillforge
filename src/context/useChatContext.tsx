@@ -1,6 +1,6 @@
 import { useAuthForm } from "@/hooks/useAuthForm";
-import { db, functions } from "@/lib/firebase";
-import { chatThreadListener } from "@/lib/firestoreListener";
+import { db, functions } from "@/firebase/firebase";
+import { chatThreadListener } from "@/firebase/firestore-listener/chatThread"; 
 import { chatInputSchema, type ChatInputShema } from "@/schemas/chatInputSchema";
 import useAuthStore from "@/store/useAuthStore";
 import useChatStore from "@/store/useChatStore";

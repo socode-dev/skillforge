@@ -39,6 +39,7 @@
   --color-soft-green: var(--soft-green);
   --color-soft-orange: var(--soft-orange);
   --color-soft-destructive: var(--soft-destructive);
+  --color-soft-amber: var(--soft-amber);
 
   /* Animation theme */
   --animate-tilt: tilt 0.1s ease-in-out forwards;
@@ -92,6 +93,7 @@
   --soft-green: rgb(240, 253, 244);
   --soft-orange: rgb(255, 247, 237);
   --soft-destructive: rgb(254, 242, 242);
+  --soft-amber: rgba(253, 230, 138, 0.5);
 }
 
 .dark {
@@ -122,6 +124,7 @@
   --soft-green: rgba(22, 101, 52, 0.1);
   --soft-orange: rgba(154, 52, 18, 0.1);
   --soft-destructive: rgba(69, 10, 10);
+  --soft-amber: rgba(146, 64, 14, 0.5);
 }
 
 html,

@@ -1,4 +1,4 @@
-import { functions } from "@/lib/firebase";
+import { functions } from "@/firebase/firebase";
 import type { Timestamp } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import {

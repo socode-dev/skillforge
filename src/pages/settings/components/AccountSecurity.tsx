@@ -3,27 +3,19 @@ import {
   ChevronUp,
   Key,
   Lock,
-  Mail,
   Shield,
-  User,
 } from "lucide-react";
 import SettingsCard from "../../../components/ui/SettingsCard";
-import useAuthStore from "../../../store/useAuthStore";
 import { useState } from "react";
 import clsx from "clsx";
 import useSettingsStore from "../../../store/useSettingsStore";
 
 const AccountSecurity = () => {
-  const { currentUser } = useAuthStore();
   const setIsEditModalOpen = useSettingsStore(
     (state) => state.setIsEditModalOpen
   );
   const [isAccountSecurityOpen, setIsAccountSecurityOpen] =
     useState<boolean>(false);
-
-  if (!currentUser) return;
-
-  const { profile } = currentUser;
 
   return (
     <section className="w-full bg-card text-card-foreground px-4 border-1 border-border rounded-radius-xl mb-6">
@@ -51,24 +43,6 @@ const AccountSecurity = () => {
           isAccountSecurityOpen ? "max-lg:h-fit" : "max-lg:h-0"
         )}
       >
-        <SettingsCard
-          icon={User}
-          heading="Name"
-          subHeading="Your full name"
-          value={profile.name}
-          handleEdit={() => setIsEditModalOpen("name", true)}
-          className="mb-4 border-b-1 border-border pb-4 rounded-b-radius"
-        />
-
-        <SettingsCard
-          icon={Mail}
-          heading="Email Address"
-          subHeading="Primary email"
-          value={profile.email}
-          handleEdit={() => setIsEditModalOpen("email", true)}
-          className="mb-4 border-b-1 border-border pb-4 rounded-b-radius"
-        />
-
         <SettingsCard
           icon={Key}
           heading="Password"

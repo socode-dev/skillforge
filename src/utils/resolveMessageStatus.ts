@@ -1,9 +1,9 @@
-import type { Message, MessageStatus } from "@/types/chat-store.types";
+import type { UIMessage, UIMessageStatus } from "@/types/message.types";
 import type { Timestamp } from "firebase/firestore"; 
 import { Check, CheckCheck, Clock } from "lucide-react";
 
 export const resolveMessageStatus = (
-    message: Message,
+    message: UIMessage,
     currentUserId: string,
     participants: string[],
     readState?: Record<string, Timestamp>,
@@ -27,7 +27,7 @@ export const resolveMessageStatus = (
     return "SENT";
 }
 
-export const renderStatusIcon = (status: MessageStatus) => {
+export const renderStatusIcon = (status: UIMessageStatus) => {
     switch(status) {
         case "PENDING":
             return Clock;

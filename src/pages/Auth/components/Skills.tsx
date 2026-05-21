@@ -9,7 +9,7 @@ import useAuthStore from "@/store/useAuthStore";
 import { useSkillsContext } from "@/context/useSkillsContext";
 import Input from "@/components/ui/Input";
 import { doc, increment, updateDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { db } from "@/firebase/firebase";
 
 const Skills = () => {
   const nextPage = useMultiStepsStore((state) => state.nextPage);
