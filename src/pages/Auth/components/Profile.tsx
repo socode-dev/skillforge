@@ -14,7 +14,7 @@ import { useState, type ChangeEvent } from "react";
 import { uploadToCloudinary } from "../../../utils/uploadToCloudinary";
 import useAuthStore from "../../../store/useAuthStore";
 import { doc, updateDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { db } from "@/firebase/firebase";
 
 const Profile = () => {
   const [uploading, setUploading] = useState<boolean>(false);
@@ -44,8 +44,7 @@ const Profile = () => {
 
     const url = await uploadToCloudinary(file);
     if (!url) {
-      console.error("Failed to generate image url.");
-      return;
+      throw Error("Failed to generate image url.");
     }
     setValue("avatar", url);
     setUploading(false);

@@ -7,7 +7,7 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { auth, db } from "../lib/firebase";
+import { auth, db } from "../firebase/firebase";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import useMultiStepsStore from "./useMultiStepsStore";
 import { getAuthErrorMessage } from "../lib/authErrors";
@@ -16,11 +16,12 @@ import type { UseFormReset } from "react-hook-form";
 import type { AccountSchema } from "../schemas/accountSchema";
 import type { LoginSchema } from "../schemas/loginSchema";
 import { type NavigateFunction } from "react-router-dom";
-import { functions } from "../lib/firebase";
+import { functions } from "../firebase/firebase";
 import { httpsCallable } from "firebase/functions";
 
 export interface SkillType {
   id?: string;
+  skillId?: string;
   skillName: string;
   skillDesc: string;
   learnersCount?: number;
@@ -91,7 +92,7 @@ const useAuthStore = create<StoreState>()(
           set({ loading: true });
 
           if (!user) {
-            set({ loading: false, authResolved: true });
+            set({ currentUser: null, loading: false, authResolved: true });
             return;
           }
 

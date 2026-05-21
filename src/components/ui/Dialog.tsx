@@ -28,7 +28,7 @@ const Dialog = ({ children, className }: DialogProps) => {
         transition={{ duration: 0.3, ease: "easeOut" }}
         key={"Dialog overlay"}
         className={clsx(
-          "fixed top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] inset-0 z-30 p-6 h-fit w-[80%] max-w-[600px] flex flex-col bg-card text-card-foreground border-1 border-border rounded-radius-xl",
+          "fixed top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] inset-0 z-30 p-6 h-fit w-[90%] max-w-[600px] flex flex-col bg-card text-card-foreground border-1 border-border rounded-radius-xl overflow-y-auto",
           className
         )}
       >

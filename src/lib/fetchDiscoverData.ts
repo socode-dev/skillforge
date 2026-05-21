@@ -6,7 +6,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { db } from "@/firebase/firebase";
 import type { SkillDataType } from "@/store/useUsersAndSkillsStore";
 
 export const fetchSkills = async (currentUserId: string) => {

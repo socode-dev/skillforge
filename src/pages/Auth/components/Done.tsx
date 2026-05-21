@@ -6,7 +6,7 @@ import { ScrollToTop } from "@/Layouts/ScrollToTop";
 import useAuthStore from "@/store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
-import { db, functions } from "@/lib/firebase";
+import { db, functions } from "@/firebase/firebase";
 import { httpsCallable } from "firebase/functions";
 import { useState } from "react";
 import { doc, increment, updateDoc } from "firebase/firestore";

@@ -1,4 +1,4 @@
-import { db } from "@/lib/firebase";
+import { db } from "@/firebase/firebase";
 import type { CurrentUser } from "@/store/useAuthStore";
 import type { UIMessage } from "@/types/message.types";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";

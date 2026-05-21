@@ -1,5 +1,5 @@
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { db } from "@/firebase/firebase";
 
 export const getChatsWhereUserIsParticipant = async (userId: string) => {
     const q = query(collection(db, "chats"), where("participants", "array-contains", userId));

@@ -1,10 +1,9 @@
 import logo from "../../../assets/skillforge-logo.webp";
 import { Menu, X } from "lucide-react";
 import Button from "../../ui/Button";
-import { useEffect, useState, type ChangeEvent } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
-import useThemeStore from "../../../store/useThemeStore";
 import clsx from "clsx";
 import useMultiStepsStore from "../../../store/useMultiStepsStore";
 import ThemeSelect from "../../ui/ThemeSelect";

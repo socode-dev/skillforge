@@ -1,5 +1,5 @@
 import { collection, getDocs } from "firebase/firestore";
-import { auth, db } from "./firebase";
+import { auth, db } from "../firebase/firebase";
 
 export const fetchOtherUsers = async () => {
   const usersDocRef = collection(db, "users");

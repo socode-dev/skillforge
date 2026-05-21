@@ -5,7 +5,6 @@ import ListInterface from "@/pages/messages/components/ListInterface";
 import useChatStore from "@/store/useChatStore";
 import { useMemo, useState, type ChangeEvent } from "react";
 import EmptyChatState from "@/pages/messages/components/EmptyChatState";
-import { debounce } from "@/utils/debounce";
 
 const ChatList = () => {
   const lastMessages = useChatStore(state => state.lastMessages);

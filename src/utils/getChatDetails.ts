@@ -1,4 +1,4 @@
-import { db } from "@/lib/firebase"
+import { db } from "@/firebase/firebase"
 import { collection, getDocs, query, where } from "firebase/firestore"
 
 export const getChatDetails = async (slug: string, currentUserId: string) => {
