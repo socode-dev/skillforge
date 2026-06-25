@@ -5,12 +5,21 @@ import ListInterface from "@/pages/messages/components/ListInterface";
 import useChatStore from "@/store/useChatStore";
 import { useMemo, useState, type ChangeEvent } from "react";
 import EmptyChatState from "@/pages/messages/components/EmptyChatState";
+import { getCreatedAtDate } from "@/utils/groupMessagesByDate";
 
 const ChatList = () => {
   const lastMessages = useChatStore(state => state.lastMessages);
   const [searchValue, setSearchValue] = useState("");
 
-  const sortedLastMessages = useMemo(() => Object.values(lastMessages).sort((a, b) => b.createdAt.toMillis() - a.createdAt.toMillis()), [lastMessages]);
+  const sortedLastMessages = useMemo(
+    () =>
+      Object.values(lastMessages).sort(
+        (a, b) =>
+          getCreatedAtDate(b.createdAt).getTime() -
+          getCreatedAtDate(a.createdAt).getTime()
+      ),
+    [lastMessages]
+  );
 
   if(!sortedLastMessages.length) {
     
@@ -18,7 +27,8 @@ const ChatList = () => {
   }
 
   const filteredLastMessages = sortedLastMessages.filter(lm => {
-    return lm.senderDisplay.name.toLowerCase().includes(searchValue.toLowerCase()) || lm.senderDisplay.role.toLowerCase().includes(searchValue.toLowerCase()) || lm.text.toLowerCase().includes(searchValue.toLowerCase());
+    const search = searchValue.toLowerCase();
+    return (lm.senderDisplay.name ?? "").toLowerCase().includes(search) || (lm.senderDisplay.role ?? "").toLowerCase().includes(search) || (lm.text ?? "").toLowerCase().includes(search);
   })
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

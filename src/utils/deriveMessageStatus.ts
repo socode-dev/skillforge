@@ -7,8 +7,10 @@ export const deriveMessageStatus = (currentUserId: string, senderId: string, del
     if(status === "PENDING") return "PENDING"
 
     if(senderId !== currentUserId) return "SENT";
+
+    if (!createdAt || typeof createdAt.toMillis !== "function") return "SENT";
     
-    const recipentId = Object.keys(deliveryState).find(id => id !== currentUserId);
+    const recipentId = Object.keys(deliveryState ?? {}).find(id => id !== currentUserId);
     
     if(!recipentId) return "SENT";
     

@@ -192,8 +192,14 @@ const useProfileStore = create<ProfileStoreState>()(
           skill => (skill.skillId ?? skill.id) !== skillId
         );
 
-        batch.delete(globalSkillRef);
-        batch.delete(userSkillRef);
+        batch.update(globalSkillRef, {
+          isActive: false,
+          updatedAt: serverTimestamp(),
+        });
+        batch.update(userSkillRef, {
+          isActive: false,
+          updatedAt: serverTimestamp(),
+        });
         batch.update(userRef, {
           skillsReview: nextSkillsReview.length ? nextSkillsReview : [],
         });

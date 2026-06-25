@@ -14,7 +14,13 @@ const ThreadConversation = () => {
     const messagesByChat = useChatStore(state => state.messagesByChat);
     const outboxByChat = useChatStore(state => state.outboxByChat);
     
-    if(!lastMessage || !lastMessage.senderDisplay || !currentUser) return null;
+    if(!lastMessage || !lastMessage.senderDisplay || !currentUser) {
+        return (
+            <article className="w-full h-full pt-14 pb-26 flex items-center justify-center px-4 text-sm text-muted-foreground">
+                Loading conversation...
+            </article>
+        );
+    }
     
     const {senderDisplay, chatId} = lastMessage;
 
@@ -75,6 +81,7 @@ const ThreadConversation = () => {
                     <p className="w-fit px-2 py-1 mx-auto bg-muted text-muted-foreground rounded-full text-xs">{date}</p>
 
                     {msgs.map(message => {
+                        console.table(message)
                         const isMine = message.senderId === currentUser?.profile.userId;
                         const date = normalizeDate(message.createdAt);
                         

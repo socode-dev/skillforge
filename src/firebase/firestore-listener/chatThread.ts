@@ -12,7 +12,8 @@ export const chatThreadListener = (currentUserId: string, chatId: string) => {
   
     const unsubscribe = onSnapshot(q, async (snap) => {
       if(snap.empty) {
-        console.warn("Chats document does not exist");
+        setServerMessages(chatId, []);
+        return;
       }
   
       const chatLevelQuery = doc(db, "chats", chatId);
@@ -23,17 +24,21 @@ export const chatThreadListener = (currentUserId: string, chatId: string) => {
   
       const chatDocData = chatDetails.data();
       
-      const serverMessages = snap.docs.map(doc => {
+      const serverMessages = snap.docs.flatMap(doc => {
         const data = doc.data();
+
+        if (!data.messageId || !data.chatId || !data.clientId || !data.type) {
+          return [];
+        }
   
         const status = deriveMessageStatus(currentUserId, data.senderId, chatDocData.deliveryState, chatDocData.readState, data.status, data.createdAt);
   
-        return {...data, createdAt: data.createdAt, status: status ?? "SENT" }
+        return [{...data, createdAt: data.createdAt, status: status ?? "SENT" }]
       }) as ServerMessage[];
       
       setServerMessages(chatId, serverMessages);
   
-    });
+    }, (error) => console.error("Chat thread listener failed:", error));
   
     return unsubscribe
   };

@@ -1,15 +1,15 @@
 import { create } from "zustand";
-import { auth, db } from "../firebase/firebase";
+import { auth } from "../firebase/firebase";
 import {
-  deleteUser,
   EmailAuthProvider,
   reauthenticateWithCredential,
   updatePassword,
 } from "firebase/auth";
-import { deleteDoc, doc } from "firebase/firestore";
+import { httpsCallable } from "firebase/functions";
 import { FirebaseError } from "firebase/app";
 import { toast } from "react-toastify";
 import type { UseFormReset, UseFormSetError } from "react-hook-form";
+import { functions } from "@/firebase/firebase";
 
 interface IsModalOpen {
   password: boolean;
@@ -150,16 +150,13 @@ const useSettingsStore = create<SettingsStoreState>()((set, get) => ({
 
     if (!user || !user.email) return;
 
-    const userDocRef = doc(db, "users", user.uid);
-
     const credential = EmailAuthProvider.credential(user.email, password);
+    const deleteAccount = httpsCallable(functions, "deleteAccount");
 
     try {
       await reauthenticateWithCredential(user, credential);
 
-      await deleteUser(user);
-
-      await deleteDoc(userDocRef);
+      await deleteAccount();
 
       get().closeDialog("deleteAccount");
     } catch (err) {

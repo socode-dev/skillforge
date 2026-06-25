@@ -25,6 +25,7 @@ interface RequestType {
   updatedAt: Timestamp;
   ownerUserId: string;
   requesterUserId: string;
+  completionStatus?: "NONE" | "REQUESTED" | "CONFIRMED";
   name: string;
   role: string;
   avatar: string | undefined;
@@ -138,6 +139,7 @@ const RequestCard = ({ request }: { request: RequestType }) => {
           status={request.status}
           type={requestType}
           requestId={request.requestId}
+          completionStatus={request.completionStatus}
           acceptRequestData={acceptRequestData}
         />
       </figcaption>

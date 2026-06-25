@@ -1,14 +1,15 @@
 import { useAuthForm } from "@/hooks/useAuthForm";
-import { db, functions } from "@/firebase/firebase";
+import { functions } from "@/firebase/firebase";
 import { chatThreadListener } from "@/firebase/firestore-listener/chatThread"; 
+import { markChatDelivered } from "@/lib/chatStateService";
 import { chatInputSchema, type ChatInputShema } from "@/schemas/chatInputSchema";
 import useAuthStore from "@/store/useAuthStore";
 import useChatStore from "@/store/useChatStore";
 import type { ChatContextState } from "@/types/chat-context.types";
 import type { OutboxMessage } from "@/types/message.types";
-import { doc, serverTimestamp, Timestamp, updateDoc } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
-import { useContext, createContext, type ReactNode, useEffect, useRef } from "react";
+import { useContext, createContext, type ReactNode, useEffect, useMemo, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
@@ -27,19 +28,19 @@ export const ChatProvider = ({children}: {children: ReactNode}) => {
     const {register, reset, handleSubmit, formState} = useAuthForm<ChatInputShema>(chatInputSchema, "onSubmit");
     const inflightClientIdsRef = useRef<Set<string>>(new Set());
     
-    const lastMessage = Object.values(lastMessages).find(message => message.slug === slug);
+    const lastMessage = useMemo(
+      () => Object.values(lastMessages).find(message => message.slug === slug),
+      [lastMessages, slug]
+    );
     
     const chatId = lastMessage?.chatId;
-
     useEffect(() => {        
       if(!chatId || !currentUser?.profile.userId) return;
       
       const unsubscribe = chatThreadListener(currentUser.profile.userId, chatId);
 
-      // Update message delivery state to the current timestamp 
-      updateDoc(doc(db, "chats", chatId), {
-        [`deliveryState.${currentUser.profile.userId}`]: serverTimestamp(),
-      });
+      markChatDelivered(chatId, currentUser.profile.userId)
+        .catch((err) => console.error("Failed to update delivery state:", err));
         
       return () => {
             unsubscribe();
@@ -63,8 +64,11 @@ export const ChatProvider = ({children}: {children: ReactNode}) => {
 
             addToOutbox(chatId, outboxMessage);
             if(slug){
-            setLastMessage(chatId, {
-              ...lastMessages[chatId],
+            const existingLastMessage = lastMessages[chatId];
+
+            if (existingLastMessage) {
+              setLastMessage(chatId, {
+              ...existingLastMessage,
               messageId: outboxMessage.messageId,
               senderId: currentUser.profile.userId,
               text: outboxMessage.text,
@@ -73,6 +77,7 @@ export const ChatProvider = ({children}: {children: ReactNode}) => {
               createdAt: outboxMessage.createdAt
             }
           )
+        }
         }
             reset();
         
@@ -142,7 +147,7 @@ export const ChatProvider = ({children}: {children: ReactNode}) => {
 
 export const useChatContext = () => {
     const context = useContext(ChatContext);
-    if (!context || !("slug" in context) || !("lastMessage" in context) || !("chatId" in context) || !("register" in context) || !("reset" in context) || !("handleSubmit" in context) || !("formState" in context)) {
+    if (!context || !("register" in context) || !("reset" in context) || !("handleSubmit" in context) || !("formState" in context)) {
       throw new Error("Value must be used within a Provider");
     }
     return context;

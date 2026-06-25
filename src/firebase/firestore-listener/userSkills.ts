@@ -11,14 +11,16 @@ export const userSkillsListener = (userId: string) => {
     const q = query(collection(db, "users", userId, "skills"));
 
     const unsubscribe = onSnapshot(q, (snap) => {
-        const skills = snap.docs.map((doc) => {
+        const skills = snap.docs.flatMap((doc) => {
             const data = doc.data() as Omit<UserSkills, "skillId">;
 
-            return {
+            if (data.isActive === false) return [];
+
+            return [{
                 ...data,
                 skillId: doc.id,
                 skillDesc: data.skillDesc ?? "",
-            };
+            }];
         });
 
         setSkills(skills)

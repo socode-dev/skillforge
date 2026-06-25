@@ -1,7 +1,6 @@
-import { db } from "@/firebase/firebase";
+import { markChatRead } from "@/lib/chatStateService";
 import type { CurrentUser } from "@/store/useAuthStore";
 import type { UIMessage } from "@/types/message.types";
-import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useEffect } from "react";
 
 export const useMarkAsRead = ({chatId, currentUser, messages}: {chatId: string; currentUser: CurrentUser | null, messages: UIMessage[]}) => {
@@ -10,10 +9,8 @@ export const useMarkAsRead = ({chatId, currentUser, messages}: {chatId: string; 
         if(!chatId || !currentUser) return;
 
         const markAsRead = async () => {
-            await updateDoc(doc(db, "chats", chatId), {
-                [`readState.${currentUser.profile.userId}`]: serverTimestamp(),
-                [`unreadCount.${currentUser.profile.userId}`]: 0
-            })
+            await markChatRead(chatId, currentUser.profile.userId)
+                .catch((err) => console.error("Failed to mark chat as read:", err));
         };
 
         markAsRead();
@@ -25,9 +22,8 @@ export const useMarkAsRead = ({chatId, currentUser, messages}: {chatId: string; 
         const lastMessage = messages[messages.length - 1];
 
         if(lastMessage.senderId !== currentUser.profile.userId) {
-            updateDoc(doc(db, "chats", chatId), {
-                [`readState.${currentUser.profile.userId}`]: serverTimestamp()
-            })
+            markChatRead(chatId, currentUser.profile.userId)
+                .catch((err) => console.error("Failed to update read state:", err));
         }
     }, [messages]);
 
