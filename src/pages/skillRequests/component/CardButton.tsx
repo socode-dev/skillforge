@@ -2,8 +2,11 @@ import type { SkillRequest } from "@/store/useRequestsStore";
 import Button from "@/components/ui/Button";
 import useRequestsStore from "@/store/useRequestsStore";
 import { useNavigate } from "react-router-dom";
+import SkillCompletionAction from "@/components/skillRequest/SkillCompletionAction";
+import useAuthStore from "@/store/useAuthStore";
 
 interface CardButtonProps extends Pick<SkillRequest, "status" | "requestId"> {
+  completionStatus?: SkillRequest["completionStatus"];
   acceptRequestData: {
     ownerUserId: string;
     requesterUserId: string;
@@ -13,12 +16,36 @@ interface CardButtonProps extends Pick<SkillRequest, "status" | "requestId"> {
   type: "incoming" | "outgoing";
 }
 
-const CardButton = ({ status, type, requestId, acceptRequestData }: CardButtonProps) => {
+const CardButton = ({
+  status,
+  type,
+  requestId,
+  completionStatus,
+  acceptRequestData,
+}: CardButtonProps) => {
   const navigate = useNavigate();
-  const { onCancelRequest, onDeclineRequest, onAcceptRequest, loading } =
+  const currentUser = useAuthStore(state => state.currentUser);
+  const {
+    onCancelRequest,
+    onDeclineRequest,
+    onAcceptRequest,
+    loading,
+  } =
     useRequestsStore();
+  const completionRequest = {
+    requestId,
+    skillName: acceptRequestData.skillName,
+    status,
+    completionStatus,
+    owner: {
+      userId: acceptRequestData.ownerUserId,
+    },
+    requester: {
+      userId: acceptRequestData.requesterUserId,
+    },
+  };
 
-  if (type === "incoming") {
+  if (type === "incoming" && status === "PENDING") {
     return (
       <div className="grid grid-cols-2 gap-2">
         <Button
@@ -42,6 +69,17 @@ const CardButton = ({ status, type, requestId, acceptRequestData }: CardButtonPr
         </Button>
       </div>
     );
+  } else if (
+    type === "incoming" &&
+    status === "ACCEPTED" &&
+    completionStatus === "REQUESTED"
+  ) {
+    return (
+      <SkillCompletionAction
+        request={completionRequest}
+        currentUserId={currentUser?.profile.userId}
+      />
+    );
   } else if (type === "outgoing" && status === "PENDING") {
     return (
       <Button
@@ -55,14 +93,21 @@ const CardButton = ({ status, type, requestId, acceptRequestData }: CardButtonPr
     );
   } else if (type === "outgoing" && status === "ACCEPTED") {
     return (
-      <Button
-        type="button"
-        onClick={() => navigate("/home/Messages")}
-        variant="outline"
-        className="w-full"
-      >
-        Message
-      </Button>
+      <div className="grid grid-cols-2 gap-2">
+        <Button
+          type="button"
+          onClick={() => navigate("/home/messages")}
+          variant="outline"
+          className="text-sm sm:text-base"
+        >
+          Message
+        </Button>
+        <SkillCompletionAction
+          request={completionRequest}
+          currentUserId={currentUser?.profile.userId}
+          className="text-sm sm:text-base"
+        />
+      </div>
     );
   } else {
     return null;

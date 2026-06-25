@@ -26,7 +26,7 @@ export const skillsCollectionListener = (
       }));
   
       const otherSkills = allSkills.filter(
-        (skill) => skill.ownerId !== currentUserId);
+        (skill) => skill.isActive && skill.ownerId !== currentUserId);
   
       setSkills(otherSkills);
     }, (error) => console.error("Skills collection listener failed:", error));

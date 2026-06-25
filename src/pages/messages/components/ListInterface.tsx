@@ -4,12 +4,15 @@ import { formatTime } from "@/utils/formatTime";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "@/store/useAuthStore";
 import { getMessageStatusIcon } from "@/utils/deriveMessageStatus";
+import { isUserOnline } from "@/utils/userPresence";
+import { useUserPresence } from "@/hooks/useUserPresence";
 import clsx from "clsx";
 
 const ListInterface = ({lastMessage}: {lastMessage: LastMessage}) => {
   const navigate = useNavigate();
   const {currentUser} = useAuthStore();
-  const {slug, senderId, senderDisplay, text, createdAt, unreadCount, status} = lastMessage;
+  const {slug, senderId, senderDisplay, text, createdAt, unreadCount, status, participantId} = lastMessage;
+  const presence = useUserPresence(participantId);
   
   if (!currentUser) return null;
   const newMessageCount = unreadCount?.[currentUser.profile.userId] ?? 0;
@@ -17,6 +20,7 @@ const ListInterface = ({lastMessage}: {lastMessage: LastMessage}) => {
   const StatusIcon = getMessageStatusIcon(status);
 
   const isLastMessageMine = senderId === currentUser.profile.userId;
+  const online = isUserOnline(presence);
 
     return (
         <fieldset
@@ -30,7 +34,7 @@ const ListInterface = ({lastMessage}: {lastMessage: LastMessage}) => {
             ) : (
             <User size={25} />
             )}       
-            <span className="w-3 h-3 absolute bottom-1 -right-0.5 bg-green-500 rounded-full border-2 border-background"></span>
+            <span className={clsx("w-3 h-3 absolute bottom-1 -right-0.5 rounded-full border-2 border-background", online ? "bg-green-500" : "bg-muted-foreground")}></span>
           </div>
 
           <div className="w-full">

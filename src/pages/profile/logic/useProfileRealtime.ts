@@ -53,14 +53,16 @@ export const useProfileRealtime = () => {
     const unsubscribeSkills = onSnapshot(
       collection(db, "users", userId, "skills"),
       (snapshot) => {
-        const skills = snapshot.docs.map((skillDoc) => {
+        const skills = snapshot.docs.flatMap((skillDoc) => {
           const data = skillDoc.data() as Omit<UserSkills, "skillId">;
 
-          return {
+          if (data.isActive === false) return [];
+
+          return [{
             ...data,
             skillId: skillDoc.id,
             skillDesc: data.skillDesc ?? "",
-          };
+          }];
         });
 
         setSkills(skills);

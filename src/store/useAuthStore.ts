@@ -18,6 +18,7 @@ import type { LoginSchema } from "../schemas/loginSchema";
 import { type NavigateFunction } from "react-router-dom";
 import { functions } from "../firebase/firebase";
 import { httpsCallable } from "firebase/functions";
+import { markUserOffline } from "@/lib/userPresenceService";
 
 export interface SkillType {
   id?: string;
@@ -250,7 +251,15 @@ const useAuthStore = create<StoreState>()(
       },
 
       onSignout: () => {
-        signOut(auth);
+        const userId = auth.currentUser?.uid;
+
+        if (userId) {
+          void markUserOffline(userId).finally(() => {
+            void signOut(auth);
+          });
+        } else {
+          void signOut(auth);
+        }
 
         set({ currentUser: null });
       },

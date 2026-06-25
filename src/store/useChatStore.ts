@@ -34,7 +34,7 @@ const useChatStore = create<ChatStoreState>()(
             set(state => ({
                 outboxByChat: {
                     ...state.outboxByChat,
-                    [chatId]: state.outboxByChat[chatId].map(outbox => outbox.messageId === messageId ? {...outbox, status} : outbox),
+                    [chatId]: (state.outboxByChat[chatId] ?? []).map(outbox => outbox.messageId === messageId ? {...outbox, status} : outbox),
                 }
             }));
         },
@@ -66,7 +66,6 @@ const useChatStore = create<ChatStoreState>()(
             set((state) => {
                 const outbox = state.outboxByChat[chatId] ?? [];
 
-                // Remove outbox messages that now exist on server
                 const filteredOutbox = outbox.filter(local => !serverMessages.some(server => server.clientId === local.clientId
                     )
                 )

@@ -1,6 +1,7 @@
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { db } from "@functions/index";
 import { UserDocPayload } from "@functions/types/auth";
+import { FieldValue } from "firebase-admin/firestore";
 
 export const createInitialUserDoc = onCall<UserDocPayload["profile"]>(
   async ({ auth, data }) => {
@@ -26,6 +27,8 @@ export const createInitialUserDoc = onCall<UserDocPayload["profile"]>(
       role,
       skillsReview,
       signupStepsCompleted: 1,
+      isOnline: false,
+      lastSeenAt: FieldValue.serverTimestamp(),
     });
 
     await batch.commit();

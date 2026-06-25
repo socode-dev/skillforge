@@ -7,6 +7,7 @@ export type UIMessageStatus = ServerMessageStatus | OutboxMessageStatus;
 export interface LastMessage {
     slug: string;
     chatId: string;
+    participantId: string;
     messageId: string;
     senderId: string;
     text: string;
@@ -19,6 +20,11 @@ export interface LastMessage {
         avatar?: string;
     },
     unreadCount?: Record<string, number>
+}
+
+export interface UserPresence {
+    isOnline: boolean;
+    lastSeenAt?: Timestamp;
 }
 
 interface Message {

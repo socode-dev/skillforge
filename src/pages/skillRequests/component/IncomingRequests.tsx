@@ -11,7 +11,8 @@ const IncomingRequests = () => {
     (req) =>
       req.owner.userId === currentUser?.profile.userId &&
       req.requester.userId !== currentUser.profile.userId &&
-      req.status === "PENDING"
+      (req.status === "PENDING" ||
+        (req.status === "ACCEPTED" && req.completionStatus === "REQUESTED"))
   );
 
   const requests = filteredRequests.map((req) => {
@@ -23,6 +24,7 @@ const IncomingRequests = () => {
       requester: { userId: requesterUserId, name, role, avatar },
       requestId,
       status,
+      completionStatus,
       createdAt,
       updatedAt,
     } = req;
@@ -33,6 +35,7 @@ const IncomingRequests = () => {
       skillName,
       skillDesc,
       status,
+      completionStatus,
       createdAt,
       updatedAt,
       ownerUserId,

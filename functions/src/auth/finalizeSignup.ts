@@ -35,6 +35,8 @@ export const finalizeSignup = onCall<FinalizeSignupPayload>(
       ratingCount: 0,
       coinBalance: 50,
       createdAt: FieldValue.serverTimestamp(),
+      isOnline: false,
+      lastSeenAt: FieldValue.serverTimestamp(),
     });
 
     // Create skills

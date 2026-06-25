@@ -25,6 +25,7 @@ const OutgoingRequests = () => {
       requester: { userId: requesterUserId },
       requestId,
       status,
+      completionStatus,
       createdAt,
       updatedAt,
     } = req;
@@ -35,6 +36,7 @@ const OutgoingRequests = () => {
       skillName,
       skillDesc,
       status,
+      completionStatus,
       createdAt,
       updatedAt,
       ownerUserId,

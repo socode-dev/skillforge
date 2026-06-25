@@ -3,9 +3,9 @@ import useAuthStore from "@/store/useAuthStore";
 import { chatsListener } from "@/firebase/firestore-listener/chat";
 import { skillRequestListener } from "@/firebase/firestore-listener/skillRequest";
 import { skillsCollectionListener } from "@/firebase/firestore-listener/skillsCollection";
-import { getChatsWhereUserIsParticipant } from "@/firebase/firestore-listener/getChatsWhereUserIsParticipant";
-import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
-import { auth, db } from "@/firebase/firebase";
+import { auth } from "@/firebase/firebase";
+import { markAllChatsDelivered } from "@/lib/chatStateService";
+import { startUserPresence } from "@/lib/userPresenceService";
 
 const AppIntializer = () => {
   const { startAuthListener, stopAuthListener, currentUser, authResolved } =
@@ -59,25 +59,22 @@ const AppIntializer = () => {
     };
   }, [currentUser?.profile?.userId, authResolved]);
 
-  // Mark all incoming messages as delivered on app auth change
-  const markDelivered = async (userId: string) => {
-    const chats = await getChatsWhereUserIsParticipant(userId);
-
-    if(!chats) return;
-
-    for(const chat of chats) {
-      await updateDoc(doc(db, "chats", chat.chatId), {
-        [`deliveryState.${userId}`]: serverTimestamp(),
-      })
-    }
-  }
-
   useEffect(() => {
     const userId = auth.currentUser?.uid;
 
     if(!authResolved || !userId) return;
     
-    markDelivered(userId);
+    markAllChatsDelivered(userId).catch((err) =>
+      console.error("Failed to mark chats delivered:", err)
+    );
+  }, [currentUser?.profile?.userId, authResolved]);
+
+  useEffect(() => {
+    const userId = auth.currentUser?.uid;
+
+    if (!authResolved || !userId) return;
+
+    return startUserPresence(userId);
   }, [currentUser?.profile?.userId, authResolved]);
 
   return null;
