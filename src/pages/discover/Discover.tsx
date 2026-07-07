@@ -5,7 +5,6 @@ import { searchAndFilterSchema } from "@/schemas/searchAndFilterSchema";
 import { useAuthForm } from "@/hooks/useAuthForm";
 import Recommendations from "@/pages/discover/components/Recommendations";
 import PopularSkills from "@/pages/discover/components/PopularSkills";
-import FeaturedMembers from "@/pages/discover/components/FeaturedMembers";
 import { ScrollToTop } from "@/Layouts/ScrollToTop";
 
 const Discover = () => {
@@ -47,9 +46,6 @@ const Discover = () => {
         </>
       )}
 
-      {(filterValue === "all" || filterValue === "people") && (
-        <FeaturedMembers />
-      )}
     </motion.main>
   );
 };
