@@ -1,10 +1,11 @@
 import useUsersStore from "@/store/useUsersAndSkillsStore";
 import SkillCard from "@/pages/discover/components/SkillCard";
+import { useMemo } from "react";
 
 const PopularSkills = ({searchValue}: {searchValue: string}) => {
-  const { skills } = useUsersStore();
+  const skills = useUsersStore(state => state.skills);
 
-  const filteredSkills = skills.filter(skill => skill.skillName.toLowerCase().includes(searchValue.toLowerCase()) || skill.skillDesc.toLowerCase().includes(searchValue.toLowerCase()));
+  const filteredSkills = useMemo(() => skills.filter(skill => skill.skillName.toLowerCase().includes(searchValue.toLowerCase()) || skill.skillDesc.toLowerCase().includes(searchValue.toLowerCase())), [skills, searchValue]);
 
   if(!filteredSkills.length) {
     return <p className="mb-20 mt-14 text-center text-xl text-muted-foreground">No skill matched.</p>

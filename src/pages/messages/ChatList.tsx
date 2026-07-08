@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 import ListInterface from "@/pages/messages/components/ListInterface";
 import useChatStore from "@/store/useChatStore";
-import { useMemo, useState, type ChangeEvent } from "react";
+import { useCallback, useMemo, useState, type ChangeEvent } from "react";
 import EmptyChatState from "@/pages/messages/components/EmptyChatState";
 import { getCreatedAtDate } from "@/utils/groupMessagesByDate";
 
@@ -26,21 +26,21 @@ const ChatList = () => {
     return <EmptyChatState />
   }
 
-  const filteredLastMessages = sortedLastMessages.filter(lm => {
+  const filteredLastMessages = useMemo(() => sortedLastMessages.filter(lm => {
     const search = searchValue.toLowerCase();
     return (lm.senderDisplay.name ?? "").toLowerCase().includes(search) || (lm.senderDisplay.role ?? "").toLowerCase().includes(search) || (lm.text ?? "").toLowerCase().includes(search);
-  })
+  }), [sortedLastMessages, searchValue]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
-  };
+  }, []);
 
   return (
     <motion.main
-      initial={{ opacity: 0, y: 50, x: 50 }}
-      animate={{ opacity: 1, y: 0, x: 0 }}
-      exit={{ opacity: 0, x: -50, y: 50 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
       className="w-full pb-10"
     >
       <fieldset className="w-full relative px-6 md:px-8">

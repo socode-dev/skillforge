@@ -2,20 +2,21 @@ import { motion } from "framer-motion";
 import useRequestsStore from "@/store/useRequestsStore";
 import RequestCard from "@/pages/skillRequests/component/RequestCard";
 import useAuthStore from "@/store/useAuthStore";
+import { useMemo } from "react";
 
 const IncomingRequests = () => {
-  const { currentUser } = useAuthStore();
-  const { skillRequests } = useRequestsStore();
+  const currentUser = useAuthStore(state => state.currentUser);
+  const skillRequests = useRequestsStore(state => state.skillRequests);
 
-  const filteredRequests = skillRequests.filter(
+  const filteredRequests = useMemo(() => skillRequests.filter(
     (req) =>
       req.owner.userId === currentUser?.profile.userId &&
       req.requester.userId !== currentUser.profile.userId &&
       (req.status === "PENDING" ||
         (req.status === "ACCEPTED" && req.completionStatus === "REQUESTED"))
-  );
+  ), [skillRequests]);
 
-  const requests = filteredRequests.map((req) => {
+  const requests = useMemo(() => filteredRequests.map((req) => {
     const {
       skillId,
       skillName,
@@ -44,7 +45,7 @@ const IncomingRequests = () => {
       role,
       avatar,
     };
-  });
+  }), [filteredRequests]);
 
   if (!requests.length) {
     return (
@@ -59,10 +60,10 @@ const IncomingRequests = () => {
   return (
     <motion.section
       key="incoming-requests"
-      initial={{ x: -100, y: 100, opacity: 0 }}
-      animate={{ x: 0, y: 0, opacity: 1 }}
-      exit={{ x: -100, y: 100, opacity: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.15, ease: "easeOut" }}
       className="grid grid-cols-1 md:grid-cols-2 gap-6"
     >
       {requests.map((request) => (

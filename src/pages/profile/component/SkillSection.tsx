@@ -5,7 +5,7 @@ import useProfileStore from "@/store/useProfileStore";
 import { useMemo } from "react";
 
 const SkillSection = () => {
-    const {skills} = useProfileStore();
+    const skills = useProfileStore(state => state.skills);
     const openAddSkillModal = useProfileStore(state => state.openAddSkillModal);
 
     const sortedSkills = useMemo(() => [...skills].sort((a, b) => (b.createdAt?.seconds ?? 0) - (a.createdAt?.seconds ?? 0)), [skills]);

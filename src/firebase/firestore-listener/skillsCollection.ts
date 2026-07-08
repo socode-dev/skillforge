@@ -1,6 +1,8 @@
 import useUsersAndSkillsStore, { type SkillDataType } from "@/store/useUsersAndSkillsStore";
 import { db } from "../firebase";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, limit, onSnapshot, query, where } from "firebase/firestore";
+
+const DISCOVER_SKILLS_LIMIT = 60;
 
 export const skillsCollectionListener = (
     currentUserId: string | null | undefined
@@ -13,9 +15,13 @@ export const skillsCollectionListener = (
       );
     }
   
-    const collectionRef = collection(db, "skills");
+    const skillsQuery = query(
+      collection(db, "skills"),
+      where("isActive", "==", true),
+      limit(DISCOVER_SKILLS_LIMIT)
+    );
   
-    const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+    const unsubscribe = onSnapshot(skillsQuery, (snapshot) => {
       if (snapshot.empty) {
         setSkills([]);
         return;
@@ -26,7 +32,7 @@ export const skillsCollectionListener = (
       }));
   
       const otherSkills = allSkills.filter(
-        (skill) => skill.isActive && skill.ownerId !== currentUserId);
+        (skill) => skill.ownerId !== currentUserId);
   
       setSkills(otherSkills);
     }, (error) => console.error("Skills collection listener failed:", error));

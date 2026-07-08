@@ -4,18 +4,21 @@ import clsx from "clsx";
 import useRequestsStore from "@/store/useRequestsStore";
 import useAuthStore from "@/store/useAuthStore";
 import { formatTime } from "@/utils/formatTime";
+import { useMemo } from "react";
 
 const OutgoingRequestOverview = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const skillRequests = useRequestsStore((state) => state.skillRequests);
+  
   const currentUserId = currentUser?.profile.userId;
-  const requests = skillRequests
+  
+  const requests = useMemo(() => skillRequests
     .filter(
       (request) =>
         request.requester.userId === currentUserId &&
         request.owner.userId !== currentUserId
     )
-    .slice(0, 2);
+    .slice(0, 2), [skillRequests, currentUserId]);
 
   return (
     <motion.div

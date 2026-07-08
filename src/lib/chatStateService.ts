@@ -20,6 +20,32 @@ export const markChatDelivered = async (chatId: string, userId: string) => {
   });
 };
 
+export const markChatsDelivered = async (chatIds: string[], userId: string) => {
+  const uniqueChatIds = [...new Set(chatIds)].filter(Boolean);
+
+  if (!uniqueChatIds.length || !userId) return;
+
+  let batch = writeBatch(db);
+  let writeCount = 0;
+
+  for (const chatId of uniqueChatIds) {
+    batch.update(doc(db, "chats", chatId), {
+      [`deliveryState.${userId}`]: serverTimestamp(),
+    });
+    writeCount += 1;
+
+    if (writeCount === COMMIT_CHUNK_SIZE) {
+      await batch.commit();
+      batch = writeBatch(db);
+      writeCount = 0;
+    }
+  }
+
+  if (writeCount > 0) {
+    await batch.commit();
+  }
+};
+
 export const markChatRead = async (chatId: string, userId: string) => {
   if (!chatId || !userId) return;
 

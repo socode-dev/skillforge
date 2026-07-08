@@ -15,10 +15,10 @@ const Profile = () => {
   <DeleteSkillDialog />
 
   <motion.main
-  initial={{ opacity: 0, y: 50, x: 50 }}
-  animate={{ opacity: 1, y: 1, x: 1 }}
-  exit={{ opacity: 0, x: -50, y: 50 }}
-  transition={{ duration: 0.4, ease: "easeOut" }}
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  exit={{ opacity: 0 }}
+  transition={{ duration: 0.15, ease: "easeOut" }}
   className="w-full bg-background text-foreground pb-6 px-6 md:px-8 lg:px-10 space-y-6"
 >
 

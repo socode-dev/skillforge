@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import useAuthStore from "@/store/useAuthStore";
 import useRequestsStore from "@/store/useRequestsStore";
 import useChatStore from "@/store/useChatStore";
+import { useMemo } from "react";
 
 const OngoingLearning = () => {
   const navigate = useNavigate();
@@ -13,13 +14,13 @@ const OngoingLearning = () => {
   const lastMessages = useChatStore((state) => state.lastMessages);
   const currentUserId = currentUser?.profile.userId;
 
-  const ongoingRequests = skillRequests
+  const ongoingRequests = useMemo(() => skillRequests
     .filter(
       (request) =>
         request.requester.userId === currentUserId &&
         request.status === "ACCEPTED"
     )
-    .slice(0, 4);
+    .slice(0, 4), [skillRequests]);
 
   return (
     <section className="space-y-4 w-full overflow-hidden">

@@ -5,10 +5,10 @@ import {
   Lock,
   Shield,
 } from "lucide-react";
-import SettingsCard from "../../../components/ui/SettingsCard";
+import SettingsCard from "@/components/ui/SettingsCard";
 import { useState } from "react";
 import clsx from "clsx";
-import useSettingsStore from "../../../store/useSettingsStore";
+import useSettingsStore from "@/store/useSettingsStore";
 
 const AccountSecurity = () => {
   const setIsEditModalOpen = useSettingsStore(

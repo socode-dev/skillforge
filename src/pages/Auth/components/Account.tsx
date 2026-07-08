@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Mail, User, Lock, Eye, EyeOff, type LucideIcon } from "lucide-react";
 import Input from "../../../components/ui/Input";
 import Button from "../../../components/ui/Button";
@@ -7,6 +7,17 @@ import { motion } from "framer-motion";
 import { useAuthForm } from "../../../hooks/useAuthForm";
 import { accountSchema } from "../../../schemas/accountSchema";
 import useAuthStore from "../../../store/useAuthStore";
+
+const pascalCase = (str: string): string => {
+    if (str === "") return "";
+
+    const splitStr = str.split(" ");
+    const transform = splitStr.map(
+      (s) => s.slice(0, 1).toUpperCase() + s.slice(1).toLowerCase()
+    );
+
+    return transform.join(" ");
+  };
 
 const Account = () => {
   const onSignup = useAuthStore((state) => state.onSignup);
@@ -29,24 +40,13 @@ const Account = () => {
     formState: { errors, isValid, isSubmitting },
   } = form;
 
-  const pascalCase = (str: string): string => {
-    if (str === "") return "";
-
-    const splitStr = str.split(" ");
-    const transform = splitStr.map(
-      (s) => s.slice(0, 1).toUpperCase() + s.slice(1).toLowerCase()
-    );
-
-    return transform.join(" ");
-  };
-
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = useCallback(handleSubmit((data) => {
     if (!isValid) return;
 
     const userName = pascalCase(data.fullName);
 
     onSignup(data.email, data.password, userName, reset);
-  });
+  }), [handleSubmit, isValid, onSignup, reset]);
 
   const RevealPasswordIcon: LucideIcon = revealPassword.password ? EyeOff : Eye;
   const RevealConfirmPasswordIcon: LucideIcon = revealPassword.confirmPassword

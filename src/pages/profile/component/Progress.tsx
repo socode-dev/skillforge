@@ -1,6 +1,7 @@
 import useAuthStore from "@/store/useAuthStore";
 import useProfileStore from "@/store/useProfileStore";
 import { TrendingUp } from "lucide-react";
+import { useMemo } from "react";
 
 const Progress = () => {
     const currentUser = useAuthStore(state => state.currentUser);
@@ -14,11 +15,10 @@ const Progress = () => {
         { label: "Upload a profile photo", complete: !!currentUser?.profile.avatar?.trim() },
         { label: "Add at least one skill", complete: skills.length > 0 },
     ];
-    console.log(skills)
 
-    const completedItems = completionItems.filter(item => item.complete).length;
+    const completedItems = useMemo(() => completionItems.filter(item => item.complete).length, [completionItems]);
     const progress = Math.round((completedItems / completionItems.length) * 100);
-    const missingItems = completionItems.filter(item => !item.complete);
+    const missingItems = useMemo(() => completionItems.filter(item => !item.complete), [completionItems]);
     
     return (
         <section className="w-full flex gap-4 p-4 rounded-radius-xl border border-primary/40 bg-soft-primary/50">

@@ -15,26 +15,7 @@ const DangerZone = () => {
         <h3>Danger Zone</h3>
       </div>
 
-      <div className="flex justify-between items-center border-destructive/20 border-b-1 pb-3">
-        <div>
-          <h4 className="text-sm">Reset Learning Progress</h4>
-          <p className="text-xs text-muted-foreground">
-            Clear all your learning progress and start fresh
-          </p>
-        </div>
-
-        <Button
-          type="button"
-          onClick={() => console.log("Reset learning data")}
-          variant="outline"
-          className="flex items-center gap-3 text-destructive text-sm font-semibold border-2 border-destructive rounded-radius hover:bg-transparent"
-        >
-          <RefreshCcw size={15} />
-          <span>Reset</span>
-        </Button>
-      </div>
-
-      <div className="flex justify-between items-center pt-3">
+      <div className="flex justify-between items-center pt-3 gap-2 border-destructive/20 border-t-1">
         <div>
           <h4 className="text-sm">Delete Account</h4>
           <p className="text-xs text-muted-foreground">
