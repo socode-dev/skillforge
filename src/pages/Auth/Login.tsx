@@ -3,7 +3,7 @@ import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
 import { FaGoogle } from "react-icons/fa6";
 import { Eye, EyeOff, Lock, Mail, type LucideIcon } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
 import AuthHeader from "./components/AuthHeader";
 import { useAuthForm } from "../../hooks/useAuthForm";
@@ -26,9 +26,13 @@ const Login = () => {
     formState: { errors, isValid },
   } = form;
 
-  const onSubmit = useCallback(() => handleSubmit((data) => {
+  const onSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    void handleSubmit((data) => {
     onLogin(data.email, data.password, reset, navigate);
-  }), []);
+  })(e)
+  }, [handleSubmit, onLogin, reset, navigate]);
 
   return (
     <motion.main
@@ -58,7 +62,7 @@ const Login = () => {
           </p>
         )}
 
-        <form className="flex flex-col gap-6">
+        <form className="flex flex-col gap-6" onSubmit={onSubmit}>
           <fieldset className="space-y-1">
             <div className="relative flex flex-col gap-2">
               <Input
@@ -127,7 +131,6 @@ const Login = () => {
           </fieldset>
 
           <Button
-            onClick={onSubmit}
             type="submit"
             variant="primary"
             isDisabled={!isValid}
