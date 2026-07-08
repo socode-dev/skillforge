@@ -3,7 +3,7 @@ import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
 import { FaGoogle } from "react-icons/fa6";
 import { Eye, EyeOff, Lock, Mail, type LucideIcon } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import AuthHeader from "./components/AuthHeader";
 import { useAuthForm } from "../../hooks/useAuthForm";
@@ -12,7 +12,8 @@ import useAuthStore from "../../store/useAuthStore";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { onLogin, loginErr } = useAuthStore();
+  const onLogin = useAuthStore(state => state.onLogin);
+  const loginErr = useAuthStore(state => state.loginErr);
   const [revealPassword, setRevealPassword] = useState(false);
 
   const RevealIcon: LucideIcon = revealPassword ? EyeOff : Eye;
@@ -25,9 +26,9 @@ const Login = () => {
     formState: { errors, isValid },
   } = form;
 
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = useCallback(() => handleSubmit((data) => {
     onLogin(data.email, data.password, reset, navigate);
-  });
+  }), []);
 
   return (
     <motion.main

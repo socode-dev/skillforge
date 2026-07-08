@@ -2,6 +2,7 @@ import ActivityCard from "@/pages/profile/component/ActivityCard";
 import useChatStore from "@/store/useChatStore";
 import useRequestsStore from "@/store/useRequestsStore";
 import { ArrowLeftRight, CircleCheck, MessageCircle } from "lucide-react";
+import { useMemo } from "react";
 
 const ActivityOverview = () => {
     const lastMessage =  useChatStore(state => state.lastMessages);
@@ -9,13 +10,13 @@ const ActivityOverview = () => {
 
     const chatCount = Object.keys(lastMessage)?.length ?? 0;
     
-    const pendingRequestCount = skillRequests.filter(
+    const pendingRequestCount = useMemo(() => skillRequests.filter(
         request => request.status === "PENDING"
-    ).length;
+    ).length, [skillRequests]);
 
-    const completedRequestCount = skillRequests.filter(
+    const completedRequestCount = useMemo(() => skillRequests.filter(
         request => request.status === "COMPLETED"
-    ).length;
+    ).length, [skillRequests]);
 
 
     return (

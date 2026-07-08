@@ -4,12 +4,13 @@ import useUsersStore, {
   type SkillDataType,
 } from "@/store/useUsersAndSkillsStore";
 import { shuffleArray } from "@/utils/shuffleArray";
+import { useMemo } from "react";
 
 const Recommendations = ({searchValue}: {searchValue: string}) => {
-  const { skills } = useUsersStore();
-  const shuffledSkills = shuffleArray(skills) as SkillDataType[];
+  const skills = useUsersStore(state => state.skills);
+  const shuffledSkills = useMemo(() => shuffleArray(skills) as SkillDataType[], [skills]);
 
-  const slicedSkills = shuffledSkills.slice(0, 6).filter(skill => skill.skillName.toLowerCase().includes(searchValue.toLowerCase()) || skill.skillDesc.toLowerCase().includes(searchValue.toLowerCase()));
+  const slicedSkills = useMemo(() => shuffledSkills.slice(0, 6).filter(skill => skill.skillName.toLowerCase().includes(searchValue.toLowerCase()) || skill.skillDesc.toLowerCase().includes(searchValue.toLowerCase())), [shuffledSkills, searchValue]);
 
   if(!slicedSkills.length) return null;
 

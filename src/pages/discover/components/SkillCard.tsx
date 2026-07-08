@@ -7,6 +7,7 @@ import { colors } from "@/data/colors";
 import type { SkillDataType } from "@/store/useUsersAndSkillsStore";
 import useUsersAndSkillsStore from "@/store/useUsersAndSkillsStore";
 import { Users } from "lucide-react";
+import { useMemo } from "react";
 
 interface SkillCardProps {
   skill: SkillDataType;
@@ -18,13 +19,15 @@ const generateInitialIcon = (name: string) => {
   if (!name) return "";
 
   const firstLetter = name.charAt(0).toUpperCase();
-  const randomColor = colors[Math.floor(Math.random() * colors.length)];
+  const colorIndex = name
+    .split("")
+    .reduce((total, character) => total + character.charCodeAt(0), 0) % colors.length;
 
   return (
     <div
       className={clsx(
         "w-10 h-10 flex items-center justify-center rounded-radius text-xl font-semibold shadow-lg",
-        randomColor
+        colors[colorIndex]
       )}
     >
       {firstLetter}
@@ -37,43 +40,51 @@ const SkillCard = ({
   className,
   size = "w-68 h-auto",
 }: SkillCardProps) => {
-  const { currentUser } = useAuthStore();
-  const { disablebutton } = useUsersAndSkillsStore();
-  const {
-    skillRequests,
-    getSkillRequestButtonChildren,
-    onSendRequest,
-    loading,
-  } = useRequestsStore();
-
-  if (!currentUser) return;
-
-  const skillRequestStatus = skillRequests.find(
-    (s) => s.skillId === skill.skillId
-  )?.status;
+  const currentUser = useAuthStore((state) => state.currentUser);
+  const disablebutton = useUsersAndSkillsStore((state) => state.disablebutton);
+  const skillRequestStatus = useRequestsStore(
+    (state) =>
+      state.skillRequests.find((request) => request.skillId === skill.skillId)
+        ?.status
+  );
+  const isRequesting = useRequestsStore(
+    (state) => state.loading.isRequesting[skill.skillId] ?? false
+  );
+  const getSkillRequestButtonChildren = useRequestsStore(
+    (state) => state.getSkillRequestButtonChildren
+  );
+  const onSendRequest = useRequestsStore((state) => state.onSendRequest);
 
   const { text: buttonText, icon: ButtonIcon } =
     getSkillRequestButtonChildren(skillRequestStatus);
 
-  const requestData = {
-    skillId: skill.skillId,
-    skillName: skill.skillName,
-    skillDesc: skill.skillDesc,
+  const requestData = useMemo(
+    () =>
+      currentUser
+        ? {
+      skillId: skill.skillId,
+      skillName: skill.skillName,
+      skillDesc: skill.skillDesc,
 
-    owner: {
-      userId: skill.ownerId,
-      name: skill.ownerName,
-      role: skill.ownerRole,
-      avatar: skill.ownerAvatar,
-    },
+      owner: {
+        userId: skill.ownerId,
+        name: skill.ownerName,
+        role: skill.ownerRole,
+        avatar: skill.ownerAvatar,
+      },
 
-    requester: {
-      userId: currentUser.profile.userId,
-      name: currentUser.profile.name,
-      role: currentUser.profile.role,
-      avatar: currentUser.profile.avatar,
-    },
-  };
+      requester: {
+        userId: currentUser.profile.userId,
+        name: currentUser.profile.name,
+        role: currentUser.profile.role,
+        avatar: currentUser.profile.avatar,
+      },
+    }
+        : null,
+    [currentUser, skill]
+  );
+
+  if (!currentUser || !requestData) return;
 
   const isButtonDisabled = disablebutton(skillRequestStatus);
 
@@ -115,7 +126,7 @@ const SkillCard = ({
           isDisabled={isButtonDisabled}
           className="flex items-center py-2 gap-2 text-sm font-semibold"
         >
-          {loading.isRequesting[skill.skillId] ? (
+          {isRequesting ? (
             "Requesting..."
           ) : (
             <>

@@ -69,10 +69,10 @@ const OutgoingRequests = () => {
   return (
     <motion.section
       key="outgoing-requests"
-      initial={{ x: 100, y: 100, opacity: 0 }}
-      animate={{ x: 0, y: 0, opacity: 1 }}
-      exit={{ x: 100, y: 100, opacity: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
       className="grid grid-cols-1 md:grid-cols-2 gap-6"
     >
       {requests.map((request) => (

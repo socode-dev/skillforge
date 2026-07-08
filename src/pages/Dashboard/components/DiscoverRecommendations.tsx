@@ -5,20 +5,20 @@ import useUsersAndSkillsStore from "@/store/useUsersAndSkillsStore";
 import useAuthStore from "@/store/useAuthStore";
 import useRequestsStore from "@/store/useRequestsStore";
 import { Link } from "react-router-dom";
+import { useMemo } from "react";
 
 const DiscoverRecommendation = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
-  const { skills, disablebutton } = useUsersAndSkillsStore();
-  const {
-    skillRequests,
-    getSkillRequestButtonChildren,
-    onSendRequest,
-    loading,
-  } = useRequestsStore();
+  const skills = useUsersAndSkillsStore(state => state.skills)
+  const disablebutton = useUsersAndSkillsStore(state => state.disablebutton);
+  const skillRequests = useRequestsStore(state => state.skillRequests);
+  const getSkillRequestButtonChildren = useRequestsStore(state => state.getSkillRequestButtonChildren);
+  const onSendRequest = useRequestsStore(state => state.onSendRequest);
+  const loading = useRequestsStore(state => state.loading);
 
-  const recommendations = [...skills]
+  const recommendations = useMemo(() => [...skills]
     .sort((a, b) => (b.learnersCount ?? 0) - (a.learnersCount ?? 0))
-    .slice(0, 3);
+    .slice(0, 3), [skills]);
 
   if (!currentUser || !recommendations.length) return null;
 

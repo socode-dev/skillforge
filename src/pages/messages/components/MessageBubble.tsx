@@ -13,7 +13,7 @@ interface MessageBubbleProps {
 }
 
 const MessageBubble = ({message, isMine, senderName, senderAvatar, time}: MessageBubbleProps) => {
-    const {currentUser} = useAuthStore();
+    const currentUser = useAuthStore(state => state.currentUser);
 
     if(!currentUser) return null;
 

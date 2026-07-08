@@ -7,6 +7,7 @@ import { getCreatedAtDate } from "@/utils/groupMessagesByDate";
 import { formatTime } from "@/utils/formatTime";
 import { useUserPresence } from "@/hooks/useUserPresence";
 import { isUserOnline } from "@/utils/userPresence";
+import { useMemo } from "react";
 
 const MessageOverviewRow = ({
   message,
@@ -62,13 +63,17 @@ const MessageOverviewRow = ({
 
 const MessagesOverview = () => {
   const lastMessages = useChatStore((state) => state.lastMessages);
-  const messages = Object.values(lastMessages)
-    .sort(
-      (a, b) =>
-        getCreatedAtDate(b.createdAt).getTime() -
-        getCreatedAtDate(a.createdAt).getTime()
-    )
-    .slice(0, 3);
+  const messages = useMemo(
+    () =>
+      Object.values(lastMessages)
+        .sort(
+          (a, b) =>
+            getCreatedAtDate(b.createdAt).getTime() -
+            getCreatedAtDate(a.createdAt).getTime()
+        )
+        .slice(0, 3),
+    [lastMessages]
+  );
 
   return (
     <div className="bg-card text-card-foreground border-1 border-border rounded-radius-xl p-6">

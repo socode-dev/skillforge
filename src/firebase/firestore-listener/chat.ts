@@ -3,7 +3,9 @@ import { collection, onSnapshot, orderBy, query, where } from "firebase/firestor
 import { db } from "../firebase";
 import type { LastMessage } from "@/types/message.types";
 import { deriveMessageStatus } from "@/utils/deriveMessageStatus";
-import { markChatDelivered } from "@/lib/chatStateService";
+import { markChatsDelivered } from "@/lib/chatStateService";
+
+const pendingDeliveryMarks = new Set<string>();
 
 const shouldMarkDelivered = (
   currentUserId: string,
@@ -40,6 +42,8 @@ export const chatsListener = (currentUserId: string) => {
           return;
         }
   
+      const chatIdsToMarkDelivered: string[] = [];
+
       const lastMessages: LastMessage[] = snapshot.docs.flatMap(snap => {
         const data = snap.data();
   
@@ -58,10 +62,14 @@ export const chatsListener = (currentUserId: string) => {
   
         const createdAt = last?.createdAt ?? data.updatedAt;
 
-        if (shouldMarkDelivered(currentUserId, last?.senderId, createdAt, deliveryState)) {
-          void markChatDelivered(snap.id, currentUserId).catch((err) =>
-            console.error("Failed to update delivery state:", err)
-          );
+        const deliveryMarkKey = `${snap.id}:${currentUserId}`;
+
+        if (
+          shouldMarkDelivered(currentUserId, last?.senderId, createdAt, deliveryState) &&
+          !pendingDeliveryMarks.has(deliveryMarkKey)
+        ) {
+          pendingDeliveryMarks.add(deliveryMarkKey);
+          chatIdsToMarkDelivered.push(snap.id);
         }
 
         const status = deriveMessageStatus(
@@ -94,6 +102,16 @@ export const chatsListener = (currentUserId: string) => {
       });
   
       setLastMessages(lastMessages);
+
+      if (chatIdsToMarkDelivered.length) {
+        void markChatsDelivered(chatIdsToMarkDelivered, currentUserId)
+          .catch((err) => console.error("Failed to update delivery state:", err))
+          .finally(() => {
+            chatIdsToMarkDelivered.forEach((chatId) =>
+              pendingDeliveryMarks.delete(`${chatId}:${currentUserId}`)
+            );
+          });
+      }
        
       },
       (error) => console.error("Chats listener failed:", error)

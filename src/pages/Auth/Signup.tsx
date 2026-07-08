@@ -24,12 +24,10 @@ const Signup = () => {
   const { slug } = useParams<{ slug: string }>();
   const steps = ["Account", "Skills", "Profile", "Done"];
 
-  // Reactively update URL when currentStep changes
   useEffect(() => {
     const expectedPath = `/signup/step-${currentStep}`;
     const currentPath = `/signup/${slug}`;
 
-    // Only update URL if it doesn't match the current step
     if (currentPath !== expectedPath) {
       navigate(expectedPath, { replace: true });
     }

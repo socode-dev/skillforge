@@ -4,7 +4,7 @@ import Button from "@/components/ui/Button";
 import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
-  const { currentUser } = useAuthStore();
+  const currentUser = useAuthStore(state => state.currentUser);
   const navigate = useNavigate();
 
   if (!currentUser) return;

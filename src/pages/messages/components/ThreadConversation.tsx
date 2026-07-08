@@ -44,18 +44,15 @@ const ThreadConversation = () => {
             el.scrollTo({ top: el.scrollHeight, behavior });
             return;
         }
-        // Fallback
         bottomRef.current?.scrollIntoView({ behavior, block: "end" });
     };
 
-    // When opening a thread (chatId changes), jump to the bottom.
     useEffect(() => {
         lastAutoScrolledMessageIdRef.current = null;
         
         requestAnimationFrame(() => scrollToBottom("smooth"));
     }, [chatId]);
 
-    // Scroll down When the current user sends a message.
     useEffect(() => {
         const last = messages[messages.length - 1];
         if (!last) return;

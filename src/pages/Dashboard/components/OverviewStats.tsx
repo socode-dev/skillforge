@@ -2,45 +2,47 @@ import { motion } from "framer-motion";
 import { BookOpen, CheckCircle2, Clock3, GraduationCap } from "lucide-react";
 import useAuthStore from "@/store/useAuthStore";
 import useRequestsStore from "@/store/useRequestsStore";
+import { useMemo } from "react";
 
 const OverviewStats = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const skillRequests = useRequestsStore((state) => state.skillRequests);
+
   const currentUserId = currentUser?.profile.userId;
 
   const stats = [
     {
       id: "active-learning",
       icon: BookOpen,
-      count: skillRequests.filter(
+      count: useMemo(() => skillRequests.filter(
         (request) =>
           request.requester.userId === currentUserId &&
           request.status === "ACCEPTED"
-      ).length,
+      ).length, [skillRequests, currentUserId]),
       label: "Active Skills Learning",
     },
     {
       id: "active-teaching",
       icon: GraduationCap,
-      count: skillRequests.filter(
+      count: useMemo(() => skillRequests.filter(
         (request) =>
           request.owner.userId === currentUserId &&
           request.status === "ACCEPTED"
-      ).length,
+      ).length, [skillRequests, currentUserId]),
       label: "Active Skills Teaching",
     },
     {
       id: "pending-requests",
       icon: Clock3,
-      count: skillRequests.filter((request) => request.status === "PENDING")
-        .length,
+      count: useMemo(() => skillRequests.filter((request) => request.status === "PENDING")
+        .length, [skillRequests]),
       label: "Pending Skill Requests",
     },
     {
       id: "completed-skills",
       icon: CheckCircle2,
-      count: skillRequests.filter((request) => request.status === "COMPLETED")
-        .length,
+      count: useMemo(() => skillRequests.filter((request) => request.status === "COMPLETED")
+        .length, [skillRequests]),
       label: "Completed Skills",
     },
   ];

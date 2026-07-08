@@ -10,7 +10,7 @@ import clsx from "clsx";
 
 const ListInterface = ({lastMessage}: {lastMessage: LastMessage}) => {
   const navigate = useNavigate();
-  const {currentUser} = useAuthStore();
+  const currentUser = useAuthStore(state => state.currentUser);
   const {slug, senderId, senderDisplay, text, createdAt, unreadCount, status, participantId} = lastMessage;
   const presence = useUserPresence(participantId);
   

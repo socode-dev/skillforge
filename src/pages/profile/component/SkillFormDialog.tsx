@@ -5,7 +5,7 @@ import { useAuthForm } from "@/hooks/useAuthForm";
 import { skillInputSchema, type SkillInputSchema } from "@/schemas/skillSchema";
 import useProfileStore from "@/store/useProfileStore";
 import { Check, X } from "lucide-react";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 const SkillFormDialog = () => {
   const openEditModal = useProfileStore(state => state.openEditModal);
@@ -30,10 +30,10 @@ const SkillFormDialog = () => {
     });
   }, [openEditModal.skill, reset, selectedSkill?.skillDesc, selectedSkill?.skillName]);
 
-  const onClose = () => {
+  const onClose = useCallback(() => {
     setOpenEditModal("skill", false);
     reset();
-  };
+  }, []);
 
   if(!openEditModal.skill) return null;
 
