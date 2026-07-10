@@ -7,7 +7,6 @@ const useChatStore = create<ChatStoreState>()(
     persist(
         (set) => ({
         lastMessages: {},
-        optimisticLastMessage: {},
         messagesByChat: {},
         outboxByChat: {},
 

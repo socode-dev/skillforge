@@ -12,17 +12,21 @@ export const formatTime = (date: DateInput) => {
   const dateCreated = getCreatedAtDate(date);
   const today = new Date();
   const yesterday = new Date();
-  yesterday.setDate(today.getDate() - 1);
+  yesterday.setUTCDate(today.getUTCDate() - 1);
 
-  if(isSameDay(dateCreated, today)) {
+  if (isSameDay(dateCreated, today)) {
     return dateCreated.toLocaleTimeString([], {
       hour: "2-digit",
-      minute: "2-digit"
+      minute: "2-digit",
+      hour12: false,
+      timeZone: "UTC",
     });
-  } if(isSameDay(dateCreated, yesterday)) {
-    return "Yesterday";
-  } else {
-    return dateCreated.toLocaleDateString("en-GB");
   }
+
+  if (isSameDay(dateCreated, yesterday)) {
+    return "Yesterday";
+  }
+
+  return dateCreated.toLocaleDateString("en-GB", { timeZone: "UTC" });
 
 };
