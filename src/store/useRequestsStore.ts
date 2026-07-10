@@ -79,7 +79,6 @@ type RequestDataType = Pick<
 
 export interface RequestsStoreState {
   skillRequests: SkillRequest[] | [];
-  // invitations: InvitationData[] | [];
   loading: LoadingState;
 
   setSkillRequests: (requests: SkillRequest[] | []) => void;
@@ -120,7 +119,6 @@ const useRequestsStore = create<RequestsStoreState>()(
   persist(
     (set, get) => ({
       skillRequests: [],
-      invitations: [],
       loading: initialLoadingState,
 
       setSkillRequests: (requests) => set({ skillRequests: requests }),
