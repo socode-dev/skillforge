@@ -13,7 +13,7 @@ import clsx from "clsx";
 import { useState, type ChangeEvent } from "react";
 import { uploadToCloudinary } from "../../../utils/uploadToCloudinary";
 import useAuthStore from "../../../store/useAuthStore";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, increment } from "firebase/firestore";
 import { db } from "@/firebase/firebase";
 
 const Profile = () => {
@@ -53,6 +53,12 @@ const Profile = () => {
   const onSubmit = handleSubmit(async (data) => {
     if (!currentUser) return;
 
+    await updateDoc(doc(db, "users", currentUser.profile.userId), {
+      avatar: data.avatar ?? "",
+      bio: data.bio ?? "",
+      signupStepsCompleted: increment(1),
+    });
+
     setCurrentUser({
       ...currentUser,
       profile: {
@@ -61,12 +67,6 @@ const Profile = () => {
         bio: data.bio ?? "",
         signupStepsCompleted: currentUser.profile.signupStepsCompleted + 1,
       },
-    });
-
-    updateDoc(doc(db, "users", currentUser.profile.userId), {
-      avatar: data.avatar ?? "",
-      bio: data.bio ?? "",
-      signupStepsCompleted: 3,
     });
 
     nextPage();
