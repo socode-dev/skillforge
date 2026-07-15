@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import Card from "@/components/ui/Card";
-import { featuresData, type FeatureType } from "@/pages/landing-temp/data/featuresData";
+import { featuresData, type FeatureType } from "@/pages/landing/data/featuresData";
 import { motion } from "framer-motion";
 
 const Features = () => {

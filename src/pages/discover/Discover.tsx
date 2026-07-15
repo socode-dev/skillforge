@@ -4,7 +4,7 @@ import { searchSchema } from "@/schemas/searchSchema";
 import { useAuthForm } from "@/hooks/useAuthForm";
 import Recommendations from "@/pages/discover/components/Recommendations";
 import PopularSkills from "@/pages/discover/components/PopularSkills";
-import { ScrollToTop } from "@/layouts-temp/ScrollToTop";
+import { ScrollToTop } from "@/layouts/ScrollToTop";
 
 
 const Discover = () => {

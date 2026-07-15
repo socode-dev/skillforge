@@ -1,10 +1,10 @@
 import { Briefcase, Plus, Sparkles, X } from "lucide-react";
-import Heading from "@/pages/auth-temp/components/Heading";
+import Heading from "@/pages/auth/components/Heading";
 import Button from "@/components/ui/Button";
 import clsx from "clsx";
 import { motion } from "framer-motion";
 import useMultiStepsStore from "@/store/useMultiStepsStore";
-import { ScrollToTop } from "@/layouts-temp/ScrollToTop";
+import { ScrollToTop } from "@/layouts/ScrollToTop";
 import useAuthStore from "@/store/useAuthStore";
 import { useSkillsContext } from "@/context/useSkillsContext";
 import Input from "@/components/ui/Input";
