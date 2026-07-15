@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
-import LandingPageLayout from "@/Layouts/LandingPageLayout";
-import DashboardLayout from "@/Layouts/DashboardLayout";
-import LandingPage from "@/pages/landing/LandingPage";
+import LandingPageLayout from "@/layouts-temp/LandingPageLayout";
+import DashboardLayout from "@/layouts-temp/DashboardLayout";
+import LandingPage from "@/pages/landing-temp/LandingPage";
 import { ProtectedRoute } from "@/routes/ProtectedRoute";
 import { SidebarProvider } from "@/context/useSidebarContext";
 import PublicRoute from "@/routes/PublicRoute";
@@ -9,9 +9,9 @@ import { ChatProvider } from "@/context/useChatContext";
 import { lazy } from "react";
 import LazyWrapper from "./LazyWrapper";
 
-const Login = lazy(() => import("@/pages/auth/Login"));
-const Signup = lazy(() => import("@/pages/auth/Signup"));
-const Dashboard = lazy(() => import("@/pages/dashboard/Dashboard"));
+const Login = lazy(() => import("@/pages/auth-temp/Login"));
+const Signup = lazy(() => import("@/pages/auth-temp/Signup"));
+const Dashboard = lazy(() => import("@/pages/dashboard-temp/Dashboard"));
 const Discover = lazy(() => import("@/pages/discover/Discover"));
 const SkillRequests = lazy(() => import ("@/pages/skillRequests/SkillRequests"));
 const ChatList = lazy(() => import("@/pages/messages/ChatList"));

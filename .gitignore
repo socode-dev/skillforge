@@ -34,4 +34,4 @@ dist-ssr
 /playwright/.auth/
 
 # Discover Filter
-/src/pages/dicover/component/Filter.tsx
+/src/pages/discover/components/Filter.tsx

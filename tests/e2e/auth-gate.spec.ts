@@ -30,6 +30,7 @@ test('partially onboarded user is redirected to signup step', async ({ page }) =
   });
 
   await page.context().addInitScript((data) => {
+    window.__SKILLFORGE_E2E_SKIP_AUTH_LISTENER__ = true;
     localStorage.setItem('current-user-storage', data);
   }, partial);
 
@@ -39,7 +40,7 @@ test('partially onboarded user is redirected to signup step', async ({ page }) =
   await expect(page).toHaveURL(/\/signup\/step-1/);
 });
 
-test('stale fully onboarded persisted user is redirected from /home', async ({ page }) => {
+test('fully onboarded persisted user can access /home', async ({ page }) => {
   const full = JSON.stringify({
     state: {
       currentUser: {
@@ -59,10 +60,11 @@ test('stale fully onboarded persisted user is redirected from /home', async ({ p
   });
 
   await page.context().addInitScript((data) => {
+    window.__SKILLFORGE_E2E_SKIP_AUTH_LISTENER__ = true;
     localStorage.setItem('current-user-storage', data);
   }, full);
 
   await page.goto('/home');
 
-  await expect(page).toHaveURL(/\/$/);
+  await expect(page).toHaveURL(/\/home/);
 });

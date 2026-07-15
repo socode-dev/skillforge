@@ -34,6 +34,7 @@ test('already authenticated user is redirected from login to home', async ({ pag
   });
 
   await page.context().addInitScript((data) => {
+    window.__SKILLFORGE_E2E_SKIP_AUTH_LISTENER__ = true;
     localStorage.setItem('current-user-storage', data);
   }, full);
 

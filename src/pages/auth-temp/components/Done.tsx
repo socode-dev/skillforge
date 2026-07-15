@@ -2,7 +2,7 @@ import { CheckCircle2, Sparkles, User } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { motion } from "framer-motion";
 import useMultiStepsStore from "@/store/useMultiStepsStore";
-import { ScrollToTop } from "@/Layouts/ScrollToTop";
+import { ScrollToTop } from "@/layouts-temp/ScrollToTop";
 import useAuthStore from "@/store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
