@@ -1,5 +1,9 @@
 import { Search } from "lucide-react";
-import type { RegisterType } from "./Filter";
+import type { UseFormRegister } from "react-hook-form";
+
+export type RegisterType = UseFormRegister<{
+  searchValue?: string;
+}>;
 
 const SearchBar = ({ register }: { register: RegisterType }) => {
   return (
@@ -7,7 +11,7 @@ const SearchBar = ({ register }: { register: RegisterType }) => {
       <input
         {...register("searchValue")}
         type="search"
-        placeholder="Search skills, topics, or people..."
+        placeholder="Search skills..."
         className="w-full py-2.5 pr-4 pl-10 border-border border-1 rounded-radius-xl text-base outline-none focus:border-2 focus:border-primary transition"
       />
       <Search

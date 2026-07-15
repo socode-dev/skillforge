@@ -1,22 +1,20 @@
 import { motion } from "framer-motion";
 import SearchBar from "@/pages/discover/components/SearchBar";
-import Filter from "@/pages/discover/components/Filter";
-import { searchAndFilterSchema } from "@/schemas/searchAndFilterSchema";
+import { searchSchema } from "@/schemas/searchSchema";
 import { useAuthForm } from "@/hooks/useAuthForm";
 import Recommendations from "@/pages/discover/components/Recommendations";
 import PopularSkills from "@/pages/discover/components/PopularSkills";
 import { ScrollToTop } from "@/Layouts/ScrollToTop";
 
+
 const Discover = () => {
-  const { discoverSearchShcema } = searchAndFilterSchema;
+  const { discoverSearchShcema } = searchSchema;
   const form = useAuthForm(discoverSearchShcema, "onChange", {
     searchValue: "",
-    filterValue: "all",
   });
 
   const { register, watch } = form;
 
-  const filterValue = watch("filterValue");
   const searchValue = watch("searchValue")!;
 
   return (
@@ -37,15 +35,9 @@ const Discover = () => {
 
       <SearchBar register={register} />
 
-      <Filter register={register} />
-
-      {(filterValue == "all" || filterValue === "skills") && (
-        <>
-          <Recommendations searchValue={searchValue}/>
-          <PopularSkills searchValue={searchValue}/>
-        </>
-      )}
-
+      <Recommendations searchValue={searchValue}/>
+      <PopularSkills searchValue={searchValue}/>
+  
     </motion.main>
   );
 };

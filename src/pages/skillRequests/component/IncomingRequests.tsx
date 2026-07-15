@@ -11,10 +11,10 @@ const IncomingRequests = () => {
   const filteredRequests = useMemo(() => skillRequests.filter(
     (req) =>
       req.owner.userId === currentUser?.profile.userId &&
-      req.requester.userId !== currentUser.profile.userId &&
+      req.requester.userId !== currentUser?.profile.userId &&
       (req.status === "PENDING" ||
         (req.status === "ACCEPTED" && req.completionStatus === "REQUESTED"))
-  ), [skillRequests]);
+  ), [skillRequests, currentUser]);
 
   const requests = useMemo(() => filteredRequests.map((req) => {
     const {

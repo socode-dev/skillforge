@@ -31,8 +31,6 @@ const Skills = () => {
   const skills = currentUser.skills;
 
   const onSubmit = handleSubmit(async (data) => {
-    nextPage();
-
     await updateDoc(doc(db, "users", currentUser.profile.userId), {
       role: data.role,
       skillsReview: currentUser.profile.skillsReview,
@@ -47,10 +45,10 @@ const Skills = () => {
         signupStepsCompleted: currentUser.profile.signupStepsCompleted + 1,
       },
     });
-    // skillsReset();
+
+    nextPage();
   });
 
-  // Function to delete skill
   const deleteSkill = (name: string) => {
     if (!name) return;
 

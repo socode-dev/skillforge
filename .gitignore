@@ -32,3 +32,6 @@ dist-ssr
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Discover Filter
+/src/pages/dicover/component/Filter.tsx

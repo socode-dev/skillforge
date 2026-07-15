@@ -78,7 +78,6 @@ const ThreadConversation = () => {
                     <p className="w-fit px-2 py-1 mx-auto bg-muted text-muted-foreground rounded-full text-xs">{date}</p>
 
                     {msgs.map(message => {
-                        console.table(message)
                         const isMine = message.senderId === currentUser?.profile.userId;
                         const date = normalizeDate(message.createdAt);
                         
