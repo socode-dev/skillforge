@@ -7,12 +7,20 @@ import { auth } from "@/firebase/firebase";
 import { markAllChatsDelivered } from "@/lib/chatStateService";
 import { startUserPresence } from "@/lib/userPresenceService";
 
+declare global {
+  interface Window {
+    __SKILLFORGE_E2E_SKIP_AUTH_LISTENER__?: boolean;
+  }
+}
+
 const AppIntializer = () => {
   const { startAuthListener, stopAuthListener, currentUser, authResolved } =
     useAuthStore();
 
   // Authentication effect
   useEffect(() => {
+    if (window.__SKILLFORGE_E2E_SKIP_AUTH_LISTENER__) return;
+
     startAuthListener();
 
     return () => {

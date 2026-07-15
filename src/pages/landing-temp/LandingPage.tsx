@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { ScrollToTop } from "@/Layouts/ScrollToTop";
-import CallToAction from "@/pages/landing/components/CallToAction";
-import Features from "@/pages/landing/components/Features";
-import Hero from "@/pages/landing/components/Hero";
-import Process from "@/pages/landing/components/Process";
+import { ScrollToTop } from "@/layouts-temp/ScrollToTop";
+import CallToAction from "@/pages/landing-temp/components/CallToAction";
+import Features from "@/pages/landing-temp/components/Features";
+import Hero from "@/pages/landing-temp/components/Hero";
+import Process from "@/pages/landing-temp/components/Process";
 import { motion } from "framer-motion";
 import useMultiStepsStore from "@/store/useMultiStepsStore";
 

@@ -4,12 +4,12 @@ import { searchSchema } from "@/schemas/searchSchema";
 import { useAuthForm } from "@/hooks/useAuthForm";
 import Recommendations from "@/pages/discover/components/Recommendations";
 import PopularSkills from "@/pages/discover/components/PopularSkills";
-import { ScrollToTop } from "@/Layouts/ScrollToTop";
+import { ScrollToTop } from "@/layouts-temp/ScrollToTop";
 
 
 const Discover = () => {
-  const { discoverSearchShcema } = searchSchema;
-  const form = useAuthForm(discoverSearchShcema, "onChange", {
+  const { discoverSearchSchema } = searchSchema;
+  const form = useAuthForm(discoverSearchSchema, "onChange", {
     searchValue: "",
   });
 

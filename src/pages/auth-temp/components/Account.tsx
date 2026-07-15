@@ -63,7 +63,7 @@ const Account = () => {
     >
       <Heading
         icon={User}
-        heading="Create You Account"
+        heading="Create Your Account"
         desc="Join SkillForge to start learning and teaching. Let's get started
             with the basics."
       />
