@@ -1,10 +1,10 @@
-import { ScrollToTop } from "@/layouts-temp/ScrollToTop";
-import DiscoverRecommendation from "@/pages/dashboard-temp/components/DiscoverRecommendations";
-import Hero from "@/pages/dashboard-temp/components/Hero";
-import MessagesOverview from "@/pages/dashboard-temp/components/MessagesOverview";
-import OngoingLearning from "@/pages/dashboard-temp/components/OngoingLearning";
-import OverviewStats from "@/pages/dashboard-temp/components/OverviewStats";
-import RequestsOverview from "@/pages/dashboard-temp/components/RequestsOverview";
+import { ScrollToTop } from "@/layouts/ScrollToTop";
+import DiscoverRecommendation from "@/pages/dashboard/components/DiscoverRecommendations";
+import Hero from "@/pages/dashboard/components/Hero";
+import MessagesOverview from "@/pages/dashboard/components/MessagesOverview";
+import OngoingLearning from "@/pages/dashboard/components/OngoingLearning";
+import OverviewStats from "@/pages/dashboard/components/OverviewStats";
+import RequestsOverview from "@/pages/dashboard/components/RequestsOverview";
 import { motion } from "framer-motion";
 
 const Dashboard = () => {

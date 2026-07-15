@@ -3,7 +3,7 @@ import Heading from "./Heading";
 import Button from "../../../components/ui/Button";
 import { motion } from "framer-motion";
 import useMultiStepsStore from "../../../store/useMultiStepsStore";
-import { ScrollToTop } from "../../../layouts-temp/ScrollToTop";
+import { ScrollToTop } from "../../../layouts/ScrollToTop";
 import { useAuthForm } from "../../../hooks/useAuthForm";
 import {
   profileSchema,

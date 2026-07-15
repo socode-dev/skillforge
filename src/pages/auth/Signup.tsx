@@ -10,7 +10,7 @@ import useMultiStepsStore from "../../store/useMultiStepsStore";
 import type { JSX } from "react";
 import { AnimatePresence } from "framer-motion";
 import useAuthStore from "../../store/useAuthStore";
-import { ScrollToTop } from "../../layouts-temp/ScrollToTop";
+import { ScrollToTop } from "../../layouts/ScrollToTop";
 import { useEffect } from "react";
 
 interface StepsState {
