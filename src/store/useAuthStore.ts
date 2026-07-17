@@ -74,6 +74,9 @@ interface StoreState {
 
 const createInitialUserDoc = httpsCallable(functions, "createInitialUserDoc");
 
+const isE2ESkipAuth = () =>
+  typeof window !== "undefined" && window.__SKILLFORGE_E2E_SKIP_AUTH__ === true;
+
 const useAuthStore = create<StoreState>()(
   persist(
     (set, get) => ({
@@ -87,6 +90,7 @@ const useAuthStore = create<StoreState>()(
       setCurrentUser: (user: CurrentUser | null) => set({ currentUser: user }),
 
       startAuthListener: () => {
+        console.log("Auth fired")
         if (get()._authUnsubscribe) return;
 
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -97,11 +101,19 @@ const useAuthStore = create<StoreState>()(
             return;
           }
 
-
           const userRef = doc(db, "users", user.uid);
-          const userDocSnap = await getDoc(userRef);
 
-          if (!userDocSnap.exists()) {
+          let userDocSnap
+
+          for(let i = 0; i < 10; i++) {
+            userDocSnap = await getDoc(userRef);
+            
+            if(userDocSnap.exists()) break;
+
+            await new Promise(resolve => setTimeout(resolve, 300));
+          }
+
+          if (!userDocSnap?.exists()) {
             set({ loading: false, authResolved: true });
             return;
           }
@@ -126,9 +138,6 @@ const useAuthStore = create<StoreState>()(
             authResolved: true,
           });
 
-          const step = userData.profile.signupStepsCompleted + 1;
-
-          useMultiStepsStore.getState().setCurrentStep(step);
         });
 
         set({ _authUnsubscribe: unsubscribe });
@@ -146,13 +155,33 @@ const useAuthStore = create<StoreState>()(
         const { nextPage } = useMultiStepsStore.getState();
         set({ loading: true });
         try {
+          if (isE2ESkipAuth()) {
+            const userData = {
+              profile: {
+                userId: "e2e-test-user",
+                name,
+                email,
+                signupStepsCompleted: 1,
+                avatar: "",
+                bio: "",
+                role: "",
+                skillsReview: [],
+              },
+              skills: [],
+            };
+
+            set({ currentUser: userData });
+            nextPage();
+            return;
+          }
+
           const { user } = await createUserWithEmailAndPassword(
             auth,
             email,
             password
           );
 
-          updateProfile(user, {
+          await updateProfile(user, {
             displayName: name,
           });
 
@@ -170,13 +199,27 @@ const useAuthStore = create<StoreState>()(
             skills: [],
           };
 
-          set({
-            currentUser: userData,
-          });
-
           await createInitialUserDoc(userData["profile"]);
 
+          const userRef = doc(db, "users", user.uid);
+
+          let exists = false;
+
+          for(let i = 0; i < 10; i++) {
+            const snap = await getDoc(userRef);
+
+            if(snap.exists()) {
+              exists = true;
+              break;
+            }
+
+            await new Promise(resolve => setTimeout(resolve, 300))
+          }
+
+          if(!exists) throw new Error("User document was never created")
+
           nextPage();
+
         } catch (err) {
           if (err instanceof FirebaseError) {
             set({ signupErr: getAuthErrorMessage(err) });
@@ -262,6 +305,7 @@ const useAuthStore = create<StoreState>()(
         }
 
         set({ currentUser: null });
+        useMultiStepsStore.getState().setCurrentStep(1);
       },
     }),
     {
