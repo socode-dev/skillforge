@@ -37,7 +37,7 @@ export const featuresData: FeatureType[] = [
     icon: MessageCircle,
     iconGradientColor: "from-blue-500 to-blue-300",
     heading: "Real-Time Chat",
-    desc: "Message instantly with your skill patners, share resources, and schedule sessions seamlessly.",
+    desc: "Message instantly with your skill partners, share resources, and schedule sessions seamlessly.",
     backgroundHoverColor: "hover:bg-soft-blue",
   },
   {

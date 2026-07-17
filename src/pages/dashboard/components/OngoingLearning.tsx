@@ -20,7 +20,7 @@ const OngoingLearning = () => {
         request.requester.userId === currentUserId &&
         request.status === "ACCEPTED"
     )
-    .slice(0, 4), [skillRequests]);
+    .slice(0, 4), [skillRequests, currentUserId]);
 
   return (
     <section className="space-y-4 w-full overflow-hidden">

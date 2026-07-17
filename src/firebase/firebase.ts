@@ -30,7 +30,7 @@ export const storage = getStorage(app);
 
 const useEmulator = 
 import.meta.env.VITE_USE_FIREBASE_EMULATOR === "true" 
-&& import.meta.env.MODE === "development";
+&& import.meta.env.DEV;
 
 if(useEmulator) {
   connectAuthEmulator(auth, "http://127.0.0.1:9099", {disableWarnings: true});

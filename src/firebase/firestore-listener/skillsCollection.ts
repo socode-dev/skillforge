@@ -18,6 +18,7 @@ export const skillsCollectionListener = (
     const skillsQuery = query(
       collection(db, "skills"),
       where("isActive", "==", true),
+      where("ownerId", "!=", currentUserId),
       limit(DISCOVER_SKILLS_LIMIT)
     );
   
@@ -27,14 +28,11 @@ export const skillsCollectionListener = (
         return;
       }
   
-      const allSkills = snapshot.docs.map((doc) => ({
+      const skills = snapshot.docs.map((doc) => ({
         ...(doc.data() as SkillDataType),
       }));
   
-      const otherSkills = allSkills.filter(
-        (skill) => skill.ownerId !== currentUserId);
-  
-      setSkills(otherSkills);
+      setSkills(skills);
     }, (error) => console.error("Skills collection listener failed:", error));
   
     return unsubscribe;

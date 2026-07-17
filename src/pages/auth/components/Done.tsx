@@ -26,20 +26,20 @@ const Done = () => {
 
     setIsSubmitting(true);
 
-    setCurrentUser({
-      ...currentUser,
-      profile: {
-        ...currentUser.profile,
-        signupStepsCompleted: currentUser.profile.signupStepsCompleted + 1,
-      },
-    });
-
     try {
       await updateDoc(doc(db, "users", currentUser.profile.userId), {
         signupStepsCompleted: increment(1),
       });
       await finalizeSignup(currentUser);
 
+      setCurrentUser({
+        ...currentUser,
+        profile: {
+          ...currentUser.profile,
+          signupStepsCompleted: currentUser.profile.signupStepsCompleted + 1,
+        },
+      });
+      
       navigate("/home", { replace: true });
       setCurrentStep(1);
     } catch (err) {
@@ -49,7 +49,7 @@ const Done = () => {
     }
   };
 
-  if (!currentUser) return;
+  if (!currentUser) return null;
 
   const {
     profile: { name, email, role, avatar },

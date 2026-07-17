@@ -75,7 +75,7 @@ interface StoreState {
 const createInitialUserDoc = httpsCallable(functions, "createInitialUserDoc");
 
 const isE2ESkipAuth = () =>
-  typeof window !== "undefined" && window.__SKILLFORGE_E2E_SKIP_AUTH__ === true;
+  typeof window !== "undefined" && window.__SKILLFORGE_E2E_SKIP_AUTH__ === true && import.meta.env.DEV;
 
 const useAuthStore = create<StoreState>()(
   persist(
@@ -90,7 +90,6 @@ const useAuthStore = create<StoreState>()(
       setCurrentUser: (user: CurrentUser | null) => set({ currentUser: user }),
 
       startAuthListener: () => {
-        console.log("Auth fired")
         if (get()._authUnsubscribe) return;
 
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
