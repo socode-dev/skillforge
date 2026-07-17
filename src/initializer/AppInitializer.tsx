@@ -10,6 +10,7 @@ import { startUserPresence } from "@/lib/userPresenceService";
 declare global {
   interface Window {
     __SKILLFORGE_E2E_SKIP_AUTH_LISTENER__?: boolean;
+    __SKILLFORGE_E2E_SKIP_AUTH__?: boolean;
   }
 }
 
@@ -17,9 +18,8 @@ const AppIntializer = () => {
   const { startAuthListener, stopAuthListener, currentUser, authResolved } =
     useAuthStore();
 
-  // Authentication effect
   useEffect(() => {
-    if (window.__SKILLFORGE_E2E_SKIP_AUTH_LISTENER__) return;
+    if (window.__SKILLFORGE_E2E_SKIP_AUTH_LISTENER__ && import.meta.env.DEV) return;
 
     startAuthListener();
 

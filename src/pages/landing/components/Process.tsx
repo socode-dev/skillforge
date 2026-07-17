@@ -23,7 +23,7 @@ const Process = () => {
         <h3 className="text-3xl md:text-4xl lg:text-5xl mb-4">How It Works</h3>
 
         <p className="text-lg text-muted-foreground mb-14">
-          Three simple steps to start your learnig journey
+          Three simple steps to start your learning journey
         </p>
       </motion.div>
 

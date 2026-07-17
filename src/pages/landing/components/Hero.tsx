@@ -20,7 +20,7 @@ const Hero = ({ handleSignupClick }: { handleSignupClick: () => void }) => {
           <span>Join 10000+ Learners</span>
         </motion.div>
 
-        <motion.h2
+        <motion.h1
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
@@ -30,7 +30,7 @@ const Hero = ({ handleSignupClick }: { handleSignupClick: () => void }) => {
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/50 to-primary">
             Global Community
           </span>
-        </motion.h2>
+        </motion.h1>
 
         <motion.p
           initial={{ y: 100, opacity: 0 }}

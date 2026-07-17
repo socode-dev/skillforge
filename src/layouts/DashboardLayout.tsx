@@ -43,9 +43,8 @@ const DashboardLayout = () => {
       {/* Mobile sidebar */}
       {isSidebarOpen && (
         <AnimatePresence>
-          <div
+          <button
             aria-label="sidebar overlay"
-            role="button"
             onClick={() => setIsSidebarOpen(false)}
             className="fixed top-0 left-0 right-0 bottom-0 inset-0 z-20 bg-black/20"
           />

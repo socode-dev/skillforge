@@ -38,16 +38,22 @@ const Profile = () => {
   const bio = watch("bio") as string;
 
   const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    setUploading(true);
     const file = e.target.files?.[0];
     if (!file) return;
+    
+    setUploading(true);
 
-    const url = await uploadToCloudinary(file);
-    if (!url) {
-      throw Error("Failed to generate image url.");
+    try {
+      const url = await uploadToCloudinary(file);
+      if (!url) {
+        throw Error("Failed to generate image url.");
+      }
+      setValue("avatar", url);
+    } catch (err) {
+      console.error("Avatar upload failed:", err);
+    } finally {
+      setUploading(false);
     }
-    setValue("avatar", url);
-    setUploading(false);
   };
 
   const onSubmit = handleSubmit(async (data) => {
@@ -129,7 +135,7 @@ const Profile = () => {
             </div>
 
             <p className="text-xs text-muted-foreground">
-              JGP, JPEG, PNG or GIF. Max size 5mb. Optional but recommended.
+              JPG, JPEG, PNG or GIF. Max size 5mb. Optional but recommended.
             </p>
             {errors.avatar && (
               <p className="text-destructive text-xs">

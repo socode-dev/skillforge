@@ -26,7 +26,7 @@ const Skills = () => {
   } = useSkillsContext();
   const { errors, isSubmitting, isValid } = skillsFormState;
 
-  if (!currentUser) return;
+  if (!currentUser) return null;
 
   const skills = currentUser.skills;
 
@@ -167,7 +167,7 @@ const Skills = () => {
           type="button"
           onClick={onSubmit}
           isDisabled={!skills.length || isSubmitting || !isValid}
-          className="py-3 text-sm font-semibold disabled:opacity-0 disabled:cursor-not-allowed"
+          className="py-3 text-sm font-semibold disabled:opacity-20 disabled:cursor-not-allowed"
         >
           {isSubmitting ? "Processing..." : "Next"}
         </Button>

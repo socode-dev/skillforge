@@ -26,23 +26,11 @@ const PublicRoute = ({ children }: { children: ReactNode }) => {
     }
 
     if (currentSignupStep !== null && currentSignupStep !== currentStep) {
-      console.log(
-        "Signup Steps Completed:",
-        currentUser.profile.signupStepsCompleted
-      );
-      console.log("Current Step:", currentStep);
-      console.log("Redirecting to correct step");
 
       return <Navigate to={`/signup/step-${currentStep}`} replace />;
     }
 
     if (!isOnAllowedRoute && currentSignupStep === null) {
-      console.log(
-        "Signup Steps Completed:",
-        currentUser.profile.signupStepsCompleted
-      );
-      console.log("Current Step:", currentStep);
-      console.log("Redirecting to signup step");
 
       return <Navigate to={`/signup/step-${currentStep}`} replace />;
     }

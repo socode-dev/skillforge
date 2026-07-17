@@ -42,7 +42,7 @@ const CallToAction = ({
         className="text-lg text-center text-white mb-8"
       >
         Join SkillForge today and start exchanging skills with a vibrant
-        community of learners and teachers worlwide.
+        community of learners and teachers worldwide.
       </motion.p>
 
       <Button

@@ -102,7 +102,7 @@ const DiscoverRecommendation = () => {
                   onClick={() => onSendRequest(requestData)}
                   type="button"
                   variant="outline"
-                  isDisabled={isButtonDisabled}
+                  isDisabled={isButtonDisabled || loading.isRequesting[skill.skillId]}
                   className="w-full flex justify-center items-center gap-3 text-primary py-2 text-sm font-semibold group-hover:scale-105"
                 >
                   {loading.isRequesting[skill.skillId] ? (

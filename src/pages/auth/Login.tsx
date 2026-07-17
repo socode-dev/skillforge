@@ -52,7 +52,7 @@ const Login = () => {
         <div className="space-y-4 my-8">
           <h2 className="text-2xl font-semibold">Welcome Back to SkillForge</h2>
           <p className="text-muted-foreground text-base">
-            Log in to cotinue learning and sharing skills.
+            Log in to continue learning and sharing skills.
           </p>
         </div>
 
@@ -114,7 +114,7 @@ const Login = () => {
           <fieldset className="flex justify-between items-center text-sm">
             <div className="w-fit flex items-center gap-2">
               <Input
-                label="Remeber Me"
+                label="Remember Me"
                 name="remember-me"
                 type={"checkbox"}
                 className="accent-primary cursor-pointer"
