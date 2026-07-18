@@ -164,6 +164,10 @@ const Profile = () => {
           >
             {bio?.length}/500
           </p>
+          {errors.bio && (
+            <p className="text-destructive text-xs">{errors.bio.message}</p>
+          )}
+
         </fieldset>
       </div>
 
@@ -179,7 +183,7 @@ const Profile = () => {
         <Button
           variant="primary"
           type="button"
-          isDisabled={isSubmitting}
+          isDisabled={isSubmitting || uploading}
           onClick={onSubmit}
           className="py-3 text-sm font-semibold disabled:opacity-20 disabled:cursor-not-allowed"
         >

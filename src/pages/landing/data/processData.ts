@@ -15,7 +15,7 @@ export const processData: Data[] = [
     icon: Search,
     iconGradientColor: "from-blue-500 to-blue-400",
     heading: "Discover Skills",
-    desc: "Explore what others are teaching and find the perfect march for your learning goals.",
+    desc: "Explore what others are teaching and find the perfect match for your learning goals.",
     backgroundHoverColor: "hover:bg-soft-blue",
   },
   {

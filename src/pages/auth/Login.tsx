@@ -143,25 +143,6 @@ const Login = () => {
           </Button>
         </form>
 
-        <div className="flex justify-center items-center gap-2 text-sm text-muted-foreground my-8">
-          <hr className="w-16" />
-          <p>or continue with </p>
-          <hr className="w-16" />
-        </div>
-
-        <Button
-          onClick={() => console.log("Signup with google")}
-          type="button"
-          variant="outline"
-          className="flex justify-center items-center gap-4 w-full py-3"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ duration: 0.1, ease: "easeOut" }}
-        >
-          <FaGoogle />
-          <span className="text-sm font-semibold">Google</span>
-        </Button>
-
         <p className="text-sm text-center mt-8">
           New to SkillForge?{" "}
           <Link

@@ -8,11 +8,6 @@ const config: Config = {
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.app.json', useESM: true }],
   },
-  globals: {
-    'ts-jest': {
-      useESM: true,
-    },
-  },
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',

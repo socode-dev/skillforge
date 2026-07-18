@@ -67,7 +67,7 @@ const Hero = ({ handleSignupClick }: { handleSignupClick: () => void }) => {
         <img
           src={teamCollaborationImage}
           alt="Picture of team collaborating"
-          loading="lazy"
+          loading="eager"
           className="w-full hero-image transition-transform duration-200 ease-out"
         />
 

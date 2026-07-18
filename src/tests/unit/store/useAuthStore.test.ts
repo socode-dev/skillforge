@@ -67,6 +67,17 @@ import { auth } from "@/firebase/firebase";
 import useAuthStore from "@/store/useAuthStore";
 import { markUserOffline } from "@/lib/userPresenceService";
 
+const waitForCondition = async (fn: () => boolean, timeout = 2000) => {
+  const start = Date.now();
+  
+  while (true) {
+    if (fn()) return;
+    if (Date.now() - start > timeout) throw new Error("Timed out waiting for condition");
+    
+    await new Promise((r) => setTimeout(r, 10));
+  }
+};
+
 describe("useAuthStore", () => {
   const resetForm = jest.fn();
   const navigate = jest.fn();
@@ -190,8 +201,7 @@ describe("useAuthStore", () => {
     (getDocs as jest.Mock).mockResolvedValue(skillsSnap);
 
     useAuthStore.getState().startAuthListener();
-    await Promise.resolve();
-    await Promise.resolve();
+    await waitForCondition(() => useAuthStore.getState().currentUser !== null, 2000);
 
     expect(useAuthStore.getState().currentUser).toEqual({
       profile: userDocSnap.data(),
