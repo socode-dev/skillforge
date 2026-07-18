@@ -5,7 +5,9 @@ test('redirects unauthenticated user from /home to landing', async ({ page }) =>
     localStorage.removeItem('current-user-storage');
   });
 
-  await page.goto('/home');
+  await page.goto('/home', { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForURL(/\/$/, { timeout: 60000 });
 
   await expect(page).toHaveURL(/\/$/);
 });
@@ -34,8 +36,9 @@ test('partially onboarded user is redirected to signup step', async ({ page }) =
     localStorage.setItem('current-user-storage', data);
   }, partial);
 
-  await page.goto('/signup/step-2');
-  await page.waitForLoadState('load');
+  await page.goto('/signup/step-2', { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForURL(/\/signup\/step-1/, { timeout: 60000 });
 
   await expect(page).toHaveURL(/\/signup\/step-1/);
 });
@@ -64,7 +67,9 @@ test('fully onboarded persisted user can access /home', async ({ page }) => {
     localStorage.setItem('current-user-storage', data);
   }, full);
 
-  await page.goto('/home');
+  await page.goto('/home', { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForURL(/\/home/, { timeout: 60000 });
 
   await expect(page).toHaveURL(/\/home/);
 });

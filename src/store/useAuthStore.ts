@@ -75,7 +75,9 @@ interface StoreState {
 const createInitialUserDoc = httpsCallable(functions, "createInitialUserDoc");
 
 const isE2ESkipAuth = () =>
-  typeof window !== "undefined" && window.__SKILLFORGE_E2E_SKIP_AUTH__ === true && import.meta.env.DEV;
+  typeof window !== "undefined" &&
+  window.__SKILLFORGE_E2E_SKIP_AUTH__ === true &&
+  process.env.NODE_ENV === "development";
 
 const useAuthStore = create<StoreState>()(
   persist(
@@ -310,6 +312,14 @@ const useAuthStore = create<StoreState>()(
     {
       name: "current-user-storage",
       partialize: (state) => ({ currentUser: state.currentUser }),
+      onRehydrateStorage: (state) => {
+        return () => {
+          if (!state) return;
+
+          state.loading = false;
+          state.authResolved = Boolean(state.currentUser);
+        };
+      },
     }
   )
 );
