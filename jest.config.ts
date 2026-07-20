@@ -2,6 +2,7 @@ import type { Config } from 'jest';
 
 const config: Config = {
   rootDir: './',
+  preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/src/test/jest.setup.ts'],
   transform: {
@@ -10,7 +11,8 @@ const config: Config = {
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '\.(gif|ttf|eot|svg|png)$': '<rootDir>/src/test/mocks/fileMock.js',
+    '^(\\.{1,2}/.*)\\.js$': '$1',
+    '\\.(gif|ttf|eot|svg|png)$': '<rootDir>/src/test/mocks/fileMock.js',
   },
   testMatch: [
     '<rootDir>/src/tests/unit/**/*.test.ts',
@@ -19,6 +21,7 @@ const config: Config = {
     '<rootDir>/src/tests/unit/**/*.spec.tsx',
   ],
   testPathIgnorePatterns: ['/node_modules/', '/tests/e2e/'],
+  transformIgnorePatterns: [],
 };
 
 export default config;

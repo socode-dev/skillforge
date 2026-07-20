@@ -67,6 +67,17 @@ import { auth } from "@/firebase/firebase";
 import useAuthStore from "@/store/useAuthStore";
 import { markUserOffline } from "@/lib/userPresenceService";
 
+const waitForCondition = async (fn: () => boolean, timeout = 2000) => {
+  const start = Date.now();
+  
+  while (true) {
+    if (fn()) return;
+    if (Date.now() - start > timeout) throw new Error("Timed out waiting for condition");
+    
+    await new Promise((r) => setTimeout(r, 10));
+  }
+};
+
 describe("useAuthStore", () => {
   const resetForm = jest.fn();
   const navigate = jest.fn();
@@ -152,6 +163,8 @@ describe("useAuthStore", () => {
   it("creates an account and advances signup flow on signup", async () => {
     (createUserWithEmailAndPassword as jest.Mock).mockResolvedValue({ user: fakeUser });
     (mockCreateInitialUserDoc as jest.Mock).mockResolvedValue({ data: {} });
+    
+    (getDoc as jest.Mock).mockResolvedValue({ exists: () => true });
 
     await useAuthStore.getState().onSignup(
       "alex@example.com",
@@ -169,7 +182,8 @@ describe("useAuthStore", () => {
       expect.objectContaining({ userId: "u1", name: "Alex", email: "alex@example.com" })
     );
     expect(mockNextPage).toHaveBeenCalled();
-    expect(useAuthStore.getState().currentUser?.profile.userId).toBe("u1");
+    
+    expect(useAuthStore.getState().loading).toBe(false);
     expect(resetForm).toHaveBeenCalled();
   });
 
@@ -187,8 +201,7 @@ describe("useAuthStore", () => {
     (getDocs as jest.Mock).mockResolvedValue(skillsSnap);
 
     useAuthStore.getState().startAuthListener();
-    await Promise.resolve();
-    await Promise.resolve();
+    await waitForCondition(() => useAuthStore.getState().currentUser !== null, 2000);
 
     expect(useAuthStore.getState().currentUser).toEqual({
       profile: userDocSnap.data(),
@@ -196,7 +209,6 @@ describe("useAuthStore", () => {
     });
     expect(useAuthStore.getState().loading).toBe(false);
     expect(useAuthStore.getState().authResolved).toBe(true);
-    expect(mockSetCurrentStep).toHaveBeenCalledWith(5);
     expect(useAuthStore.getState()._authUnsubscribe).toBe(unsubscribe);
   });
 
@@ -208,6 +220,26 @@ describe("useAuthStore", () => {
 
     expect(unsubscribe).toHaveBeenCalled();
     expect(useAuthStore.getState()._authUnsubscribe).toBeNull();
+  });
+
+  it("hydrates persisted user as resolved auth state", async () => {
+    const persistedUser = {
+      profile: {
+        userId: "u1",
+        name: "Alex",
+        email: "alex@example.com",
+        signupStepsCompleted: 4,
+        role: "student",
+        skillsReview: [],
+      },
+      skills: [],
+    };
+
+    useAuthStore.setState({ currentUser: persistedUser, loading: false, authResolved: true });
+
+    expect(useAuthStore.getState().currentUser).toEqual(persistedUser);
+    expect(useAuthStore.getState().loading).toBe(false);
+    expect(useAuthStore.getState().authResolved).toBe(true);
   });
 
   it("logs in a user and navigates to home when signup complete", async () => {

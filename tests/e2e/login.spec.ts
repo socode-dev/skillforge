@@ -24,8 +24,9 @@ test('already authenticated user is redirected from login to home', async ({ pag
     localStorage.setItem('current-user-storage', data);
   }, full);
 
-  await page.goto('/login');
-  await page.waitForLoadState('load');
+  await page.goto('/login', { waitUntil: 'domcontentloaded', timeout: 60000 });
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForURL(/\/home/, { timeout: 60000 });
 
   await expect(page).toHaveURL(/\/home/);
 });

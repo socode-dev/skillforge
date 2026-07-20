@@ -74,8 +74,26 @@ interface StoreState {
 
 const createInitialUserDoc = httpsCallable(functions, "createInitialUserDoc");
 
+const waitForUserDoc = async (userId: string) => {
+  
+  let userDocSnap;
+  
+  const userRef = doc(db, "users", userId);
+  
+  for(let i = 0; i < 10; i++) {
+    userDocSnap = await getDoc(userRef);
+
+    if(userDocSnap.exists()) break;
+
+    await new Promise(resolve => setTimeout(resolve, 300))
+  }
+
+  return userDocSnap;
+}
+
 const isE2ESkipAuth = () =>
-  typeof window !== "undefined" && window.__SKILLFORGE_E2E_SKIP_AUTH__ === true && import.meta.env.DEV;
+  typeof window !== "undefined" &&
+  window.__SKILLFORGE_E2E_SKIP_AUTH__ === true;
 
 const useAuthStore = create<StoreState>()(
   persist(
@@ -100,23 +118,16 @@ const useAuthStore = create<StoreState>()(
             return;
           }
 
-          const userRef = doc(db, "users", user.uid);
-
-          let userDocSnap
-
-          for(let i = 0; i < 10; i++) {
-            userDocSnap = await getDoc(userRef);
-            
-            if(userDocSnap.exists()) break;
-
-            await new Promise(resolve => setTimeout(resolve, 300));
-          }
+          const userDocSnap = await waitForUserDoc(user.uid);
 
           if (!userDocSnap?.exists()) {
-            set({ loading: false, authResolved: true });
+            set({
+              currentUser: null,
+              loading: false,
+              authResolved: true,
+            });
             return;
           }
-
           const skillsSnap = await getDocs(
             collection(db, "users", user.uid, "skills")
           );
@@ -200,22 +211,9 @@ const useAuthStore = create<StoreState>()(
 
           await createInitialUserDoc(userData["profile"]);
 
-          const userRef = doc(db, "users", user.uid);
+          const userDocSnap = await waitForUserDoc(user.uid);
 
-          let exists = false;
-
-          for(let i = 0; i < 10; i++) {
-            const snap = await getDoc(userRef);
-
-            if(snap.exists()) {
-              exists = true;
-              break;
-            }
-
-            await new Promise(resolve => setTimeout(resolve, 300))
-          }
-
-          if(!exists) throw new Error("User document was never created")
+          if(!userDocSnap?.exists()) throw new Error("User document was never created")
 
           nextPage();
 
@@ -242,7 +240,6 @@ const useAuthStore = create<StoreState>()(
             password
           );
 
-          // Fetch user document from Firestore to check signup progress
           const userRef = doc(db, "users", user.uid);
           const userDocSnap = await getDoc(userRef);
 
@@ -310,6 +307,16 @@ const useAuthStore = create<StoreState>()(
     {
       name: "current-user-storage",
       partialize: (state) => ({ currentUser: state.currentUser }),
+      // onRehydrateStorage: (state) => {
+      //   return () => {
+      //     if (!state) return;
+
+      //     useAuthStore.setState({
+      //       loading: false,
+      //       authResolved: Boolean(state.currentUser);
+      //     })
+      //   };
+      // },
     }
   )
 );

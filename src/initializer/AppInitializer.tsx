@@ -19,7 +19,7 @@ const AppIntializer = () => {
     useAuthStore();
 
   useEffect(() => {
-    if (window.__SKILLFORGE_E2E_SKIP_AUTH_LISTENER__ && import.meta.env.DEV) return;
+    if (window.__SKILLFORGE_E2E_SKIP_AUTH_LISTENER__) return;
 
     startAuthListener();
 

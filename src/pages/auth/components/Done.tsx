@@ -9,7 +9,7 @@ import clsx from "clsx";
 import { db, functions } from "@/firebase/firebase";
 import { httpsCallable } from "firebase/functions";
 import { useState } from "react";
-import { doc, increment, updateDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
 const Done = () => {
   const navigate = useNavigate();
@@ -27,16 +27,19 @@ const Done = () => {
     setIsSubmitting(true);
 
     try {
-      await updateDoc(doc(db, "users", currentUser.profile.userId), {
-        signupStepsCompleted: increment(1),
-      });
       await finalizeSignup(currentUser);
+
+      const userSnap = await getDoc(doc(db, "users", currentUser.profile.userId));
+      const updatedProfile = userSnap.exists() ? (userSnap.data() as any) : null;
 
       setCurrentUser({
         ...currentUser,
         profile: {
           ...currentUser.profile,
-          signupStepsCompleted: currentUser.profile.signupStepsCompleted + 1,
+          signupStepsCompleted:
+            (updatedProfile && typeof updatedProfile.signupStepsCompleted === "number")
+              ? updatedProfile.signupStepsCompleted
+              : currentUser.profile.signupStepsCompleted + 1,
         },
       });
       
