@@ -7,9 +7,9 @@ const AuthHeader = () => {
   return (
     <button
       onClick={() => navigate("/")}
-      className="flex items-center gap-2 mt-8 cursor-pointer"
+      className="grow w-fit flex items-center gap-2 mt-8 cursor-pointer"
     >
-      <img src={logo} alt="skillforge" loading="lazy" width={30} />
+      <img src={logo} alt="skillforge logo" loading="lazy" width={30} />
       <span className="text-xl font-semibold">SkillForge</span>
     </button>
   );

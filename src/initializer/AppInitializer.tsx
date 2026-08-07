@@ -7,29 +7,30 @@ import { auth } from "@/firebase/firebase";
 import { markAllChatsDelivered } from "@/lib/chatStateService";
 import { startUserPresence } from "@/lib/userPresenceService";
 
-declare global {
-  interface Window {
-    __SKILLFORGE_E2E_SKIP_AUTH_LISTENER__?: boolean;
-    __SKILLFORGE_E2E_SKIP_AUTH__?: boolean;
-  }
-}
-
 const AppIntializer = () => {
   const { startAuthListener, stopAuthListener, currentUser, authResolved } =
     useAuthStore();
 
   useEffect(() => {
-    if (window.__SKILLFORGE_E2E_SKIP_AUTH_LISTENER__) return;
+    const shouldSkipAuthListener =
+      typeof window !== "undefined" &&
+      (window.__SKILLFORGE_SKIP_AUTH_LISTENER__ === true ||
+        window.__SKILLFORGE_E2E_SKIP_AUTH_LISTENER__ === true);
 
-    startAuthListener();
+    if (!shouldSkipAuthListener) {
+      startAuthListener();
+    }
 
     return () => {
-      stopAuthListener();
+      if (!shouldSkipAuthListener) {
+        stopAuthListener();
+      }
     };
   }, []);
 
   // Real-time listener for skills
   useEffect(() => {
+
     const userId = auth.currentUser?.uid;
 
     if (!authResolved || !userId) return;
@@ -67,6 +68,7 @@ const AppIntializer = () => {
     };
   }, [currentUser?.profile?.userId, authResolved]);
 
+  // Mark all chats delivered on mount
   useEffect(() => {
     const userId = auth.currentUser?.uid;
 
@@ -77,6 +79,7 @@ const AppIntializer = () => {
     );
   }, [currentUser?.profile?.userId, authResolved]);
 
+  // Start user online presence
   useEffect(() => {
     const userId = auth.currentUser?.uid;
 

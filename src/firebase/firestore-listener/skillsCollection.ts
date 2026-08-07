@@ -21,19 +21,21 @@ export const skillsCollectionListener = (
       where("ownerId", "!=", currentUserId),
       limit(DISCOVER_SKILLS_LIMIT)
     );
+
+const unsubscribe = onSnapshot(skillsQuery, (snapshot) => {
+  if (snapshot.empty) {
+    setSkills([]);
+    return;
+  }
   
-    const unsubscribe = onSnapshot(skillsQuery, (snapshot) => {
-      if (snapshot.empty) {
-        setSkills([]);
-        return;
-      }
-  
-      const skills = snapshot.docs.map((doc) => ({
+  const skills = snapshot.docs.map((doc) => ({
         ...(doc.data() as SkillDataType),
       }));
-  
+      console.log(skills);
+      
       setSkills(skills);
     }, (error) => console.error("Skills collection listener failed:", error));
-  
+    
     return unsubscribe;
   };
+  

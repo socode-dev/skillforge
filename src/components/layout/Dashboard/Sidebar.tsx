@@ -55,7 +55,7 @@ const Sidebar = () => {
         </div>
 
         <figcaption className="w-full text-foreground">
-          <span className="inline-block w-[90%] truncate text-base">
+          <span className="inline-block w-[90%] text-clip text-base">
             {currentUser?.profile?.name}
           </span>
 

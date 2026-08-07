@@ -2,6 +2,7 @@ import { type ReactNode } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { Navigate, useLocation } from "react-router-dom";
 import useMultiStepsStore from "@/store/useMultiStepsStore";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 const PublicRoute = ({ children }: { children: ReactNode }) => {
   const { authResolved, loading, currentUser } = useAuthStore();
@@ -9,7 +10,7 @@ const PublicRoute = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
 
   if (!authResolved || loading) {
-    return <p className="text-lg text-center mt-20">Loading...</p>;
+    return <LoadingSpinner />;
   }
 
   const allowedRoutes = ["/", "/login", "/signup/step-1"];

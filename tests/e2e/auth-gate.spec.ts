@@ -1,19 +1,33 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
+
+const seedAuthState = async (
+  page: Page,
+  state: Record<string, unknown>
+) => {
+  await page.context().addInitScript((data) => {
+    window.__SKILLFORGE_SKIP_AUTH_LISTENER__ = true;
+    window.__SKILLFORGE_E2E_SKIP_AUTH_LISTENER__ = true;
+    localStorage.setItem('current-user-storage', data);
+  }, JSON.stringify(state));
+};
 
 test('redirects unauthenticated user from /home to landing', async ({ page }) => {
-  await page.context().addInitScript(() => {
-    localStorage.removeItem('current-user-storage');
+  await seedAuthState(page, {
+    state: {
+      currentUser: null,
+      authResolved: true,
+      loading: false,
+    },
   });
 
   await page.goto('/home', { waitUntil: 'domcontentloaded', timeout: 60000 });
-  await page.waitForLoadState('domcontentloaded');
   await page.waitForURL(/\/$/, { timeout: 60000 });
 
   await expect(page).toHaveURL(/\/$/);
 });
 
 test('partially onboarded user is redirected to signup step', async ({ page }) => {
-  const partial = JSON.stringify({
+  await seedAuthState(page, {
     state: {
       currentUser: {
         profile: {
@@ -31,20 +45,14 @@ test('partially onboarded user is redirected to signup step', async ({ page }) =
     },
   });
 
-  await page.context().addInitScript((data) => {
-    window.__SKILLFORGE_E2E_SKIP_AUTH_LISTENER__ = true;
-    localStorage.setItem('current-user-storage', data);
-  }, partial);
-
   await page.goto('/signup/step-2', { waitUntil: 'domcontentloaded', timeout: 60000 });
-  await page.waitForLoadState('domcontentloaded');
   await page.waitForURL(/\/signup\/step-1/, { timeout: 60000 });
 
   await expect(page).toHaveURL(/\/signup\/step-1/);
 });
 
 test('fully onboarded persisted user can access /home', async ({ page }) => {
-  const full = JSON.stringify({
+  await seedAuthState(page, {
     state: {
       currentUser: {
         profile: {
@@ -62,13 +70,7 @@ test('fully onboarded persisted user can access /home', async ({ page }) => {
     },
   });
 
-  await page.context().addInitScript((data) => {
-    window.__SKILLFORGE_E2E_SKIP_AUTH_LISTENER__ = true;
-    localStorage.setItem('current-user-storage', data);
-  }, full);
-
   await page.goto('/home', { waitUntil: 'domcontentloaded', timeout: 60000 });
-  await page.waitForLoadState('domcontentloaded');
   await page.waitForURL(/\/home/, { timeout: 60000 });
 
   await expect(page).toHaveURL(/\/home/);

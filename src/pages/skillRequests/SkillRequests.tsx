@@ -2,6 +2,7 @@ import { lazy, useState } from "react";
 import RequestNavBar from "./component/RequestNavBar";
 import { AnimatePresence } from "framer-motion";
 import LazyWrapper from "@/routes/LazyWrapper";
+import { IncomingSkeleton, OutgoingSkeleton} from "@/components/skeletons/Requests";
 
 const IncomingRequests = lazy(() => import("@/pages/skillRequests/component/IncomingRequests"));
 const OutgoingRequests = lazy(() => import("@/pages/skillRequests/component/OutgoingRequests"));
@@ -20,9 +21,9 @@ const SkillRequests = () => {
 
       <AnimatePresence mode="wait">
         {requestType === "incoming" ? (
-          <LazyWrapper loadingFallback={<p className="mt-20 text-xl text-muted-foreground">Loading available request...</p>}><IncomingRequests /></LazyWrapper>
+          <LazyWrapper loadingFallback={<IncomingSkeleton type="incoming" />}><IncomingRequests /></LazyWrapper>
         ) : (
-          <LazyWrapper loadingFallback={<p className="mt-20 text-xl text-muted-foreground">Loading available request...</p>}><OutgoingRequests /></LazyWrapper>
+          <LazyWrapper loadingFallback={<OutgoingSkeleton type="outgoing" />}><OutgoingRequests /></LazyWrapper>
         )}
       </AnimatePresence>
     </main>
