@@ -91,10 +91,6 @@ const waitForUserDoc = async (userId: string) => {
   return userDocSnap;
 }
 
-const isE2ESkipAuth = () =>
-  typeof window !== "undefined" &&
-  window.__SKILLFORGE_E2E_SKIP_AUTH__ === true;
-
 const useAuthStore = create<StoreState>()(
   persist(
     (set, get) => ({
@@ -164,26 +160,8 @@ const useAuthStore = create<StoreState>()(
       onSignup: async (email, password, name, reset) => {
         const { nextPage } = useMultiStepsStore.getState();
         set({ loading: true });
+        
         try {
-          if (isE2ESkipAuth()) {
-            const userData = {
-              profile: {
-                userId: "e2e-test-user",
-                name,
-                email,
-                signupStepsCompleted: 1,
-                avatar: "",
-                bio: "",
-                role: "",
-                skillsReview: [],
-              },
-              skills: [],
-            };
-
-            set({ currentUser: userData });
-            nextPage();
-            return;
-          }
 
           const { user } = await createUserWithEmailAndPassword(
             auth,
@@ -277,6 +255,7 @@ const useAuthStore = create<StoreState>()(
             navigate("/home", { replace: true });
           }
         } catch (err) {
+          console.error("Error:", err);
           if (err instanceof FirebaseError) {
             set({ loginErr: getAuthErrorMessage(err) });
 
@@ -307,16 +286,6 @@ const useAuthStore = create<StoreState>()(
     {
       name: "current-user-storage",
       partialize: (state) => ({ currentUser: state.currentUser }),
-      // onRehydrateStorage: (state) => {
-      //   return () => {
-      //     if (!state) return;
-
-      //     useAuthStore.setState({
-      //       loading: false,
-      //       authResolved: Boolean(state.currentUser);
-      //     })
-      //   };
-      // },
     }
   )
 );

@@ -1,5 +1,6 @@
-import logo from "../../../assets/skillforge-logo.webp";
-import { Mail, MapPin, Linkedin, Twitter } from "lucide-react";
+import logo from "@/assets/skillforge-logo.webp";
+import { FaLinkedin as Linkedin, FaTwitter as Twitter } from "react-icons/fa6"
+import { Mail, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import clsx from "clsx";

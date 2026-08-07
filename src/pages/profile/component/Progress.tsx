@@ -19,6 +19,8 @@ const Progress = () => {
     const completedItems = useMemo(() => completionItems.filter(item => item.complete).length, [completionItems]);
     const progress = Math.round((completedItems / completionItems.length) * 100);
     const missingItems = useMemo(() => completionItems.filter(item => !item.complete), [completionItems]);
+
+    if(progress >= 100) return null;
     
     return (
         <section className="w-full flex gap-4 p-4 rounded-radius-xl border border-primary/40 bg-soft-primary/50">

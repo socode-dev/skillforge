@@ -8,6 +8,14 @@ import PublicRoute from "@/routes/PublicRoute";
 import { ChatProvider } from "@/context/useChatContext";
 import { lazy } from "react";
 import LazyWrapper from "./LazyWrapper";
+import LoginSkeleton from "@/components/skeletons/Login";
+import SignupSkeleton from "@/components/skeletons/Signup";
+import DashboardSkeleton from "@/components/skeletons/Dashboard";
+import DiscoverSkeleton from "@/components/skeletons/Discover";
+import ChatListSkeleton from "@/components/skeletons/ChatList";
+import ProfileSkeleton from "@/components/skeletons/Profile";
+import SettingsSkeleton from "@/components/skeletons/SettingsSkeleton";
+import ChatThreadSkeleton from "@/components/skeletons/ChatThread";
 
 const Login = lazy(() => import("@/pages/auth/Login"));
 const Signup = lazy(() => import("@/pages/auth/Signup"));
@@ -18,10 +26,6 @@ const ChatList = lazy(() => import("@/pages/messages/ChatList"));
 const ChatThread = lazy(() => import("@/pages/messages/ChatThread"));
 const Profile = lazy(() => import("@/pages/profile/Profile"));
 const Settings = lazy(() => import("@/pages/settings/Settings"));
-
-const LoadingFallback =  <main className="bg-background h-full w-full flex justify-center items-center">
-    <p className="text-2xl text-muted-foreground">Loading...</p>
-  </main>
 
 const AppRoutes = () => {
   return (
@@ -36,11 +40,11 @@ const AppRoutes = () => {
       >
         <Route index element={<LandingPage />} />
         <Route path="login" element={
-          <LazyWrapper loadingFallback={LoadingFallback}>
+          <LazyWrapper loadingFallback={<LoginSkeleton />}>
             <Login />
           </LazyWrapper>} />
         <Route path="signup/:slug" element={
-          <LazyWrapper loadingFallback={LoadingFallback}>
+          <LazyWrapper loadingFallback={<SignupSkeleton />}>
             <Signup />
           </LazyWrapper>} />
       </Route>
@@ -55,36 +59,45 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       >
+        
         <Route index element={
-          <LazyWrapper loadingFallback={LoadingFallback}>
+          <LazyWrapper loadingFallback={<DashboardSkeleton />}>
             <Dashboard />
-          </LazyWrapper>} />
+          </LazyWrapper>} 
+        />
+        
         <Route path="discover" element={
-          <LazyWrapper loadingFallback={LoadingFallback} > 
+          <LazyWrapper loadingFallback={<DiscoverSkeleton />} > 
             <Discover /> 
-          </LazyWrapper>} />
-        <Route path="skill-requests" element={
-          <LazyWrapper loadingFallback={LoadingFallback}>
-            <SkillRequests />
-          </LazyWrapper>} />
+          </LazyWrapper>} 
+        />
+        
+        <Route path="skill-requests" element={<SkillRequests />} />
+        
         <Route path="messages" element={
           <ChatProvider>
-            <LazyWrapper loadingFallback={LoadingFallback}>
+            <LazyWrapper loadingFallback={<ChatListSkeleton />}>
               <ChatList />
             </LazyWrapper>
-          </ChatProvider>} />
+          </ChatProvider>} 
+        />
+        
         <Route path="messages/thread/:slug" element={
           <ChatProvider>
-            <LazyWrapper loadingFallback={LoadingFallback}>
+            <LazyWrapper loadingFallback={<ChatThreadSkeleton />}>
               <ChatThread />
             </LazyWrapper>
-          </ChatProvider>} />
+          </ChatProvider>}
+        />
+
         <Route path="profile" element={
-          <LazyWrapper loadingFallback={LoadingFallback}>
+          <LazyWrapper loadingFallback={<ProfileSkeleton />}>
             <Profile />
-          </LazyWrapper>} />
+          </LazyWrapper>} 
+        />
+
         <Route path="settings" element={
-          <LazyWrapper loadingFallback={LoadingFallback}>
+          <LazyWrapper loadingFallback={<SettingsSkeleton />}>
             <Settings />
           </LazyWrapper>} />
       </Route>

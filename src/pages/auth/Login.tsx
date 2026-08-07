@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
-import { FaGoogle } from "react-icons/fa6";
 import { Eye, EyeOff, Lock, Mail, type LucideIcon } from "lucide-react";
 import { useCallback, useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
@@ -30,6 +29,7 @@ const Login = () => {
     e.preventDefault();
 
     void handleSubmit((data) => {
+      console.log(data);
     onLogin(data.email, data.password, reset, navigate);
   })(e)
   }, [handleSubmit, onLogin, reset, navigate]);
@@ -46,7 +46,7 @@ const Login = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-        className="pb-8 px-6 md:px-12 lg:px-18 w-full max-tablet:max-w-[500px] tablet:w-6/12 max-tablet:mx-auto"
+        className="pb-8 px-6 md:px-12 lg:px-18 w-full max-tablet:max-w-[500px] tablet:w-6/12 max-tablet:mx-auto flex flex-col"
       >
         <AuthHeader />
         <div className="space-y-4 my-8">
@@ -158,7 +158,7 @@ const Login = () => {
         initial={{ opacity: 0, scale: 0 }}
         whileInView={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-        className="max-tablet:hidden px-8 grow bg-gradient-to-br from-primary/15 to-primary/0 flex flex-col justify-center items-center gap-8"
+        className="max-tablet:hidden h-screen px-8 grow bg-gradient-to-br from-primary/15 to-primary/0 flex flex-col justify-center items-center gap-8"
       >
         <div className="w-24 h-24 rounded-full bg-primary/20 flex justify-center items-center animate-spin-scale">
           <div className="w-16 h-16 rounded-full bg-primary/30 flex justify-center items-center">

@@ -2,13 +2,14 @@ import { Navigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 import { type ReactNode } from "react";
 import useMultiStepsStore from "../store/useMultiStepsStore";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const { currentUser, loading, authResolved } = useAuthStore();
   const { currentStep } = useMultiStepsStore();
 
   if (!authResolved || loading) {
-    return <p className="text-lg text-center mt-20">Loading...</p>;
+    return <LoadingSpinner label="Preparing your SkillForge Account..." />;
   }
 
   if (!currentUser) {

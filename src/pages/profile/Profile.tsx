@@ -20,22 +20,22 @@ const Profile = () => {
   exit={{ opacity: 0 }}
   transition={{ duration: 0.15, ease: "easeOut" }}
   className="w-full bg-background text-foreground pb-6 px-6 md:px-8 lg:px-10 space-y-6"
->
+  >
 
-<section className="w-full mb-8">
-        <h2 className="text-2xl font-semibold mb-1">Profile</h2>
-        <p className="text-sm text-muted-foreground">
-          Manage your personal information and showcase your skills.
-        </p>
-      </section>
+    <section className="w-full mb-8">
+      <h2 className="text-2xl font-semibold mb-1">Profile</h2>
+      <p className="text-sm text-muted-foreground">
+            Manage your personal information and showcase your skills.
+      </p>
+    </section>
 
-      <Progress />
+    <Progress />
 
-      <PersonalInfo />
+    <PersonalInfo />
 
-      <ActivityOverview />
+    <ActivityOverview />
 
-      <SkillSection />
+    <SkillSection />
   </motion.main>
   </>;
 };
