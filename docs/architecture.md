@@ -1,113 +1,80 @@
 # SkillForge Architecture
 
-SkillForge is a client-rendered React application organized around route layouts, feature pages, Zustand stores, React contexts, Firebase client services, Firestore listeners, and callable Cloud Functions.
+SkillForge is a Firebase-first React app built around route guards, realtime listeners, Zustand stores, contextual UI state, and callable backend functions. The app is organized around a simple rule: the browser handles presentation and user flow, while the backend owns sensitive multi-document actions.
 
-For a system-level description, see [System Overview](./system-overview.md). For auth-specific control flow, see [Authentication](./authentication.md). For persisted entities and relationships, see [Firestore Data Model](./firestore-data-model.md).
-
-## Architectural Shape
+## High-level view
 
 ```mermaid
 flowchart TD
-  A[Application entry point] --> B[Application shell]
-  B --> C[Theme and global initialization]
-  B --> D[Application router]
-  C --> E[Authentication and realtime setup]
-  D --> F[Public route guard]
-  D --> G[Protected route guard]
-  F --> H[Landing and authentication pages]
-  G --> I[Dashboard layout]
-  I --> J[Dashboard features]
-  J --> K[React contexts]
-  J --> L[Zustand stores]
-  K --> L
-  L --> M[Firebase client services]
-  E --> N[Realtime listeners]
-  M --> N
-  M --> O[Firebase authentication]
-  M --> P[Firestore data]
-  M --> Q[Backend functions]
-  M --> R[File storage]
-  N --> L
-  Q --> P
-  Q --> O
+  A[Client UI] --> B[React Router + route guards]
+  B --> C[Dashboard and feature pages]
+  C --> D[Zustand stores]
+  C --> E[React contexts]
+  D --> F[Firestore realtime data]
+  E --> G[Local UI state]
+  F --> H[Realtime listeners]
+  I[Callable Functions] --> J[Coins, requests, chat, auth]
+  J --> F
 ```
 
-## Application Bootstrap
+## Main architectural decisions
 
-1. `src/main.tsx` renders the React application.
-2. `src/App.tsx` initializes the theme and reacts to system color-scheme changes.
-3. `AppInitializer` starts the auth listener unless the E2E skip flag is present.
-4. `SkillsProvider` supplies the React Hook Form instances used by skill-related flows.
-5. `AppRoutes` renders public or protected route trees.
-6. Route guards wait for `authResolved` and `loading` before deciding whether to render or redirect.
+- Route and feature boundaries are split by page and lifetime.
+- Global state lives in Zustand for shared, server-backed data.
+- Local UI state lives in React context for forms and route-scoped interactions.
+- Realtime listeners are mounted only where they are needed and cleaned up when the route is no longer active.
+- Sensitive workflows such as request creation, settlement, and chat writes are enforced in callable backend Functions.
 
-The Firebase client is initialized in `src/firebase/firebase.ts`. When `VITE_APP_ENV === "e2e"`, the client connects Auth, Firestore, and Functions to the local emulator hosts.
+## Detailed design notes
 
-## Route and Layout Architecture
+- [Messaging Architecture](./messaging-architecture.md): chat summary model, optimistic sending, outbox retry flow, delivery/read state.
+- [Skill-Request Lifecycle](./skill-request-lifecycle.md): request state machine, coin escrow, transactional updates, completion and settlement.
+- [Testing Architecture](./testing-architecture.md): emulator-boundary reasoning, unit vs E2E split, browser matrix, CI behavior.
+- [Frontend Performance and Architecture Decisions](./frontend-performance-architecture.md): lazy routes, listener lifecycle, state ownership, and performance decisions.
 
-```mermaid
-flowchart TD
-  A[Application router] --> B[Public route guard]
-  A --> C[Protected route guard]
+For the full system view, also see [System Overview](./system-overview.md), [Authentication](./authentication.md), and [Firestore Data Model](./firestore-data-model.md).
 
-  B --> D[Landing layout]
-  D --> E[Landing page]
-  D --> F[Login page]
-  D --> G[Signup pages]
+Performance is treated as a structural concern. The app is designed to avoid loading and rendering everything up front, keep active state local to the feature that owns it, and shut down listeners when they are no longer relevant.
 
-  C --> H[Dashboard layout]
-  H --> I[Dashboard]
-  H --> J[Discover]
-  H --> K[Skill requests]
-  H --> L[Messages]
-  H --> M[Profile]
-  H --> N[Settings]
-```
+### Lazy routes and progressive loading
 
-`AppRoutes` lazy-loads most feature pages and pairs them with dedicated skeleton fallbacks through `LazyWrapper`. `SidebarProvider` is scoped to the dashboard layout, while `ChatProvider` is scoped to message routes.
+Route-level lazy loading is used for the dashboard, discover, messages, profile, and settings pages. The route tree is intentionally split so the initial shell loads quickly and feature bundles are only fetched when the user actually navigates there.
 
-## State Ownership
+Skeleton fallbacks are not decoration; they are part of the loading contract. They preserve layout stability while lazy bundles resolve, which prevents the app from feeling like it is reflowing unpredictably under route transitions.
 
-### Zustand stores
+### Listener lifecycle and cleanup
 
-- `useAuthStore`: Firebase auth actions, persisted current user, auth loading, auth resolution, and login/signup errors.
-- `useMultiStepsStore`: onboarding step state and temporary skill-form behavior.
-- `useChatStore`: chat summaries, thread messages, and offline outbox state.
-- `useRequestsStore`: skill-request records, loading state, and callable request actions.
-- `useUsersAndSkillsStore`: Discover users and skills.
-- `useProfileStore`: profile edits, skills, and profile-related updates.
-- `useSettingsStore`: password/account settings and account deletion state.
-- `useThemeStore`: light, dark, and system theme state.
+Global listeners are started in one app initializer only after auth is resolved. Feature-specific listeners are mounted closer to their route and cleaned up on unmount. This reduces memory churn and avoids stale subscriptions after navigation.
 
-### React contexts
+The design rule is that every listener has a clearly scoped lifetime. If a page or feature is no longer active, its listeners are torn down rather than left alive in the background.
 
-- `useSidebarContext`: responsive dashboard sidebar state.
-- `useSkillsContext`: skill form instances shared by onboarding/profile flows.
-- `useChatContext`: active thread, thread listener lifecycle, message form, and optimistic sending.
+### State ownership decisions
 
-The stores hold cross-page state and server-shaped data. Contexts are used where state is tightly coupled to a subtree or form lifecycle.
+State ownership is deliberately divided by scope:
 
-## Realtime Data Flow
+- `Zustand` stores own cross-page, server-shaped, and durable state such as auth, request lists, chat summaries, and derived application data.
+- `React Context` owns subtree-scoped concerns such as sidebar state, chat form state, and shared form instances that are tightly bound to a route or component tree.
 
-```mermaid
-flowchart TD
-  A[Application initializer] --> B[Authentication is resolved]
-  B --> C[Global realtime listeners]
-  C --> D[Skills updates]
-  C --> E[Skill request updates]
-  C --> F[Chat summary updates]
-  D --> G[Application state]
-  E --> G
-  F --> G
-  G --> H[Feature pages]
-  H --> I[User actions]
-  I --> J[Firestore or backend functions]
-  J --> C
-```
+This split is practical, not theoretical. We do not keep route-specific UI concerns in global stores, and we do not duplicate server-state details in many contexts. The state boundary is shaped around persistence, update frequency, and lifetime.
 
-Global listeners are mounted in `AppInitializer` for skills, skill requests, and chat summaries. Profile and chat-thread listeners are mounted closer to their feature pages so their lifetimes follow the active view.
+### Why certain state stays in Zustand vs Context
 
-## Backend Boundary
+State belongs in Zustand when it is:
+
+- needed across multiple pages,
+- backed by Firestore or auth reality,
+- updated by realtime listeners,
+- required to keep relationships consistent across navigation.
+
+State belongs in Context when it is:
+
+- tightly bound to a single feature subtree,
+- ephemeral to a form or route interaction,
+- not important outside the active UI surface.
+
+This is why chat summary state is store-owned while the active chat input and thread form logic remain context-owned: the former is shared and persistent across the app, while the latter is route-local and interaction-specific.
+
+The result is a frontend that is responsive, resilient under realtime updates, and maintainable without scattering route-level logic across unrelated global state.
 
 Direct client Firestore operations are used for reads, profile updates, presence, chat delivery/read metadata, and user skill synchronization. Callable Functions are used when the operation needs authenticated server checks, a transaction, or coordinated writes across multiple documents.
 
@@ -140,7 +107,3 @@ flowchart TD
 ```
 
 The Playwright configuration starts Vite and the Firebase emulator process through its `webServer` entries. E2E mode is selected with `VITE_APP_ENV=e2e`, which makes the client connect to the emulator endpoints. CI sets `CI`, causing Playwright to use one worker, retries, and a non-reused server.
-
-## Evolution Notes
-
-The architecture started as a Vite/React/Firebase client with authentication and storage. It later gained route layouts, Discover, skill requests, chat, profile synchronization, and coins. The largest boundary change was moving skill-request coordination from an early user-nested model into top-level `skillRequests` documents and callable Functions that atomically update requests, users, chats, skills, and coin transfers.
