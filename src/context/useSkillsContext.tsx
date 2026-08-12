@@ -77,4 +77,10 @@ export const SkillsProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useSkillsContext = () => useContext(SkillsContext);
+export const useSkillsContext = () => {
+  const context = useContext(SkillsContext);
+  if (!context) {
+    throw new Error("useSkillsContext must be used within a SkillsProvider");
+  }
+  return context;
+};
