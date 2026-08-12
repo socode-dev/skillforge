@@ -13,7 +13,7 @@ interface SidebarContextState {
   setIsSidebarOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const SidebarContext = createContext<SidebarContextState | {}>({});
+const SidebarContext = createContext<SidebarContextState | null>(null);
 
 export const SidebarProvider = ({ children }: { children: ReactNode }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);

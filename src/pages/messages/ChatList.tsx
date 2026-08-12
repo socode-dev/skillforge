@@ -21,11 +21,6 @@ const ChatList = () => {
     [lastMessages]
   );
 
-  if(!sortedLastMessages.length) {
-    
-    return <EmptyChatState />
-  }
-
   const filteredLastMessages = useMemo(() => sortedLastMessages.filter(lm => {
     const search = searchValue.toLowerCase();
     return (lm.senderDisplay.name ?? "").toLowerCase().includes(search) || (lm.senderDisplay.role ?? "").toLowerCase().includes(search) || (lm.text ?? "").toLowerCase().includes(search);
@@ -34,6 +29,11 @@ const ChatList = () => {
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
   }, []);
+
+  if(!sortedLastMessages.length) {
+    
+    return <EmptyChatState />
+  }
 
   return (
     <motion.main
@@ -58,7 +58,7 @@ const ChatList = () => {
       </fieldset>
 
       <section className="w-full mt-6">
-        {!!sortedLastMessages ? (
+        {sortedLastMessages ? (
           <>
           {filteredLastMessages.map(lastMessage => (
             <ListInterface key={lastMessage.chatId} lastMessage={lastMessage} />

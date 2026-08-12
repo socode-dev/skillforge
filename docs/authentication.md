@@ -5,7 +5,7 @@ SkillForge authentication has two layers:
 1. Firebase Authentication determines whether a browser session has an authenticated Firebase user.
 2. Firestore user data determines whether that authenticated user has completed onboarding and may enter the dashboard.
 
-For the broader runtime structure, see [System Overview](./system-overview.md) and [Architecture](./architecture.md). For the documents loaded during auth resolution, see [Firestore Data Model](./firestore-data-model.md).
+For the broader runtime structure, see [Architecture](./architecture.md). For the documents loaded during auth resolution, see [Firestore Data Model](./firestore-data-model.md).
 
 ## Auth State
 

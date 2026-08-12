@@ -53,6 +53,7 @@ jest.mock("uuid", () => ({
 }));
 
 import useProfileStore from "../../../store/useProfileStore";
+import type { Timestamp } from "firebase/firestore";
 
 describe("useProfileStore", () => {
   const sampleSkill = {
@@ -60,7 +61,7 @@ describe("useProfileStore", () => {
     skillName: "Test Skill",
     skillDesc: "Test Desc",
     isActive: true,
-    createdAt: {} as any,
+    createdAt: {} as Timestamp,
   };
 
   beforeEach(() => {

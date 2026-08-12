@@ -14,7 +14,7 @@ export const useMarkAsRead = ({chatId, currentUser, messages}: {chatId: string; 
         };
 
         markAsRead();
-    }, [chatId]);
+    }, [chatId, currentUser]);
 
     useEffect(() => {
         if(!chatId || !currentUser || messages.length === 0) return;
@@ -25,7 +25,7 @@ export const useMarkAsRead = ({chatId, currentUser, messages}: {chatId: string; 
             markChatRead(chatId, currentUser.profile.userId)
                 .catch((err) => console.error("Failed to update read state:", err));
         }
-    }, [messages]);
+    }, [messages, chatId, currentUser]);
 
     return null;
 }

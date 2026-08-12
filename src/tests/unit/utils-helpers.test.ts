@@ -30,7 +30,7 @@ describe("shuffleArray", () => {
   });
 
   it("throws if the input is not an array", () => {
-    expect(() => shuffleArray("abc" as unknown as any[])).toThrow(TypeError);
+    expect(() => shuffleArray("abc" as unknown as unknown[])).toThrow(TypeError);
   });
 });
 

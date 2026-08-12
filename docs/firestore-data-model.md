@@ -2,7 +2,7 @@
 
 SkillForge stores durable application state in Cloud Firestore and uses Firebase Authentication for identity. The frontend reads documents directly where realtime UI updates are needed; callable Cloud Functions perform authenticated, transactional, or multi-document operations.
 
-For the system boundaries around this model, see [System Overview](./system-overview.md) and [Architecture](./architecture.md). For how the user and onboarding documents are created, see [Authentication](./authentication.md).
+For the system boundaries around this model, see [Architecture](./architecture.md). For how the user and onboarding documents are created, see [Authentication](./authentication.md).
 
 ## Collection Map
 

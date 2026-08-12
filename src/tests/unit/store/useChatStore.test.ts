@@ -1,4 +1,4 @@
-import type { LastMessage } from "@/types/message.types";
+import type { LastMessage, OutboxMessage, ServerMessage } from "@/types/message.types";
 import type { Timestamp } from "firebase/firestore";
 import useChatStore from "@/store/useChatStore";
 
@@ -117,7 +117,7 @@ describe("useChatStore", () => {
         type: "TEXT",
         createdAt: timestamp,
         status: "PENDING",
-      } as any
+      } as OutboxMessage
     );
 
     expect(useChatStore.getState().outboxByChat["chat-1"]).toEqual([
@@ -231,7 +231,7 @@ describe("useChatStore", () => {
         type: "TEXT",
         createdAt: timestamp,
         status: "SENT",
-      } as any,
+      } as ServerMessage,
     ]);
 
     expect(useChatStore.getState().messagesByChat["chat-1"]).toEqual([

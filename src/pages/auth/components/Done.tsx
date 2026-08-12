@@ -30,7 +30,7 @@ const Done = () => {
       await finalizeSignup(currentUser);
 
       const userSnap = await getDoc(doc(db, "users", currentUser.profile.userId));
-      const updatedProfile = userSnap.exists() ? (userSnap.data() as any) : null;
+      const updatedProfile = userSnap.exists() ? userSnap.data() : null;
 
       setCurrentUser({
         ...currentUser,

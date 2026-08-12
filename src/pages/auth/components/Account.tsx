@@ -46,7 +46,7 @@ const Account = () => {
     const userName = pascalCase(data.fullName);
 
     await onSignup(data.email, data.password, userName, reset);
-  }), [handleSubmit, isValid, onSignup, reset]);
+  }), []);
 
   const RevealPasswordIcon: LucideIcon = revealPassword.password ? EyeOff : Eye;
   const RevealConfirmPasswordIcon: LucideIcon = revealPassword.confirmPassword
