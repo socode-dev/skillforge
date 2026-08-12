@@ -26,9 +26,7 @@ interface SkillsContextState {
   inputFormState: UseFormReturn<SkillInputSchema>["formState"];
 }
 
-const SkillsContext = createContext<SkillsContextState>(
-  {} as SkillsContextState
-);
+const SkillsContext = createContext<SkillsContextState | null>(null);
 
 export const SkillsProvider = ({ children }: { children: ReactNode }) => {
   const skillsForm = useAuthForm<SkillSchema>(skillSchema, "onSubmit", {

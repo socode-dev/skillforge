@@ -4,29 +4,6 @@ SkillForge is a skill-learning web application where users discover skills, requ
 
 The application uses React, TypeScript, Vite, Firebase Authentication, Cloud Firestore, callable Cloud Functions, Firebase Storage, Zustand, and React Router. Firebase emulators are used for local end-to-end testing.
 
-## Current System
-
-```mermaid
-flowchart TD
-	A[User] --> B[Frontend application]
-	B --> C[Application routes]
-	C --> D[Public and protected pages]
-	D --> E[Application state]
-	E --> F[Firebase client services]
-
-	F --> G[User authentication]
-	F --> H[Firestore data]
-	F --> I[Backend functions]
-	F --> J[File storage]
-
-	H --> K[Realtime listeners]
-	K --> E
-	I --> H
-	I --> G
-
-	L[Testing-only local emulator services] -.-> F
-```
-
 ## What SkillForge Does
 
 Users can:
@@ -43,8 +20,11 @@ Users can:
 
 The documentation is organized around the system's current boundaries:
 
-- [System Overview](./docs/system-overview.md): product capabilities, runtime boundaries, current architecture, and architectural evolution.
-- [Architecture](./docs/architecture.md): frontend layers, routes, state ownership, realtime listeners, backend boundaries, and local/CI runtime.
+- [Architecture](./docs/architecture.md): frontend layers, routes, state ownership, realtime listeners, backend boundaries, and the main architecture decisions.
+- [Messaging Architecture](./docs/messaging-architecture.md): chat data model, optimistic message flow, outbox retry, delivery/read state, and listener boundaries.
+- [Skill-Request Lifecycle](./docs/skill-request-lifecycle.md): request state machine, coin escrow, transactional updates, completion flow, and abuse mitigation.
+- [Testing Architecture](./docs/testing-architecture.md): emulator boundary reasoning, unit vs E2E scope, browser matrix, CI behavior, and test data seeding.
+- [Frontend Performance and Architecture Decisions](./docs/frontend-performance-architecture.md): lazy routes, listener lifecycle, state ownership, and runtime performance choices.
 - [Authentication](./docs/authentication.md): Firebase auth resolution, four-step onboarding, public/protected route gates, and test boundaries.
 - [Firestore Data Model](./docs/firestore-data-model.md): collections, subcollections, document fields, relationships, write ownership, and realtime queries.
 

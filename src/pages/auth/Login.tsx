@@ -40,7 +40,7 @@ const Login = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="w-full h-auto flex"
+      className="w-full h-fit flex"
     >
       <motion.section
         initial={{ opacity: 0, y: 20 }}
@@ -158,7 +158,7 @@ const Login = () => {
         initial={{ opacity: 0, scale: 0 }}
         whileInView={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-        className="max-tablet:hidden h-screen px-8 grow bg-gradient-to-br from-primary/15 to-primary/0 flex flex-col justify-center items-center gap-8"
+        className="max-tablet:hidden px-8 grow bg-gradient-to-br from-primary/15 to-primary/0 flex flex-col justify-center items-center gap-8"
       >
         <div className="w-24 h-24 rounded-full bg-primary/20 flex justify-center items-center animate-spin-scale">
           <div className="w-16 h-16 rounded-full bg-primary/30 flex justify-center items-center">

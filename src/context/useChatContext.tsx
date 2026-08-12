@@ -13,7 +13,7 @@ import { useContext, createContext, type ReactNode, useEffect, useMemo, useRef }
 import { useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
-const ChatContext = createContext<ChatContextState | {}>({});
+const ChatContext = createContext<ChatContextState | null>(null);
 
 const sendMessage = httpsCallable(functions, "sendMessage");
 

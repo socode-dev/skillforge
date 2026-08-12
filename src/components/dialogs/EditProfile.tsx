@@ -16,8 +16,7 @@ const EditProfile = () => {
     const onSubmit = useProfileStore(state => state.onSubmitProfileEdit);
     const [avatarUploading, setAvatarUploading] = useState<boolean>(false);
 
-    if(!currentUser) return null;
-
+    
     const form = useAuthForm<ProfileEditSchema>(
         profileEditSchema, 
         "onSubmit",
@@ -27,30 +26,30 @@ const EditProfile = () => {
             avatar: currentUser?.profile.avatar ?? "", 
             bio: currentUser?.profile.bio ?? ""
         });
-
-    const {register, watch, handleSubmit, setValue, reset, formState: {errors, isSubmitting}} = form;
-
-    useEffect(() => {
-        if(!openEditModal.profile) return;
-
-        reset({
-            fullName: currentUser.profile.name,
-            email: currentUser.profile.email,
-            avatar: currentUser.profile.avatar ?? "",
-            bio: currentUser.profile.bio ?? "",
-        });
-    }, [currentUser.profile.avatar, currentUser.profile.bio, currentUser.profile.email, currentUser.profile.name, openEditModal.profile, reset]);
-
-    const handleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
-        setAvatarUploading(true);
-        const file = e.target.files?.[0];
-        if (!file) {
-            setAvatarUploading(false);
-            return;
-        }
-
-        try {
-            const url = await uploadToCloudinary(file);
+        
+        const {register, watch, handleSubmit, setValue, reset, formState: {errors, isSubmitting}} = form;
+        
+        useEffect(() => {
+            if(!openEditModal.profile) return;
+            
+            reset({
+                fullName: currentUser?.profile.name,
+                email: currentUser?.profile.email,
+                avatar: currentUser?.profile.avatar ?? "",
+                bio: currentUser?.profile.bio ?? "",
+            });
+        }, [currentUser?.profile.avatar, currentUser?.profile.bio, currentUser?.profile.email, currentUser?.profile.name, openEditModal.profile, reset]);
+        
+        const handleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
+            setAvatarUploading(true);
+            const file = e.target.files?.[0];
+            if (!file) {
+                setAvatarUploading(false);
+                return;
+            }
+            
+            try {
+                const url = await uploadToCloudinary(file);
             if (!url) {
               throw Error("Failed to generate image url.");
             }
@@ -58,12 +57,14 @@ const EditProfile = () => {
         } finally {
             setAvatarUploading(false);
         }
-      };
-
-
+    };
+    
+    
     if(!openEditModal.profile) return null;
 
     const avatar = watch("avatar");
+    
+    if(!currentUser) return null;
 
     return (
         <Dialog>

@@ -6,7 +6,7 @@ const mockSetTheme = jest.fn();
 
 jest.mock("../../../store/useThemeStore", () => ({
   __esModule: true,
-  default: (selector: (state: any) => unknown) =>
+  default: (selector: (state: unknown) => unknown) =>
     selector({ theme: "system", setTheme: mockSetTheme }),
 }));
 

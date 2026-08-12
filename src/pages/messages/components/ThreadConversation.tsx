@@ -14,15 +14,8 @@ const ThreadConversation = () => {
     const messagesByChat = useChatStore(state => state.messagesByChat);
     const outboxByChat = useChatStore(state => state.outboxByChat);
     
-    if(!lastMessage || !lastMessage.senderDisplay || !currentUser) {
-        return (
-            <article className="w-full h-full pt-14 pb-26 flex items-center justify-center px-4 text-sm text-muted-foreground">
-                Loading conversation...
-            </article>
-        );
-    }
-    
-    const {senderDisplay, chatId} = lastMessage;
+    const chatId = lastMessage?.chatId ?? "";
+    const senderDisplay = lastMessage?.senderDisplay;
 
     const serverMessages = messagesByChat[chatId] ?? [];
     const outboxMessages = outboxByChat[chatId] ?? [];
@@ -57,7 +50,7 @@ const ThreadConversation = () => {
         const last = messages[messages.length - 1];
         if (!last) return;
 
-        const isMine = last.senderId === currentUser.profile.userId;
+        const isMine = last.senderId === currentUser?.profile.userId;
         if (!isMine) return;
 
         if (lastAutoScrolledMessageIdRef.current === last.messageId) return;
@@ -65,7 +58,15 @@ const ThreadConversation = () => {
 
         requestAnimationFrame(() => scrollToBottom("smooth"));
 
-    }, [messages.length, chatId, currentUser.profile.userId]);
+    }, [messages.length, chatId, currentUser?.profile.userId]);
+    
+    if(!lastMessage || !lastMessage.senderDisplay || !currentUser) {
+        return (
+            <article className="w-full h-full pt-14 pb-26 flex items-center justify-center px-4 text-sm text-muted-foreground">
+                Loading conversation...
+            </article>
+        );
+    }
     
     return(
         <article
@@ -89,7 +90,7 @@ const ThreadConversation = () => {
                         return message.type === "SYSTEM" ? (
                             <p key={message.messageId} className="text-sm text-center text-muted-foreground">{message.text}</p>
                         ) : (
-                            <MessageBubble key={message.messageId} message={message} isMine={isMine} senderName={senderDisplay.name} senderAvatar={senderDisplay.avatar} time={time} />
+                            <MessageBubble key={message.messageId} message={message} isMine={isMine} senderName={senderDisplay?.name as string} senderAvatar={senderDisplay?.avatar} time={time} />
                         )
                     })}
                 </section>

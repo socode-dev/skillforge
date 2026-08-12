@@ -32,7 +32,7 @@ flowchart TD
 - [Testing Architecture](./testing-architecture.md): emulator-boundary reasoning, unit vs E2E split, browser matrix, CI behavior.
 - [Frontend Performance and Architecture Decisions](./frontend-performance-architecture.md): lazy routes, listener lifecycle, state ownership, and performance decisions.
 
-For the full system view, also see [System Overview](./system-overview.md), [Authentication](./authentication.md), and [Firestore Data Model](./firestore-data-model.md).
+For auth specifics, see [Authentication](./authentication.md). For Firestore shapes, see [Firestore Data Model](./firestore-data-model.md).
 
 Performance is treated as a structural concern. The app is designed to avoid loading and rendering everything up front, keep active state local to the feature that owns it, and shut down listeners when they are no longer relevant.
 

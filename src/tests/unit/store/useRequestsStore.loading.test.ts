@@ -1,4 +1,4 @@
-import { resetRequestsStore, toast, useRequestsStore } from "./useRequestsStore.testUtils";
+import { resetRequestsStore, useRequestsStore } from "./useRequestsStore.testUtils";
 
 describe("useRequestsStore loading state", () => {
   beforeEach(() => {

@@ -1,4 +1,4 @@
-import { RefreshCcw, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import Button from "../../../components/ui/Button";
 import { MdWarning } from "react-icons/md";
 import useSettingsStore from "../../../store/useSettingsStore";

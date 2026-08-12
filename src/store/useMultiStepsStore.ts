@@ -59,7 +59,7 @@ const useMultiStepsStore = create<StoreState>()((set) => ({
 
     const currentSkills = currentUser.skills;
 
-    if (!!currentSkills.length) {
+    if (currentSkills.length) {
       updatedSkills = [
         ...currentSkills,
         { id: uuidv4(), skillName, skillDesc, learnersCount: 0 },

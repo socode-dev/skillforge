@@ -27,7 +27,7 @@ const SkillSection = () => {
             </fieldset>
 
             <fieldset className="flex flex-col gap-4">
-                {!!sortedSkills.length ? (
+                {sortedSkills.length ? (
                     sortedSkills.map(skill => (
                         <SkillCard key={skill.skillId} skill={skill} />
                     ))
