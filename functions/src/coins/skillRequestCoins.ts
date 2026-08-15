@@ -1,4 +1,4 @@
-import { db } from "@functions/index";
+import { db } from "@functions/db";
 
 export const SKILL_REQUEST_COIN_AMOUNT = 10;
 export const COIN_TRANSFERS_COLLECTION = "coinTransfers";

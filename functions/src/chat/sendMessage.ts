@@ -1,6 +1,6 @@
 import { SendMessagePayload } from "@functions/types/SendMessagePayload";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
-import { db } from "@functions/index";
+import { db } from "@functions/db";
 import { FieldValue } from "firebase-admin/firestore";
 
 export const sendMessage = onCall<SendMessagePayload>(

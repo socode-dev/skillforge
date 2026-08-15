@@ -1,5 +1,4 @@
 import { initializeApp } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
 
 initializeApp();
 
@@ -13,5 +12,3 @@ export { acceptSkillRequest } from "@functions/skillRequest/accept";
 export { requestSkillCompletion } from "@functions/skillRequest/requestCompletion";
 export { confirmSkillCompletion } from "@functions/skillRequest/confirmCompletion";
 export {sendMessage} from "@functions/chat/sendMessage";
-
-export const db = getFirestore();
