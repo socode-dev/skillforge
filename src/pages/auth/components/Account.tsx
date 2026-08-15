@@ -40,13 +40,13 @@ const Account = () => {
     formState: { errors, isValid, isSubmitting },
   } = form;
 
-  const onSubmit = useCallback(handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async (data) => {
     if (!isValid) return;
 
     const userName = pascalCase(data.fullName);
 
     await onSignup(data.email, data.password, userName, reset);
-  }), []);
+  });
 
   const RevealPasswordIcon: LucideIcon = revealPassword.password ? EyeOff : Eye;
   const RevealConfirmPasswordIcon: LucideIcon = revealPassword.confirmPassword
