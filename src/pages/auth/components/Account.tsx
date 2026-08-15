@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { Mail, User, Lock, Eye, EyeOff, type LucideIcon } from "lucide-react";
 import Input from "../../../components/ui/Input";
 import Button from "../../../components/ui/Button";
