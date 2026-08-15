@@ -1,7 +1,7 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { v4 as uuidv4 } from "uuid";
 import { FieldValue } from "firebase-admin/firestore";
-import { db } from "@functions/index";
+import { db } from "@functions/db";
 import { FinalizeSignupPayload } from "@functions/types/auth";
 
 export const finalizeSignup = onCall<FinalizeSignupPayload>(

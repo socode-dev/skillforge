@@ -1,6 +1,6 @@
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { FieldValue } from "firebase-admin/firestore";
-import { db } from "@functions/index";
+import { db } from "@functions/db";
 import { getSkillRequestCoinTransferRef } from "@functions/coins/skillRequestCoins";
 import { addSystemMessageToTransaction } from "@functions/chat/systemMessage";
 import {

@@ -1,6 +1,6 @@
 import { getAuth } from "firebase-admin/auth";
 import { HttpsError, onCall } from "firebase-functions/v2/https";
-import { db } from "@functions/index";
+import { db } from "@functions/db";
 
 export const deleteAccount = onCall(async ({auth}) => {
   if (!auth) {
